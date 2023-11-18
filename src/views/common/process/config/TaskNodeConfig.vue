@@ -3,7 +3,7 @@
     <el-form label-position="top" label-width="90px">
       <el-form-item label="⚙ 选择办理对象" prop="text" class="user-type">
         <el-radio-group v-model="nodeProps.assignedType">
-          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type">{{t.name }}</el-radio>
+          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type">{{ t.name }}</el-radio>
         </el-radio-group>
         <div v-if="nodeProps.assignedType === 'ASSIGN_USER'">
           <el-button size="small" icon="el-icon-plus" type="primary" @click="selectUser" round>选择人员</el-button>
@@ -28,7 +28,7 @@
             </el-radio-group>
             <div class="approve-end-leave" v-if="nodeProps.leaderTop.endCondition === 'LEAVE'">
               <span>第 </span>
-              <el-input-number :min="1" :max="20" :step="1" v-model="nodeProps.leaderTop.endLevel"/>
+              <el-input-number :min="1" :max="20" :step="1" v-model="nodeProps.leaderTop.endLevel" />
               <span> 级主管</span>
             </div>
             <el-divider />
@@ -63,7 +63,7 @@
         </div>
         <div v-else-if="nodeProps.assignedType === 'FORM_USER'">
           <el-form-item label="选择表单联系人项" prop="text" class="approve-end">
-            <el-select style="width: 80%" size="small" v-model="nodeProps.formUser" placeholder="请选择联系人表单项">
+            <el-select style="width: 80%" size="small" v-model="nodeProps.formUser" placeholder="请选择联系人表单项" multiple>
               <el-option v-for="op in userForms" :label="op.title" :value="op.id"></el-option>
             </el-select>
           </el-form-item>
@@ -147,7 +147,7 @@
         </el-form-item>
       </div>
     </el-form>
-    <org-picker :title="pickerTitle" multiple :type="orgPickerType" ref="orgPicker" :selected="orgPickerSelected" @ok="selected"/>
+    <org-picker :title="pickerTitle" multiple :type="orgPickerType" ref="orgPicker" :selected="orgPickerSelected" @ok="selected" />
   </div>
 </template>
 
@@ -166,6 +166,7 @@ export default {
       },
     },
   },
+
   data() {
     return {
       showOrgSelect: false,
@@ -266,7 +267,7 @@ export default {
   methods: {
     loadFormItemPicker(items, result, name) {
       items.forEach((it) => {
-        if (it.name === 'SpanLayout') {
+        if (it.name === 'SpanLayout' || it.name === 'ModuleBlock') {
           this.loadFormItemPicker(it.props.items, result, name)
         } else if (it.name === name) {
           result.push(it)
@@ -314,14 +315,17 @@ export default {
     margin-bottom: 20px;
   }
 }
+
 :deep(.line-mode) {
   .el-radio {
     margin-right: 40px;
   }
 }
+
 :deep(.el-form-item__label) {
   line-height: 25px;
 }
+
 :deep(.approve-mode) {
   .el-radio {
     float: left;
@@ -330,6 +334,7 @@ export default {
     margin-top: 5px;
   }
 }
+
 :deep(.approve-end) {
   position: relative;
 
@@ -344,6 +349,7 @@ export default {
     left: 150px;
   }
 }
+
 :deep(.el-divider--horizontal) {
   margin: 10px 0;
 }

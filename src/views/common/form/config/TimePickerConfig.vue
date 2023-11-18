@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form-item label="提示文字">
-      <el-input size="default" v-model="modelValue.placeholder" placeholder="请设置时间提示"/>
+      <el-input size="default" v-model="modelValue.placeholder" placeholder="请设置时间提示" />
     </el-form-item>
     <el-form-item label="时间格式">
       <el-select v-model="modelValue.format">

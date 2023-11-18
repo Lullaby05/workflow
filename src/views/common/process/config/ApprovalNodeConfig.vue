@@ -3,7 +3,7 @@
     <el-form label-position="top" label-width="90px">
       <el-form-item label="⚙ 选择审批对象" prop="text" class="user-type">
         <el-radio-group v-model="nodeProps.assignedType">
-          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type">{{t.name }}</el-radio>
+          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type">{{ t.name }}</el-radio>
         </el-radio-group>
         <div v-if="nodeProps.assignedType === 'ASSIGN_USER'">
           <el-button size="small" icon="el-icon-plus" type="primary" @click="selectUser" round>选择人员</el-button>
@@ -28,7 +28,7 @@
             </el-radio-group>
             <div class="approve-end-leave" v-if="nodeProps.leaderTop.endCondition === 'LEAVE'">
               <span>第 </span>
-              <el-input-number :min="1" :max="20" :step="1" v-model="nodeProps.leaderTop.endLevel"/>
+              <el-input-number :min="1" :max="20" :step="1" v-model="nodeProps.leaderTop.endLevel" />
               <span> 级主管</span>
             </div>
             <el-divider />
@@ -47,7 +47,9 @@
               <span>发起人的第 </span>
               <el-input-number :min="1" :max="20" v-model="nodeProps.leader.level"></el-input-number>
               <span> 级主管</span>
-              <p style="color: #409eff; font-size: small">👉 直接主管为 第 1 级主管</p>
+              <p style="color: #409eff; font-size: small">
+                👉 直接主管为 第 1 级主管
+              </p>
             </div>
           </el-form-item>
           <el-form-item label="📌 提取规则" prop="text" class="approve-end">
@@ -63,7 +65,7 @@
         </div>
         <div v-else-if="nodeProps.assignedType === 'FORM_USER'">
           <el-form-item label="选择表单联系人项" prop="text" class="approve-end">
-            <el-select style="width: 80%" size="small" v-model="nodeProps.formUser" placeholder="请选择联系人表单项">
+            <el-select style="width: 80%" size="small" v-model="nodeProps.formUser" placeholder="请选择联系人表单项" multiple>
               <el-option v-for="op in userForms" :label="op.title" :value="op.id"></el-option>
             </el-select>
           </el-form-item>
@@ -90,11 +92,7 @@
             <el-radio label="TO_PASS">自动通过</el-radio>
             <el-radio label="TO_REFUSE">自动驳回</el-radio>
             <el-radio label="TO_ADMIN">转交审批管理员</el-radio>
-            <el-radio
-              label="TO_USER"
-              :disabled="nodeProps.assignedType === 'ASSIGN_USER'"
-              >转交到指定人员</el-radio
-            >
+            <el-radio label="TO_USER" :disabled="nodeProps.assignedType === 'ASSIGN_USER'">转交到指定人员</el-radio>
           </el-radio-group>
 
           <div style="margin-top: 10px" v-if="nodeProps.nobody.handler === 'TO_USER'">
@@ -154,8 +152,8 @@
         <el-form-item label="🙅‍ 如果审批被驳回 👇">
           <el-radio-group v-model="nodeProps.refuse.type">
             <el-radio label="TO_END">直接结束流程</el-radio>
-<!--            <el-radio label="TO_BEFORE">驳回到上级审批节点</el-radio>-->
-              <el-radio label="TO_NODE">驳回到指定节点</el-radio>
+            <!--            <el-radio label="TO_BEFORE">驳回到上级审批节点</el-radio>-->
+            <el-radio label="TO_NODE">驳回到指定节点</el-radio>
           </el-radio-group>
           <div v-if="nodeProps.refuse.type === 'TO_NODE'">
             <span>指定节点:</span>
@@ -166,13 +164,13 @@
         </el-form-item>
       </div>
     </el-form>
-    <org-picker :title="pickerTitle" multiple :type="orgPickerType" ref="orgPicker" :selected="orgPickerSelected" @ok="selected"/>
+    <org-picker :title="pickerTitle" multiple :type="orgPickerType" ref="orgPicker" :selected="orgPickerSelected" @ok="selected" />
   </div>
 </template>
 
 <script>
-import OrgPicker from '@/components/common/OrgPicker.vue'
-import OrgItems from '../OrgItems.vue'
+import OrgPicker from '@/components/common/OrgPicker.vue';
+import OrgItems from '../OrgItems.vue';
 
 export default {
   name: 'ApprovalNodeConfig',
@@ -181,7 +179,7 @@ export default {
     config: {
       type: Object,
       default: () => {
-        return {}
+        return {};
       },
     },
   },
@@ -202,128 +200,128 @@ export default {
         { name: '表单内部门主管', type: 'FORM_DEPT' },
         { name: '系统(自动拒绝)', type: 'REFUSE' },
       ],
-    }
+    };
   },
   computed: {
     nodeProps() {
-      return this.$store.state.selectedNode.props
+      return this.$store.state.selectedNode.props;
     },
     select() {
-      return this.config.assignedUser || []
+      return this.config.assignedUser || [];
     },
     selectDept() {
       if (!this.config.assignedDept) {
-        this.config['assignedDept'] = []
+        this.config['assignedDept'] = [];
       }
-      return this.config.assignedDept
+      return this.config.assignedDept;
     },
     userForms() {
-      let userForm = []
+      let userForm = [];
       this.loadFormItemPicker(
         this.$store.state.design.formItems,
         userForm,
         'UserPicker'
-      )
-      return userForm
+      );
+      return userForm;
     },
     deptForms() {
-      let deptForm = []
+      let deptForm = [];
       this.loadFormItemPicker(
         this.$store.state.design.formItems,
         deptForm,
         'DeptPicker'
-      )
-      return deptForm
+      );
+      return deptForm;
     },
     pickerTitle() {
       switch (this.orgPickerType) {
         case 'user':
-          return '请选择人员'
+          return '请选择人员';
         case 'role':
-          return '请选择系统角色'
+          return '请选择系统角色';
         default:
-          return null
+          return null;
       }
     },
     nodeOptions() {
-      let values = []
+      let values = [];
       const excType = [
         'EMPTY',
         'CONDITION',
         'CONDITIONS',
         'CONCURRENT',
         'CONCURRENTS',
-      ]
+      ];
       this.$store.state.nodeMap.forEach((v) => {
         if (excType.indexOf(v.type) === -1) {
-          values.push({ id: v.id, name: v.name })
+          values.push({ id: v.id, name: v.name });
         }
-      })
-      return values
+      });
+      return values;
     },
     showMode() {
       switch (this.nodeProps.assignedType) {
         case 'ASSIGN_USER':
-          return this.nodeProps.assignedUser.length > 0
+          return this.nodeProps.assignedUser.length > 0;
         case 'ASSIGN_LEADER':
-          return true
+          return true;
         case 'SELF_SELECT':
-          return this.nodeProps.selfSelect.multiple
+          return this.nodeProps.selfSelect.multiple;
         case 'LEADER_TOP':
-          return true
+          return true;
         case 'FORM_USER':
-          return true
+          return true;
         case 'ROLE':
-          return true
+          return true;
         case 'FORM_DEPT':
-          return true
+          return true;
         default:
-          return false
+          return false;
       }
     },
   },
   methods: {
     loadFormItemPicker(items, result, name) {
       items.forEach((it) => {
-        if (it.name === 'SpanLayout') {
-          this.loadFormItemPicker(it.props.items, result, name)
+        if (it.name === 'SpanLayout' || it.name === 'ModuleBlock') {
+          this.loadFormItemPicker(it.props.items, result, name);
         } else if (it.name === name) {
-          result.push(it)
+          result.push(it);
         }
-      })
+      });
     },
     selectUser() {
-      this.orgPickerSelected = this.select
-      this.orgPickerType = 'user'
-      console.log('选择 ' + this.orgPickerType)
-      this.$refs.orgPicker.show()
+      this.orgPickerSelected = this.select;
+      this.orgPickerType = 'user';
+      console.log('选择 ' + this.orgPickerType);
+      this.$refs.orgPicker.show();
     },
     selectOrgDept() {
-      this.orgPickerSelected = this.selectDept
-      this.orgPickerType = 'dept'
-      console.log('选择 ' + this.orgPickerType)
-      this.$refs.orgPicker.show()
+      this.orgPickerSelected = this.selectDept;
+      this.orgPickerType = 'dept';
+      console.log('选择 ' + this.orgPickerType);
+      this.$refs.orgPicker.show();
     },
     selectNoSetUser() {
-      this.orgPickerSelected = this.config.nobody.assignedUser
-      this.orgPickerType = 'user'
-      this.$refs.orgPicker.show()
+      this.orgPickerSelected = this.config.nobody.assignedUser;
+      this.orgPickerType = 'user';
+      this.$refs.orgPicker.show();
     },
     selectRole() {
-      this.orgPickerType = 'role'
-      this.orgPickerSelected = this.config.role
-      console.log('选择 ' + this.orgPickerType)
-      this.$refs.orgPicker.show()
+      this.orgPickerType = 'role';
+      this.orgPickerSelected = this.config.role;
+      console.log('选择 ' + this.orgPickerType);
+      this.$refs.orgPicker.show();
     },
     selected(select) {
-      this.orgPickerSelected.length = 0
-      select.forEach((val) => this.orgPickerSelected.push(val))
+      this.orgPickerSelected.length = 0;
+      select.forEach((val) => this.orgPickerSelected.push(val));
     },
     removeOrgItem(index) {
-      this.select.splice(index, 1)
+      this.select.splice(index, 1);
     },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -333,14 +331,17 @@ export default {
     margin-bottom: 20px;
   }
 }
+
 :deep(.line-mode) {
   .el-radio {
     width: 140px;
   }
 }
+
 :deep(.el-form-item__label) {
   line-height: 25px;
 }
+
 :deep(.approve-mode) {
   .el-radio {
     float: left;
@@ -349,6 +350,7 @@ export default {
     margin-top: 5px;
   }
 }
+
 :deep(.approve-end) {
   position: relative;
 
@@ -363,6 +365,7 @@ export default {
     left: 150px;
   }
 }
+
 :deep(.el-divider--horizontal) {
   margin: 10px 0;
 }

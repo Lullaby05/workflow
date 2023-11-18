@@ -1,14 +1,14 @@
 <template>
   <el-form label-width="90px" v-if="true">
-    <template v-if="showPublicConfig">
+    <template v-if="showBlockConfig || showPublicConfig">
       <el-form-item label="表单ID">
-        <el-input size="default" disabled v-model="form.id"/>
+        <el-input size="default" disabled v-model="form.id" />
       </el-form-item>
       <el-form-item label="表单名称">
-        <el-input size="default" clearable v-model="form.title"/>
+        <el-input size="default" clearable v-model="form.title" @change="formTitleInput" />
       </el-form-item>
     </template>
-    <component :is="form.name" v-model="form.props"/>
+    <component :is="form.name" v-model="form.props" />
     <template v-if="showPublicConfig">
       <el-form-item label="必填项">
         <el-switch v-model="form.props.required"></el-switch>
@@ -48,6 +48,7 @@ import WebIframe from './config/WebIframeConfig.vue'
 import VueContainer from './config/VueContainerConfig.vue'
 import CalcFormula from './config/CalcFormulaConfig.vue'
 import SpanLayout from './config/SpanLayoutConfig.vue'
+import MultilevelLink from './config/MultilevelLinkConfig.vue'
 
 export default {
   name: 'FormComponentConfig',
@@ -77,21 +78,31 @@ export default {
     VueContainer,
     ProcessIndex,
     CalcFormula,
-    SpanLayout
+    SpanLayout,
+    MultilevelLink
   },
   props: {},
   computed: {
     form() {
       return this.$store.state.selectFormItem
     },
-    showPublicConfig(){
-      return this.form.name !== 'SpanLayout'
-    }
+    showPublicConfig() {
+      return this.form.name !== 'SpanLayout' && this.form.name !== 'ModuleBlock'
+    },
+    showBlockConfig() {
+      return this.form.name === 'ModuleBlock'
+    },
   },
   data() {
     return {}
   },
-  methods: {},
+  methods: {
+    formTitleInput(val) {
+      if (val && this.form.name === 'ModuleBlock') {
+        this.$store.commit('setCertProcessFormKeysName', this.form)
+      }
+    }
+  },
 }
 </script>
 

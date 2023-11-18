@@ -216,7 +216,7 @@ export default {
       items.forEach((item) => {
         //过滤掉自身组件，防止用户使用造成死循环计算
         if (item.id !== this.activeConfig) {
-          if (item.name === 'SpanLayout') {
+          if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
             this.getFormItem(item.props.items, arr)
           } else if (this.isNumberField(item)) {
             arr.push({

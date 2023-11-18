@@ -1,4 +1,3 @@
-
 export default {
   props: {
     mode: {
@@ -15,17 +14,17 @@ export default {
     },
   },
   data() {
-    return {}
+    return {};
   },
   computed: {
     _value: {
       get() {
-        return this.modelValue
+        return this.modelValue;
       },
       set(val) {
-        this.$emit('update:modelValue', val)
+        this.$emit('update:modelValue', val);
       },
     },
   },
   emits: ['update:modelValue'],
-}
+};

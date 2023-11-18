@@ -1,14 +1,5 @@
 <template>
-  <component v-bind="config.props"
-             v-model:items="config.props.items"
-             v-model:columns="config.props.columns"
-             ref="form" :index="index"
-             :formData="formData"
-             :readonly="readonly"
-             :is="config.name"
-             :mode="mode"
-             style="width: 100%"
-             v-model="_value"/>
+  <component v-bind="config.props" v-model:items="config.props.items" v-model:columns="config.props.columns" ref="form" :index="index" :formData="formData" :readonly="readonly" :is="config.name" :mode="mode" style="width: 100%" v-model="_value" />
 </template>
 
 <script>

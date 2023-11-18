@@ -1,8 +1,8 @@
-import {createRouter, createWebHashHistory} from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 const viewport = {
   content: 'width=device-width, initial-scale=1.0, user-scalable=no',
-}
+};
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -41,6 +41,13 @@ const router = createRouter({
           meta: { title: 'wflow-pro | 未完成的', viewport: viewport },
         },
         {
+          path: 'unfinishedForOperation',
+          name: 'unfinishedForOperation',
+          component: () =>
+            import('@/views/workspace/oa/unfinishedForOperation.vue'),
+          meta: { title: 'wflow-pro | 未完成的', viewport: viewport },
+        },
+        {
           path: 'finished',
           name: 'finished',
           component: () => import('@/views/workspace/oa/Finished.vue'),
@@ -58,6 +65,13 @@ const router = createRouter({
           component: () => import('@/views/admin/FormsPanel.vue'),
           meta: { title: 'wflow-pro | 表单列表', viewport: viewport },
         },
+        {
+          path: 'formsPanelForOperation',
+          name: 'formsPanelForOperation',
+          component: () =>
+            import('@/views/admin/forOperation/formsPanelForOperation.vue'),
+          meta: { title: 'wflow-pro | 表单列表', viewport: viewport },
+        },
       ],
     },
     {
@@ -67,10 +81,10 @@ const router = createRouter({
       meta: { title: 'wflow-pro | 发起审批', viewport: viewport },
     },
     {
-      path: "/mbInstance",
-      name: "mbInstance",
-      component: () => import("@/views/workspace/MbInstanceViewer.vue"),
-      meta: {title: 'wflow-pro | 流程详情', viewport: viewport}
+      path: '/mbInstance',
+      name: 'mbInstance',
+      component: () => import('@/views/workspace/MbInstanceViewer.vue'),
+      meta: { title: 'wflow-pro | 流程详情', viewport: viewport },
     },
     {
       path: '/admin/design',
@@ -78,22 +92,29 @@ const router = createRouter({
       component: () => import('@/views/admin/FormProcessDesign.vue'),
       meta: { title: 'wflow-pro | 表单流程设计', viewport: viewport },
     },
+    {
+      path: '/admin/designForOperation',
+      name: 'designForOperation',
+      component: () =>
+        import('@/views/admin/forOperation/FormProcessDesign.vue'),
+      meta: { title: 'wflow-pro | 表单流程设计', viewport: viewport },
+    },
   ],
-})
+});
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = to.meta.title
+    document.title = to.meta.title;
   }
   if (to.meta.content) {
-    let head = document.getElementByTagName('head')
-    let meta = document.createElemnet('meta')
-    meta.name = 'viewport'
-    meta.content = 'width=device-width, initial-scale=1.0, user-scalable=no'
-    head[0].appendChild(meta)
+    let head = document.getElementByTagName('head');
+    let meta = document.createElemnet('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, initial-scale=1.0, user-scalable=no';
+    head[0].appendChild(meta);
   }
-  next()
-  sessionStorage.setItem('router-path', to.path)
-})
+  next();
+  sessionStorage.setItem('router-path', to.path);
+});
 
-export default router
+export default router;

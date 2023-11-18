@@ -76,7 +76,7 @@ export default {
     },
     formPermsLoad(oldPermMap, forms) {
       forms.forEach((form) => {
-        if (form.name === 'SpanLayout') {
+        if (form.name === 'SpanLayout' || form.name === 'ModuleBlock') {
           this.formPermsLoad(oldPermMap, form.props.items)
         } else if (form.name === 'TableList') {
           this.loadFormItemPerms(oldPermMap, form)

@@ -42,13 +42,15 @@
 </template>
 
 <script>
-import LayoutHeader from './LayoutHeader.vue';
+import LayoutHeader from '../LayoutHeader.vue';
 import { saveProcess, deployProcess, getNewVerProcess } from '@/api/process';
-import FormBaseSetting from '@/views/admin/layout/FormBaseSetting.vue';
+import FormBaseSetting from './FormBaseSetting.vue';
 import FormDesign from '@/views/admin/layout/FormDesign.vue';
 import ProcessDesign from '@/views/admin/layout/ProcessDesign.vue';
 import FormProSetting from '@/views/admin/layout/FormProSetting.vue';
-import MobilePreview from './layout/FormDesignMobilePreview.vue';
+import MobilePreview from '../layout/FormDesignMobilePreview.vue';
+import { ElMessage } from 'element-plus';
+import { checkValueKey } from '@/api/operation';
 
 export default {
   name: 'FormProcessDesign',
@@ -66,7 +68,7 @@ export default {
       validStep: 0,
       timer: null,
       loading: false,
-      activeSelect: 'formSetting',
+      activeSelect: 'baseSetting',
       validVisible: false,
       isSave: false,
       validResult: {},
@@ -109,6 +111,17 @@ export default {
       }
     },
   },
+  watch: {
+    async activeSelect(val, oldVal) {
+      if (oldVal === 'baseSetting') {
+        const err = this.$refs.baseSetting.validate();
+        if (err.length) {
+          this.activeSelect = oldVal;
+          ElMessage.warning('请将基础信息填写完毕');
+        }
+      }
+    },
+  },
   created() {
     this.showValiding();
     let formId = this.$route.query.code;
@@ -141,7 +154,6 @@ export default {
     },
     loadFormInfo(formId) {
       this.loading = true;
-      console.log('!!', formId);
       getNewVerProcess(formId)
         .then((rsp) => {
           this.loading = false;
@@ -261,6 +273,8 @@ export default {
       if (this.validResult.success) {
         this.doPublish();
       } else {
+        this.validResult.errs =
+          this.$refs[this.validComponents[this.validStep]].validate();
         this.activeSelect = this.validComponents[this.validStep];
         this.validVisible = false;
       }
@@ -276,11 +290,13 @@ export default {
     publishProcess() {
       this.validateDesign();
     },
-    doSave(call) {
+    async doSave(call) {
       this.valids = this.$refs.baseSetting.validate();
       if (Array.isArray(this.valids) && this.valids.length === 0) {
         let modelData = this.getDataFromStore();
+        const checkModelData = this.getCheckModelData();
         this.loading = true;
+        const res = await checkValueKey(checkModelData);
         saveProcess(modelData)
           .then((rsp) => {
             this.loading = false;
@@ -304,7 +320,8 @@ export default {
     getDataFromStore() {
       return {
         formId: this.setup.formId,
-        formName: this.setup.formName,
+        formName: this.setup.operationType + this.setup.formName,
+        enterpriseName: this.setup.enterpriseName,
         logo: JSON.stringify(this.setup.logo),
         settings: JSON.stringify(this.setup.settings),
         groupId: this.setup.groupId,
@@ -314,10 +331,18 @@ export default {
         remark: this.setup.remark,
       };
     },
+    getCheckModelData() {
+      return {
+        operationType: this.setup.operationType,
+        enterpriseName: this.setup.enterpriseName,
+        formItems: this.setup.formItems,
+        progress: this.setup.process,
+      };
+    },
     createReload(groupId, formId) {
       if (!this.$isNotEmpty(this.$route.query.code)) {
         window.location.replace(
-          `${window.location.origin}/#/admin/design?groupId=${groupId}&code=${formId}`
+          `${window.location.origin}/#/admin/designForOperation?groupId=${groupId}&code=${formId}`
         );
         window.location.reload();
       }

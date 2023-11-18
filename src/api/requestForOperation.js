@@ -6,13 +6,13 @@ globalProps.$axios = axios;
 // globalProps.BASE_URL =
 //   `http://${
 //     process.env.NODE_ENV === 'development' ? '172.16.16.9' : '172.16.16.9'
-//   }:10000` + '/businessApi';
+//   }:32200` + '/businessApi';
 console.log('注入请求地址');
 const service = axios.create({
   headers: {
     Authorization: 'Bearer testSec_1_1',
   },
-  baseURL: '/businessApi',
+  baseURL: '/outer',
   timeout: 50000,
 });
 

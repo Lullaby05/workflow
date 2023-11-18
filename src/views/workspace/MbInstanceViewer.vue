@@ -189,7 +189,7 @@ export default {
     },
     getEnableEditForm(forms, fields) {
       forms.forEach(f => {
-        if (f.name === 'SpanLayout') {
+        if (f.name === 'SpanLayout' || f.name === 'ModuleBlock') {
           this.getEnableEditForm(f.props.items, fields)
         } else if (f.name === 'TableList'){
           fields.push(f.id)

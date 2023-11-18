@@ -180,7 +180,7 @@ export default {
   methods: {
     getItems(options, items){
       items.forEach(item => {
-        if (item.name === 'SpanLayout'){
+        if (item.name === 'SpanLayout' || item.name === 'ModuleBlock'){
           this.getItems(options, item.props.items)
         }else {
           options.push(item)

@@ -5,15 +5,29 @@
         <span @click="libSelect = 0">组件库</span>
       </div>
       <div>
-        <div class="components" v-for="(group, i) in baseComponents" :key="i">
+        <div
+          class="components"
+          v-for="(group, i) in baseComponents"
+          :key="i"
+        >
           <p>{{ group.name }}</p>
           <ul>
-            <draggable class="drag" :list="group.components" item-key="id" :sort="false"
-                       :group="{ name: 'form', pull: 'clone', put: false}"
-                        @start="isStart = true" @end="isStart = false" :clone="clone">
-              <template #item="{element}">
+            <draggable
+              class="drag"
+              :list="group.components"
+              item-key="id"
+              :sort="false"
+              :group="{ name: 'form', pull: 'clone', put: false }"
+              @start="isStart = true"
+              @end="isStart = false"
+              :clone="clone"
+            >
+              <template #item="{ element }">
                 <li>
-                  <icon :name="element.icon" style="width: 12px; height: 12px"></icon>
+                  <icon
+                    :name="element.icon"
+                    style="width: 12px; height: 12px"
+                  ></icon>
                   <span>{{ element.title }}</span>
                 </li>
               </template>
@@ -26,40 +40,89 @@
     <el-main class="layout-main">
       <div class="tool-nav">
         <div>
-          <el-tooltip class="item" effect="dark" content="移动端" placement="bottom-start">
-            <icon :name="`el-icon-cellphone ${showMobile ? 'select' : ''}`" @click="showMobile = true"></icon>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="移动端"
+            placement="bottom-start"
+          >
+            <icon
+              :name="`el-icon-cellphone ${showMobile ? 'select' : ''}`"
+              @click="showMobile = true"
+            ></icon>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="PC端" placement="bottom-start">
-            <icon :name="`el-icon-monitor ${!showMobile ? 'select' : ''}`" @click="showMobile = false"></icon>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="PC端"
+            placement="bottom-start"
+          >
+            <icon
+              :name="`el-icon-monitor ${!showMobile ? 'select' : ''}`"
+              @click="showMobile = false"
+            ></icon>
           </el-tooltip>
         </div>
         <div>
-          <el-tooltip class="item" effect="dark" content="预览表单" placement="bottom-start">
-            <div style="display: flex; align-items: center; cursor: pointer" @click="viewForms">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="预览表单"
+            placement="bottom-start"
+          >
+            <div
+              style="display: flex; align-items: center; cursor: pointer"
+              @click="viewForms"
+            >
               <icon name="el-icon-view"></icon>
               <span style="font-size: 13px; color: #666666">预览表单</span>
             </div>
           </el-tooltip>
         </div>
       </div>
-      <div class="work-form"  @click="release">
+      <div
+        class="work-form"
+        @click="release"
+      >
         <div :class="{ mobile: showMobile, pc: !showMobile }">
           <div :class="{ bd: showMobile }">
             <div :class="{ 'form-content': showMobile }">
               <div class="form">
-                <div class="tip" v-show="forms.length === 0 && !isStart">
+                <div
+                  class="tip"
+                  v-show="forms.length === 0 && !isStart"
+                >
                   👈 请在左侧选择控件并拖至此处
                 </div>
-                <draggable class="drag-from" item-key="id" v-model="forms" v-bind="dragProps"
-                           :component-data="{tag: 'div', type: 'transition-group'}"
-                           @start="drag = true; selectFormItem = null" @end="drag = false">
-                  <template #item="{element, index}">
-                    <div class="form-item" @click.stop="selectItem(element)" :style="getSelectedClass(element)">
+                <draggable
+                  class="drag-from"
+                  item-key="id"
+                  v-model="forms"
+                  v-bind="dragProps"
+                  :component-data="{ tag: 'div', type: 'transition-group' }"
+                  @start="
+                    drag = true;
+                    selectFormItem = null;
+                  "
+                  @end="drag = false"
+                >
+                  <template #item="{ element, index }">
+                    <div
+                      class="form-item"
+                      @click.stop="selectItem(element)"
+                      :style="getSelectedClass(element)"
+                    >
                       <div class="form-header">
-                        <p><span v-if="element.props.required">*</span>{{ element.title }}</p>
+                        <p>
+                          <span v-if="element.props.required">*</span
+                          >{{ element.title }}
+                        </p>
                         <div class="option">
                           <!--<icon name="el-icon-copy-document" @click="copy"></icon>-->
-                           <icon name="el-icon-close" @click="del(index)"></icon>
+                          <icon
+                            name="el-icon-close"
+                            @click="del(index)"
+                          ></icon>
                         </div>
                         <form-design-render :config="element" />
                       </div>
@@ -74,8 +137,15 @@
     </el-main>
 
     <el-aside class="layout-param">
-      <div class="tool-nav-r" v-if="selectFormItem">
-        <icon :key="selectFormItem.icon" :name="selectFormItem.icon" style="margin-right: 5px; font-size: medium"></icon>
+      <div
+        class="tool-nav-r"
+        v-if="selectFormItem"
+      >
+        <icon
+          :key="selectFormItem.icon"
+          :name="selectFormItem.icon"
+          style="margin-right: 5px; font-size: medium"
+        ></icon>
         <span>{{ selectFormItem.title }}</span>
       </div>
       <div v-if="!selectFormItem || forms.length === 0">
@@ -83,38 +153,89 @@
           <icon name="el-icon-tickets"></icon>
           表单联动
         </div>
-        <form-config/>
+        <form-config />
       </div>
-      <div style="text-align:left; padding: 10px" v-else>
-        <form-component-config :key="selectFormItem.id"/>
+      <div
+        style="text-align: left; padding: 10px"
+        v-else
+      >
+        <form-component-config :key="selectFormItem.id" />
       </div>
     </el-aside>
-    <w-dialog clickClose width="750px" :border="false" @ok="doPrint" title="打印预览" okText="打印" v-model="viewPrintVisible">
-      <div id="print" v-if="viewPrintVisible" v-html="printContent"></div>
+    <w-dialog
+      clickClose
+      width="750px"
+      :border="false"
+      @ok="doPrint"
+      title="打印预览"
+      okText="打印"
+      v-model="viewPrintVisible"
+    >
+      <div
+        id="print"
+        v-if="viewPrintVisible"
+        v-html="printContent"
+      ></div>
     </w-dialog>
-    <w-dialog clickClose width="700px" :showFooter="false" :border="false" title="表单预览" v-model="viewFormVisible">
+    <w-dialog
+      clickClose
+      width="700px"
+      :showFooter="false"
+      :border="false"
+      title="表单预览"
+      v-model="viewFormVisible"
+    >
       <template #title>
         <div>
           <span>表单预览</span>
-          <el-radio-group style="margin: 0 30px" v-model="forViewMode">
+          <el-radio-group
+            style="margin: 0 30px"
+            v-model="forViewMode"
+          >
             <el-radio label="PC">电脑端</el-radio>
             <el-radio label="MOBILE">手机端（需保存才生效）</el-radio>
           </el-radio-group>
-          <el-popover placement="bottom" title="手机扫码预览表单" width="195" trigger="click">
-            <qrcode-vue :value="qrCode" :size="170" level="H"/>
+          <el-popover
+            placement="bottom"
+            title="手机扫码预览表单"
+            width="195"
+            trigger="click"
+          >
+            <qrcode-vue
+              :value="qrCode"
+              :size="170"
+              level="H"
+            />
             <template #reference>
               <el-link type="primary">扫码预览</el-link>
             </template>
           </el-popover>
-          <el-link v-if="customPrint" style="margin-left: 30px" type="primary" @click="showPrint">打印预览</el-link>
+          <el-link
+            v-if="customPrint"
+            style="margin-left: 30px"
+            type="primary"
+            @click="showPrint"
+            >打印预览</el-link
+          >
         </div>
       </template>
       <div v-show="forViewMode === 'PC'">
-        <form-render ref="form" v-model="formData" :forms="formsTemp" mode="PC" :config="formConfigTemp"/>
+        <form-render
+          ref="form"
+          v-model="formData"
+          :forms="formsTemp"
+          mode="PC"
+          :config="formConfigTemp"
+        />
       </div>
       <div v-if="forViewMode === 'MOBILE'">
         <div style="display: flex; justify-content: center">
-          <iframe width="400px" height="700px" frameborder="0" :src="`/#/admin/design?code=${$route.query.code}&mobilePreview=true`"></iframe>
+          <iframe
+            width="400px"
+            height="700px"
+            frameborder="0"
+            :src="`/#/admin/design?code=${$route.query.code}&mobilePreview=true`"
+          ></iframe>
         </div>
       </div>
     </w-dialog>
@@ -122,18 +243,18 @@
 </template>
 
 <script>
-import QrcodeVue from 'qrcode.vue'
-import draggable from 'vuedraggable'
-import FormRender from '@/views/common/form/FormRender.vue'
-import FormDesignRender from '@/views/admin/layout/form/FormDesignRender.vue'
-import FormComponentConfig from '@/views/common/form/FormComponentConfig.vue'
-import { baseComponents } from '@/views/common/form/ComponentsConfigExport'
-import MobilePreview from './FormDesignMobilePreview.vue'
-import Editor from '../../../components/common/Editor.vue'
-import FormConfig from "../../common/form/config/FormConfig.vue";
-import Print, { bindVar, getVal } from '@/utils/print'
+import QrcodeVue from 'qrcode.vue';
+import draggable from 'vuedraggable';
+import FormRender from '@/views/common/form/FormRender.vue';
+import FormDesignRender from '@/views/admin/layout/form/FormDesignRender.vue';
+import FormComponentConfig from '@/views/common/form/FormComponentConfig.vue';
+import { baseComponents } from '@/views/common/form/ComponentsConfigExport';
+import MobilePreview from './FormDesignMobilePreview.vue';
+import Editor from '../../../components/common/Editor.vue';
+import FormConfig from '../../common/form/config/FormConfig.vue';
+import Print, { bindVar, getVal } from '@/utils/print';
 
-const varExp = /\${\w+}/gi
+const varExp = /\${\w+}/gi;
 
 export default {
   name: 'FormDesign',
@@ -145,12 +266,12 @@ export default {
     FormRender,
     MobilePreview,
     QrcodeVue,
-    FormConfig
+    FormConfig,
   },
   data() {
     return {
       formConfigTemp: {},
-      formsTemp:{},
+      formsTemp: {},
       formData: {},
       libSelect: 0,
       printContent: '',
@@ -163,74 +284,85 @@ export default {
       select: null,
       drag: false,
       qrcode: null,
-      dragProps:{
+      dragProps: {
         animation: 300,
-        group: "form",
+        group: 'form',
         disabled: false,
         sort: true,
-        ghostClass: "choose",
-      }
-    }
+        ghostClass: 'choose',
+      },
+    };
   },
   computed: {
-    formConfig(){
-      return this.$store.state.design.formConfig
+    formConfig() {
+      return this.$store.state.design.formConfig;
     },
-    qrCode(){
-      return window.location.href + '&mobilePreview=true'
+    qrCode() {
+      return window.location.href + '&mobilePreview=true';
     },
     formatFormData() {
-      let val = {}
-      getVal(this.formData, this.forms, val)
-      return val
+      let val = {};
+      getVal(this.formData, this.forms, val);
+      return val;
     },
     forms: {
-      get(){
-        return this.$store.state.design.formItems
+      get() {
+        return this.$store.state.design.formItems;
       },
-      set(val){
-        this.$store.state.design.formItems = val
-      }
+      set(val) {
+        // 这里是添加到最外层的表单项
+        const moduleBlockMap = [];
+        // 只需要添加最外层的ModuleBlock
+        val.forEach((item) => {
+          if (item.name === 'ModuleBlock') {
+            // 如果是新增的数据是ModuleBlock则将该表单格式化后放入ModuleBlockMap
+            moduleBlockMap.push({ dictKey: item.title, dictValue: item.id });
+          }
+        });
+        // 最后将这个map放入store中
+        this.$store.commit('setCertProcessFormKeys', moduleBlockMap);
+        this.$store.state.design.formItems = val;
+      },
     },
     customPrint() {
-      return this.$store.state.design.settings.customPrint
+      return this.$store.state.design.settings.customPrint;
     },
     printTemplate() {
-      return this.$store.state.design.settings.printTemplate || ''
+      return this.$store.state.design.settings.printTemplate || '';
     },
     selectFormItem: {
       get() {
-        return this.$store.state.selectFormItem
+        return this.$store.state.selectFormItem;
       },
       set(val) {
-        this.$store.state.selectFormItem = val
+        this.$store.state.selectFormItem = val;
       },
     },
     nodeMap() {
-      return this.$store.state.nodeMap
+      return this.$store.state.nodeMap;
     },
   },
   methods: {
-    release(){
-      this.selectFormItem = null
+    release() {
+      this.selectFormItem = null;
     },
     copy(node, index) {
-      this.form.splice(index + 1, 0, Object.assign({}, node))
+      this.form.splice(index + 1, 0, Object.assign({}, node));
     },
     getId() {
       return (
         'field' +
         (Math.floor(Math.random() * (99999 - 10000)) + 10000).toString() +
         new Date().getTime().toString().substring(5)
-      )
+      );
     },
     showPrint() {
-      this.viewPrintVisible = true
-      let val = {}
-      getVal(this.formatFormData, this.forms, val)
+      this.viewPrintVisible = true;
+      let val = {};
+      getVal(this.formatFormData, this.forms, val);
       this.$nextTick(() => {
-        bindVar(this.printTemplate, val, 'print')
-      })
+        bindVar(this.printTemplate, val, 'print');
+      });
     },
     del(index) {
       this.$confirm(
@@ -242,29 +374,34 @@ export default {
           type: 'warning',
         }
       ).then(() => {
-        if (this.forms[index].name === 'SpanLayout') {
+        if (
+          this.forms[index].name === 'SpanLayout' ||
+          this.forms[index].name === 'ModuleBlock'
+        ) {
+          // 删除之前先根据id删除processFormKey中的下拉
+          this.$store.commit('clearCertProcessFormKey', this.forms[index].id);
           //删除的是分栏则遍历删除分栏内所有子组件
           this.forms[index].props.items.forEach((item) => {
-            this.removeFormItemAbout(item)
-          })
-          this.forms[index].props.items.length = 0
+            this.removeFormItemAbout(item);
+          });
+          this.forms[index].props.items.length = 0;
         } else {
-          this.removeFormItemAbout(this.forms[index])
+          this.removeFormItemAbout(this.forms[index]);
         }
-        this.forms.splice(index, 1)
-      })
+        this.forms.splice(index, 1);
+      });
     },
     async removeFormItemAbout(item) {
       this.nodeMap.forEach((node) => {
         //搜寻条件，进行移除
         if (node.type === 'CONDITION') {
           node.props.groups.forEach((group) => {
-            let i = group.cids.remove(item.id)
+            let i = group.cids.remove(item.id);
             if (i > -1) {
               //从子条件移除
-              group.conditions.splice(i, 1)
+              group.conditions.splice(i, 1);
             }
-          })
+          });
         }
         //搜寻权限，进行移除
         if (
@@ -272,74 +409,78 @@ export default {
           node.type === 'APPROVAL' ||
           node.type === 'CC'
         ) {
-          node.props.formPerms.removeByKey('id', item.id)
-          if (node.props.formUser === item.id) {
-            node.props.formUser = ''
+          node.props.formPerms.removeByKey('id', item.id);
+          if (node.props.formUser && node.props.formUser.includes(item.id)) {
+            node.props.formUser = [];
           }
         }
-      })
+      });
     },
     clone(obj) {
-      const clone = JSON.parse(JSON.stringify(obj))
-      clone.id = this.getId()
-      return clone
+      const clone = JSON.parse(JSON.stringify(obj));
+      clone.id = this.getId();
+      return clone;
     },
     viewForms() {
-      this.forViewMode = 'PC'
-      this.viewFormVisible = true
-      this.formData = {}
-      this.formsTemp = this.$deepCopy(this.forms)
-      this.formConfigTemp = this.$deepCopy(this.formConfig)
+      this.forViewMode = 'PC';
+      this.viewFormVisible = true;
+      this.formData = {};
+      this.formsTemp = this.$deepCopy(this.forms);
+      this.formConfigTemp = this.$deepCopy(this.formConfig);
     },
     selectItem(cp) {
-      this.selectFormItem = cp
+      this.selectFormItem = cp;
     },
     getSelectedClass(cp) {
       return this.selectFormItem && this.selectFormItem.id === cp.id
         ? 'border-left: 4px solid #409eff'
-        : ''
+        : '';
     },
     validateItem(err, titleSet, item) {
-      if (titleSet.has(item.title) && item.name !== 'SpanLayout') {
-        err.push(`表单 ${item.title} 名称重复`)
+      if (
+        titleSet.has(item.title) &&
+        item.name !== 'SpanLayout' &&
+        item.name !== 'ModuleBlock'
+      ) {
+        err.push(`表单 ${item.title} 名称重复`);
       }
-      titleSet.add(item.title)
+      titleSet.add(item.title);
       if (item.name === 'SelectInput' || item.name === 'MultipleSelect') {
         if (item.props.options.length === 0) {
-          err.push(`${item.title} 未设置选项`)
+          err.push(`${item.title} 未设置选项`);
         }
       } else if (item.name === 'TableList') {
         if (item.props.columns.length === 0) {
-          err.push(`明细表 ${item.title} 内未添加组件`)
+          err.push(`明细表 ${item.title} 内未添加组件`);
         }
       } else if (item.name === 'SpanLayout') {
         if (item.props.items.length === 0) {
-          err.push('分栏内未添加组件')
+          err.push('分栏内未添加组件');
         } else {
           item.props.items.forEach((sub) =>
             this.validateItem(err, titleSet, sub)
-          )
+          );
         }
       }
     },
     validate() {
-      let err = []
+      let err = [];
       if (this.forms.length > 0) {
-        let titleSet = new Set()
+        let titleSet = new Set();
         this.forms.forEach((item) => {
           //主要校验表格及分栏/选择器/表单名称/是否设置
-          this.validateItem(err, titleSet, item)
-        })
+          this.validateItem(err, titleSet, item);
+        });
       } else {
-        err.push('表单为空，请添加组件')
+        err.push('表单为空，请添加组件');
       }
-      return err
+      return err;
     },
     doPrint() {
-      Print(document.getElementById('print'))
+      Print(document.getElementById('print'));
     },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -353,7 +494,7 @@ iframe {
 }
 
 .process-form {
-   :deep(.el-form-item__label) {
+  :deep(.el-form-item__label) {
     padding: 0 0;
   }
 }
@@ -441,7 +582,7 @@ iframe {
   }
 }
 
- :deep(.el-main) {
+:deep(.el-main) {
   padding: 0;
 }
 
@@ -459,7 +600,7 @@ iframe {
       text-align: left;
 
       :deep(.icon) {
-        margin-right: 10px
+        margin-right: 10px;
       }
     }
 
@@ -467,7 +608,7 @@ iframe {
       float: right;
 
       :deep(.icon) {
-        margin-left: 10px
+        margin-left: 10px;
       }
     }
 
@@ -496,7 +637,8 @@ iframe {
         height: calc(100vh - 190px);
         background-color: rgb(245, 246, 246);
 
-        .form-item, li {
+        .form-item,
+        li {
           cursor: grab;
           background: #ffffff;
           padding: 10px;
@@ -539,7 +681,8 @@ iframe {
             display: inline-block;
             max-height: 640px;
 
-            .form-item, li {
+            .form-item,
+            li {
               border: 1px solid #ffffff;
               list-style: none;
               background: #ffffff;
@@ -571,7 +714,6 @@ iframe {
       }
     }
   }
-
 }
 
 .layout-param {
@@ -588,11 +730,13 @@ iframe {
     background: #fafafb;
     border-bottom: 1px solid #ebecee;
   }
-  .title{
+
+  .title {
     font-style: normal;
     display: flex;
     align-items: center;
-    .icon{
+
+    .icon {
       margin-right: 10px;
     }
   }

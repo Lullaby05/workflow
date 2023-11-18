@@ -1,67 +1,134 @@
 <template>
-  <div v-loading="loading" class="preview">
+  <div
+    v-loading="loading"
+    class="preview"
+  >
     <div v-if="instanceData.instanceId">
       <div class="title">
         <div v-if="instanceData.staterUser">
-          <avatar showY :name="instanceData.staterUser.name" :src="instanceData.staterUser.avatar"/>
+          <avatar
+            showY
+            :name="instanceData.staterUser.name"
+            :src="instanceData.staterUser.avatar"
+          />
         </div>
         <div class="title-info">
           <div class="name">
-            <span style="margin-right: 15px; color:#000;">{{ instanceData.processDefName }}</span>
+            <span style="margin-right: 15px; color: #000">{{
+              instanceData.processDefName
+            }}</span>
             <el-tag :type="status.type">{{ status.text }}</el-tag>
           </div>
           <div class="code">
-            <span style="color:#6c6c6c;">编号：</span>
+            <span style="color: #6c6c6c">编号：</span>
             <span class="id">{{ instanceData.instanceId }}</span>
           </div>
-          <img v-if="status.img" :src="status.img" :style="isMobile ? 'right: -20px':''">
+          <img
+            v-if="status.img"
+            :src="status.img"
+            :style="isMobile ? 'right: -20px' : ''"
+          />
           <!--          <div style="font-size: 13px; color: rgb(142 141 141)" v-if="instanceData.staterUser">
                         由 {{instanceData.staterUser.name}} 在{{instanceData.startTime}}发起
                       </div>-->
         </div>
-        <div class="extend-options" v-if="!isMobile">
-          <el-tooltip class="item" effect="dark" content="打印" placement="top-start">
-            <icon name="el-icon-printer" @click="print"></icon>
+        <div
+          class="extend-options"
+          v-if="!isMobile"
+        >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="打印"
+            placement="top-start"
+          >
+            <icon
+              name="el-icon-printer"
+              @click="print"
+            ></icon>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="手机扫码" placement="top-start">
-            <icon name="iconfont icon-iconfonterweima" @click="scanQr"></icon>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="手机扫码"
+            placement="top-start"
+          >
+            <icon
+              name="iconfont icon-iconfonterweima"
+              @click="scanQr"
+            ></icon>
           </el-tooltip>
         </div>
       </div>
       <div class="form">
-        <form-render class="process-form" :config="instanceData.formConfig" :mode="isMobile ? 'MOBILE' : 'PC'" ref="form" :forms="instanceData.formItems" v-model="instanceData.formData"/>
+        <form-render
+          class="process-form"
+          :config="instanceData.formConfig"
+          :mode="isMobile ? 'MOBILE' : 'PC'"
+          ref="form"
+          :forms="instanceData.formItems"
+          v-model="instanceData.formData"
+        />
       </div>
       <div class="process">
-        <process-progress :result="instanceData.result" :status="instanceData.status" :progress="instanceData.progress"/>
+        <process-progress
+          :result="instanceData.result"
+          :status="instanceData.status"
+          :progress="instanceData.progress"
+        />
       </div>
     </div>
-    <div class="actions" v-if="instanceData.result === 'RUNNING'">
+    <div
+      class="actions"
+      v-if="isNeedExamine && instanceData.result === 'RUNNING'"
+    >
       <div style="position: relative; width: 100%">
-        <div class="comment" @click="comment">
+        <div
+          class="comment"
+          @click="comment"
+        >
           <icon name="el-icon-chatlineround"></icon>
           <div>评论</div>
         </div>
         <template v-if="instanceData.operationPerm">
-          <div v-if="activeTasks.length > 0 && showMore" class="action-more">
+          <div
+            v-if="activeTasks.length > 0 && showMore"
+            class="action-more"
+          >
             <el-dropdown>
-              <el-button type="primary" link>
+              <el-button
+                type="primary"
+                link
+              >
                 更多<icon name="el-icon-arrowdown"></icon>
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-if="opPerms?.transfer?.show" @click="handler('transfer')">
+                  <el-dropdown-item
+                    v-if="opPerms?.transfer?.show"
+                    @click="handler('transfer')"
+                  >
                     <icon name="iconfont icon-zhuanyi-16"></icon>
-                    {{opPerms?.transfer?.alisa}}
+                    {{ opPerms?.transfer?.alisa }}
                   </el-dropdown-item>
-                  <el-dropdown-item v-if="opPerms?.recall?.show" @click="handler('recall')">
+                  <el-dropdown-item
+                    v-if="opPerms?.recall?.show"
+                    @click="handler('recall')"
+                  >
                     <icon name="el-icon-failed"></icon>
-                    {{opPerms?.recall?.alisa}}
+                    {{ opPerms?.recall?.alisa }}
                   </el-dropdown-item>
-                  <el-dropdown-item v-if="opPerms?.afterAdd?.show" @click="handler('afterAdd')">
+                  <el-dropdown-item
+                    v-if="opPerms?.afterAdd?.show"
+                    @click="handler('afterAdd')"
+                  >
                     <icon name="iconfont icon-zhaopinguanli"></icon>
-                    {{opPerms?.afterAdd?.alisa}}
+                    {{ opPerms?.afterAdd?.alisa }}
                   </el-dropdown-item>
-                  <el-dropdown-item v-if="enableCancel" @click.native="handler('cancel')">
+                  <el-dropdown-item
+                    v-if="enableCancel"
+                    @click.native="handler('cancel')"
+                  >
                     <icon name="el-icon-refreshleft"></icon>
                     撤销
                   </el-dropdown-item>
@@ -69,50 +136,109 @@
               </template>
             </el-dropdown>
           </div>
-          <div v-if="activeTasks.length > 0" class="ok-refuse">
-            <el-button size="small" type="danger" v-if="opPerms?.refuse?.show" round plain @click="handler('refuse')">{{opPerms?.refuse?.alisa}}</el-button>
-            <el-button size="small" type="primary" v-if="opPerms?.agree?.show" round @click="handler('agree')">{{opPerms?.agree?.alisa}}</el-button>
+          <div
+            v-if="activeTasks.length > 0"
+            class="ok-refuse"
+          >
+            <el-button
+              size="small"
+              type="danger"
+              v-if="opPerms?.refuse?.show"
+              round
+              plain
+              @click="handler('refuse')"
+              >{{ opPerms?.refuse?.alisa }}</el-button
+            >
+            <el-button
+              size="small"
+              type="primary"
+              v-if="opPerms?.agree?.show"
+              round
+              @click="handler('agree')"
+              >{{ opPerms?.agree?.alisa }}</el-button
+            >
           </div>
         </template>
-        <div class="cancel" v-else-if="enableCancel">
-          <el-button type="primary" link @click="handler('cancel')">
+        <div
+          class="cancel"
+          v-else-if="enableCancel"
+        >
+          <el-button
+            type="primary"
+            link
+            @click="handler('cancel')"
+          >
             <icon name="el-icon-refreshleft"></icon>
             撤销
           </el-button>
         </div>
-
       </div>
     </div>
-    <w-dialog v-model="printVisible" width="700px" title="打印预览" okText="打 印" @ok="doPrint">
+    <w-dialog
+      v-model="printVisible"
+      width="700px"
+      title="打印预览"
+      okText="打 印"
+      @ok="doPrint"
+    >
       <template #title>
         <div>
           <span>打印预览</span>
-          <el-radio-group style="margin: 0 30px" v-model="printCheck" @change="renderPrint" v-if="printTemplateConfig.customPrint">
+          <el-radio-group
+            style="margin: 0 30px"
+            v-model="printCheck"
+            @change="renderPrint"
+            v-if="printTemplateConfig.customPrint"
+          >
             <el-radio :label="false">默认模板</el-radio>
             <el-radio :label="true">自定义模板</el-radio>
           </el-radio-group>
         </div>
       </template>
-      <div v-if="printCheck" id="printDom" ref="print" v-html="printTemplateConfig.printTemplate"></div>
-      <default-printer v-else ref="print" :status="status" :instance="instanceData"/>
+      <div
+        v-if="printCheck"
+        id="printDom"
+        ref="print"
+        v-html="printTemplateConfig.printTemplate"
+      ></div>
+      <default-printer
+        v-else
+        ref="print"
+        :status="status"
+        :instance="instanceData"
+      />
     </w-dialog>
-    <w-dialog v-model="actionVisible" :width="isMobile ? '100%' : '500px'" :title="actionDesc.title" okText="提 交" @ok="doAction">
-      <process-action ref="action" @success="handlerOk" :form-data="formData" v-if="actionVisible"
-        :active-tasks="activeTasks" :instance="instanceData" :action="actionType" :action-desc="actionDesc"/>
+    <w-dialog
+      v-model="actionVisible"
+      :width="isMobile ? '100%' : '500px'"
+      :title="actionDesc.title"
+      okText="提 交"
+      @ok="doAction"
+    >
+      <process-action
+        ref="action"
+        @success="handlerOk"
+        :form-data="formData"
+        v-if="actionVisible"
+        :active-tasks="activeTasks"
+        :instance="instanceData"
+        :action="actionType"
+        :action-desc="actionDesc"
+      />
     </w-dialog>
   </div>
 </template>
 
 <script>
-import FormRender from '@/views/common/form/FormRender.vue'
-import ProcessProgress from './ProcessProgress.vue'
-import ProcessAction from './ProcessAction.vue'
-import { getFormAndProcessProgress } from '@/api/processTask'
-import { getCustomPrintConfig } from '@/api/process'
-import moment from 'moment'
-import {showFailToast} from 'vant'
-import Print, { bindVar, getVal } from '@/utils/print'
-import DefaultPrinter from './DefaultPrinter.vue'
+import FormRender from '@/views/common/form/FormRender.vue';
+import ProcessProgress from './ProcessProgress.vue';
+import ProcessAction from './ProcessAction.vue';
+import { getFormAndProcessProgress } from '@/api/processTask';
+import { getCustomPrintConfig } from '@/api/process';
+import moment from 'moment';
+import { showFailToast } from 'vant';
+import Print, { bindVar, getVal } from '@/utils/print';
+import DefaultPrinter from './DefaultPrinter.vue';
 
 export default {
   name: 'ProcessInstancePreview',
@@ -126,117 +252,140 @@ export default {
       type: String,
       required: false,
     },
+    isNeedExamine: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     loginUser() {
-      return this.$store.state.loginUser
+      return this.$store.state.loginUser;
     },
-    isRootUser(){
-      return this.instanceData?.staterUser?.id === this.loginUser?.id
+    isRootUser() {
+      return this.instanceData?.staterUser?.id === this.loginUser?.id;
     },
-    enableCancel(){
+    enableCancel() {
       try {
-        return this.instanceData.externSetting.enableCancel
+        return this.instanceData.externSetting.enableCancel;
       } catch (e) {
-        return false
+        return false;
       }
     },
     isMobile() {
-      return window.screen.width < 450
+      return window.screen.width < 450;
     },
-    opPerms(){
-      const opPerms = this.instanceData.operationPerm || {}
-      for(let key in opPerms){
-        if (!opPerms[key]){
-          opPerms[key] = {alisa: '', show: false}
+    opPerms() {
+      const opPerms = this.instanceData.operationPerm || {};
+      for (let key in opPerms) {
+        if (!opPerms[key]) {
+          opPerms[key] = { alisa: '', show: false };
         }
       }
-      return opPerms
+      return opPerms;
     },
-    showMore(){
-      return this.opPerms?.transfer?.show || this.opPerms?.recall?.show
-              || this.opPerms?.afterAdd?.show || this.enableCancel
+    showMore() {
+      return (
+        this.opPerms?.transfer?.show ||
+        this.opPerms?.recall?.show ||
+        this.opPerms?.afterAdd?.show ||
+        this.enableCancel
+      );
     },
     formatFormData() {
-      let val = {}
-      getVal(this.instanceData.formData || {}, this.instanceData.formItems || [], val)
-      val.ownerDept = this.instanceData.starterDept
-      val.owner = this.instanceData.staterUser.name
-      val.startTime = this.instanceData.startTime
-      val.finishTime = this.instanceData.finishTime
-      val.code = this.instanceData.instanceId
-      return val
+      let val = {};
+      getVal(
+        this.instanceData.formData || {},
+        this.instanceData.formItems || [],
+        val
+      );
+      val.ownerDept = this.instanceData.starterDept;
+      val.owner = this.instanceData.staterUser.name;
+      val.startTime = this.instanceData.startTime;
+      val.finishTime = this.instanceData.finishTime;
+      val.code = this.instanceData.instanceId;
+      return val;
     },
     status() {
       let status = {
-        text: this.instanceData.status
-      }
-      switch (this.instanceData.result){
+        text: this.instanceData.status,
+      };
+      switch (this.instanceData.result) {
         case 'RUNNING':
         case 'COMPLETE':
-          status.type = ''
-          status.img = null
-          break
+          status.type = '';
+          status.img = null;
+          break;
         case 'PASS':
-          status.type = 'success'
-          status.img = this.$getLocalRes('agree.png')
-          break
+          status.type = 'success';
+          status.img = this.$getLocalRes('agree.png');
+          break;
         case 'CANCEL':
-          status.type = 'info'
-          status.img = this.$getLocalRes('recall.png')
-          break
+          status.type = 'info';
+          status.img = this.$getLocalRes('recall.png');
+          break;
         case 'REFUSE':
-          status.type = 'danger'
-          status.img = this.$getLocalRes('refuse.png')
-          break
+          status.type = 'danger';
+          status.img = this.$getLocalRes('refuse.png');
+          break;
       }
-      return status
+      return status;
     },
     activeTasks() {
       let tasks = [];
       (this.instanceData.progress || []).forEach((task) => {
         if (task.users) {
           task.users.forEach((tk) => {
-            if (tk.user && tk.user.id === this.loginUser.id && !this.$isNotEmpty(tk.finishTime)) {
-              tasks.push(tk)
+            if (
+              tk.user &&
+              tk.user.id === this.loginUser.id &&
+              !this.$isNotEmpty(tk.finishTime)
+            ) {
+              tasks.push(tk);
             }
-          })
+          });
         } else {
-          if (task.user && task.user.id === this.loginUser.id && !this.$isNotEmpty(task.finishTime)) {
-            tasks.push(task)
+          if (
+            task.user &&
+            task.user.id === this.loginUser.id &&
+            !this.$isNotEmpty(task.finishTime)
+          ) {
+            tasks.push(task);
           }
         }
-      })
-      return tasks
+      });
+      return tasks;
     },
     formData() {
       //过滤出可编辑的表单字段
-      let formFields = []
-      let formData = {}
-      this.getEnableEditForm(this.instanceData.formItems || [], formFields)
+      let formFields = [];
+      let formData = {};
+      this.getEnableEditForm(this.instanceData.formItems || [], formFields);
       formFields.forEach((k) => {
-        formData[k] = this.instanceData.formData[k]
-      })
-      return formData
+        formData[k] = this.instanceData.formData[k];
+      });
+      return formData;
     },
     actionDesc() {
       switch (this.actionType) {
         case 'agree':
-          return {tip: this.isRootUser? '备注':'审批意见', title: this.isRootUser?'提交审批':'同意审批'};
+          return {
+            tip: this.isRootUser ? '备注' : '审批意见',
+            title: this.isRootUser ? '提交审批' : '同意审批',
+          };
         case 'refuse':
-          return { tip: '驳回意见', title: '拒绝审批' }
+          return { tip: '驳回意见', title: '拒绝审批' };
         case 'comment':
-          return { tip: '评论内容', title: '添加评论' }
+          return { tip: '评论内容', title: '添加评论' };
         case 'beforeAdd':
-          return { tip: '加签意见', title: '前方增加审批人' }
+          return { tip: '加签意见', title: '前方增加审批人' };
         case 'afterAdd':
-          return { tip: '加签意见', title: '后方增加审批人' }
+          return { tip: '加签意见', title: '后方增加审批人' };
         case 'transfer':
-          return { tip: '转交意见', title: '转交给其他人审批' }
+          return { tip: '转交意见', title: '转交给其他人审批' };
         case 'cancel':
-          return { tip: '撤销原因', title: '撤销当前流程' }
+          return { tip: '撤销原因', title: '撤销当前流程' };
         case 'recall':
-          return { tip: '退回意见', title: '退回到之前节点' }
+          return { tip: '退回意见', title: '退回到之前节点' };
       }
     },
   },
@@ -253,11 +402,11 @@ export default {
         customPrint: false,
         printTemplate: '',
       },
-    }
+    };
   },
   mounted() {
-    this.getInstanceData()
-    this.getPrintConfig()
+    this.getInstanceData();
+    this.getPrintConfig();
   },
   methods: {
     //根据退回进行分段拆解
@@ -265,49 +414,51 @@ export default {
       //提取分段时间点
       let points = progress
         .filter((p) => p.result === 'recall')
-        .map((p) => new Date(p.startTime).getTime())
+        .map((p) => new Date(p.startTime).getTime());
       if (points.length > 0) {
-        let blocks = [] //分段流程块组
-        let pointer = 0 //定点索引
-        points.push(new Date().getTime())
+        let blocks = []; //分段流程块组
+        let pointer = 0; //定点索引
+        points.push(new Date().getTime());
         points.forEach((point) => {
-          let block = []
+          let block = [];
           for (let i = pointer; i < progress.length; i++) {
-            let startTime = new Date(progress[i].startTime).getTime()
+            let startTime = new Date(progress[i].startTime).getTime();
             if (startTime <= point) {
-              block.push(progress[i])
+              block.push(progress[i]);
             } else {
-              pointer = i
-              break
+              pointer = i;
+              break;
             }
           }
           //存段
-          blocks.push(block)
-        })
+          blocks.push(block);
+        });
         //按段处理
-        let processNodes = []
-        blocks.forEach((block) => processNodes.push(...this.mergeTask(block)))
-        return processNodes
+        let processNodes = [];
+        blocks.forEach((block) => processNodes.push(...this.mergeTask(block)));
+        return processNodes;
       }
-      return this.mergeTask(progress)
+      return this.mergeTask(progress);
     },
     //合并活动节点，此处执行一段合并算法用来处理退回导致节点重合的问题
     mergeTask(progress) {
-      let merge = []
+      let merge = [];
       progress.forEach((pg) => {
-        let i = merge.findIndex((n) => n.nodeId === pg.nodeId && n.startTime === pg.startTime)
+        let i = merge.findIndex(
+          (n) => n.nodeId === pg.nodeId && n.startTime === pg.startTime
+        );
         if (i > -1) {
           //存在则合并到对象
           if (merge[i].users) {
             //已经合并过了
-            merge[i].finishTime = pg.finishTime
-            merge[i].users.push(pg)
+            merge[i].finishTime = pg.finishTime;
+            merge[i].users.push(pg);
             merge[i].result = this.getApprovalResult(
               merge[i],
               pg,
               pg.approvalMode
-            )
-            merge[i].comment = merge[i].comment.concat(pg.comment)
+            );
+            merge[i].comment = merge[i].comment.concat(pg.comment);
           } else {
             //没有就合并
             merge[i] = {
@@ -321,99 +472,99 @@ export default {
               finishTime: pg.finishTime,
               comment: merge[i].comment.concat(pg.comment),
               users: [merge[i], pg],
-            }
+            };
             merge[i].comment = merge[i].comment.sort(
               (a, b) => moment(a.createTime) - moment(b.createTime)
-            )
+            );
           }
         } else {
-          merge.push(pg)
+          merge.push(pg);
         }
-      })
-      return merge
+      });
+      return merge;
     },
     getInstanceData() {
-      this.loading = true
+      this.loading = true;
       getFormAndProcessProgress(this.instanceId, this.nodeId)
         .then((rsp) => {
-          this.loading = false
-          this.instanceData = rsp.data
-          this.instanceData.progress = this.splitByRecall(rsp.data.progress)
+          this.loading = false;
+          this.instanceData = rsp.data;
+          this.instanceData.progress = this.splitByRecall(rsp.data.progress);
         })
         .catch((err) => {
-          this.loading = false
-          this.$err(err, '获取审批实例数据失败')
-        })
+          this.loading = false;
+          this.$err(err, '获取审批实例数据失败');
+        });
     },
     getApprovalResult(oldVal, newVal, mode) {
       if (mode === 'OR') {
-        return newVal.result ? newVal.result : oldVal.result
+        return newVal.result ? newVal.result : oldVal.result;
       } else if (mode === 'AND') {
-        let rs = oldVal.result || newVal.result
-        return rs === 'recall' ? 'recall' : rs
+        let rs = oldVal.result || newVal.result;
+        return rs === 'recall' ? 'recall' : rs;
       } else {
-        return newVal.result
+        return newVal.result;
       }
     },
     comment() {
-      this.actionType = 'comment'
-      this.actionVisible = true
+      this.actionType = 'comment';
+      this.actionVisible = true;
     },
     handler(action) {
-      this.actionType = action
-      this.actionVisible = true
+      this.actionType = action;
+      this.actionVisible = true;
     },
     doAction() {
       if (this.actionType !== 'recall') {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.$refs.action.submitAction()
+            this.$refs.action.submitAction();
           } else {
-            this.actionVisible = false
+            this.actionVisible = false;
             if (this.isMobile) {
-              showFailToast('请完善表单')
+              showFailToast('请完善表单');
             } else {
-              this.$message.warning('请完善表单')
+              this.$message.warning('请完善表单');
             }
           }
-        })
+        });
       } else {
-        this.$refs.action.submitAction()
+        this.$refs.action.submitAction();
       }
     },
     print() {
-      this.printVisible = true
+      this.printVisible = true;
     },
     doPrint() {
-      Print(this.printCheck ? this.$refs.print : this.$refs.print.$el)
+      Print(this.printCheck ? this.$refs.print : this.$refs.print.$el);
     },
     scanQr() {
-      this.$message.warning('敬请期待')
+      this.$message.warning('敬请期待');
     },
     handlerOk() {
-      console.log('处理---handlerOk')
-      this.actionVisible = false
-      this.$emit('handler-after')
+      console.log('处理---handlerOk');
+      this.actionVisible = false;
+      this.$emit('handler-after');
     },
     getEnableEditForm(forms, fields) {
       forms.forEach((f) => {
-        if (f.name === 'SpanLayout') {
-          this.getEnableEditForm(f.props.items, fields)
-        } else if (f.name === 'TableList'){
-          fields.push(f.id)
+        if (f.name === 'SpanLayout' || f.name === 'ModuleBlock') {
+          this.getEnableEditForm(f.props.items, fields);
+        } else if (f.name === 'TableList') {
+          fields.push(f.id);
         } else if (f.perm === 'E') {
-          fields.push(f.id)
+          fields.push(f.id);
         }
-      })
+      });
     },
     getPrintConfig() {
       getCustomPrintConfig(this.instanceId)
         .then((rsp) => {
-          this.printTemplateConfig = rsp.data
+          this.printTemplateConfig = rsp.data;
         })
         .catch((err) => {
-          this.$err(err, '获取打印模板配置失败')
-        })
+          this.$err(err, '获取打印模板配置失败');
+        });
     },
     renderPrint(val) {
       if (val) {
@@ -422,13 +573,13 @@ export default {
             this.printTemplateConfig.printTemplate,
             this.formatFormData,
             'printDom'
-          )
-        })
+          );
+        });
       }
     },
   },
   emits: ['handler-after'],
-}
+};
 </script>
 
 <style lang="less" scoped>

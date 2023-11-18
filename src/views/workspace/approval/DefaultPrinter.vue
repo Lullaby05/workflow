@@ -105,7 +105,7 @@ export default {
   methods: {
     getItems(items, collects) {
       items.forEach((item) => {
-        if (item.name === 'SpanLayout') {
+        if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
           this.getItems(item.props.items, collects)
         } else {
           collects.push(item)

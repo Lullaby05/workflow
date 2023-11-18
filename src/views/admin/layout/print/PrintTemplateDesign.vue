@@ -84,13 +84,13 @@ export default {
       },
     },
   },
-  mounted() {},
+  mounted() { },
   methods: {
-    getItems(options, items){
+    getItems(options, items) {
       items.forEach(item => {
-        if (item.name === 'SpanLayout'){
+        if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
           this.getItems(options, item.props.items)
-        }else {
+        } else {
           options.push(item)
         }
       })
@@ -133,6 +133,7 @@ export default {
 
 <style lang="less" scoped>
 @border-color: #e7e7e7;
+
 .print-col-range {
   position: absolute;
   top: 0;
@@ -140,10 +141,12 @@ export default {
   height: 100%;
   border-right: 2px dashed @theme-primary;
 }
+
 .field-lib {
   font-size: 13px;
   background: #f5f6f6;
   border-right: 1px solid @border-color;
+
   .field-lib-title {
     text-align: center;
     height: 40px;
@@ -155,19 +158,22 @@ export default {
   .field-lib-body {
     padding: 10px;
     overflow-y: auto;
+
     .field-group {
       margin-bottom: 20px;
 
-      & > div:first-child {
+      &>div:first-child {
         margin-bottom: 10px;
       }
     }
   }
 }
+
 .form-fields {
   display: flex;
   justify-content: start;
   flex-direction: column;
+
   .form-field {
     cursor: move;
     background: white;
@@ -184,5 +190,4 @@ export default {
       color: @theme-primary;
     }
   }
-}
-</style>
+}</style>

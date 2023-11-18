@@ -8,19 +8,20 @@ export const ValueType = {
   dept: 'Dept',
   dateRange: 'DateRange',
   getValidType: (type) => {
-    switch (type){
+    switch (type) {
       case 'Dept':
       case 'User':
       case 'DateRange':
-        return 'array'
+        return 'array';
       case 'Array':
       case 'Number':
       case 'String':
-        return type.toLowerCase()
-      default: return undefined
+        return type.toLowerCase();
+      default:
+        return undefined;
     }
-  }
-}
+  },
+};
 
 export const baseComponents = [
   {
@@ -34,7 +35,18 @@ export const baseComponents = [
         valueType: ValueType.array,
         props: {
           items: [],
-          number: 2
+          number: 2,
+        },
+      },
+      {
+        title: '模块名称',
+        name: 'ModuleBlock',
+        icon: 'el-icon-scaletooriginal',
+        value: [],
+        valueType: ValueType.array,
+        props: {
+          items: [],
+          number: 1,
         },
       },
     ],
@@ -52,6 +64,7 @@ export const baseComponents = [
           enableScan: false,
           required: false,
           enablePrint: true,
+          valueKey: '',
         },
       },
       {
@@ -102,6 +115,9 @@ export const baseComponents = [
           enablePrint: true,
           expanding: false,
           options: ['选项1', '选项2'],
+          isNeedApi: false,
+          apiType: '',
+          valueKey: '',
         },
       },
       {
@@ -126,7 +142,7 @@ export const baseComponents = [
         props: {
           required: false,
           enablePrint: true,
-          format: 'HH:mm:ss'
+          format: 'HH:mm:ss',
         },
       },
       {
@@ -140,7 +156,7 @@ export const baseComponents = [
           enablePrint: true,
           placeholder: ['开始时间', '结束时间'],
           showLength: false,
-          format: 'HH:mm:ss'
+          format: 'HH:mm:ss',
         },
       },
       {
@@ -153,6 +169,7 @@ export const baseComponents = [
           required: false,
           enablePrint: true,
           format: 'YYYY-MM-DD HH:mm',
+          valueKey: '',
         },
       },
       {
@@ -209,6 +226,7 @@ export const baseComponents = [
           multiple: false,
           expansion: false,
           options: [],
+          valueKey: '',
         },
       },
       {
@@ -223,6 +241,7 @@ export const baseComponents = [
           multiple: false,
           expansion: false,
           options: [],
+          valueKey: '',
         },
       },
       {
@@ -251,6 +270,19 @@ export const baseComponents = [
           required: false,
           enablePrint: true,
           color: '#818181',
+        },
+      },
+      {
+        title: '多级联动',
+        name: 'MultilevelLink',
+        icon: 'el-icon-warning',
+        value: '',
+        valueType: ValueType.string,
+        props: {
+          required: false,
+          enablePrint: true,
+          linkType: '',
+          currentOptions: {},
         },
       },
     ],
@@ -366,10 +398,32 @@ export const baseComponents = [
           cpJs: null,
         },
       },
+      {
+        title: '安全措施',
+        name: 'SafetyMeasure',
+        icon: 'el-icon-tickets',
+        value: [],
+        valueType: ValueType.array,
+        props: {
+          required: false,
+          enablePrint: true,
+          showBorder: true,
+          rowLayout: true,
+          showSummary: false,
+          summaryColumns: [],
+          maxSize: 0, //最大条数，为0则不限制
+          columns: [
+            { id: 'number' },
+            { id: 'safetyMeasure' },
+            { id: 'isRealted' },
+            { id: 'confirmPerson' },
+          ], //列设置
+        },
+      },
     ],
   },
-]
+];
 
 export default {
   baseComponents,
-}
+};

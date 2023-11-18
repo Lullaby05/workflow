@@ -2,7 +2,7 @@
   <el-container>
     <el-aside :class="{ 'aside-menu': true }" v-show="showMenu">
       <div class="logo">
-        <img src="../../assets/image/logo.png"/>
+        <img src="../../assets/image/logo.png" />
         <span v-show="!isCollapse">wflow-pro</span>
       </div>
       <el-menu router class="el-menu-vertical" :default-active="active" :collapse="isCollapse">
@@ -13,6 +13,10 @@
         <el-menu-item index="/workspace/unfinished">
           <icon name="el-icon-stamp"></icon>
           <template #title>待我处理</template>
+        </el-menu-item>
+        <el-menu-item index="/workspace/unfinishedForOperation">
+          <icon name="el-icon-stamp"></icon>
+          <template #title>待我处理(作业用)</template>
         </el-menu-item>
         <el-menu-item index="/workspace/finished">
           <icon name="el-icon-avatar"></icon>
@@ -38,14 +42,17 @@
             <icon name="el-icon-setting"></icon>
             <template #title>流程管理</template>
           </el-menu-item>
+          <el-menu-item index="/workspace/formsPanelForOperation">
+            <icon name="el-icon-setting"></icon>
+            <template #title>流程管理(作业用)</template>
+          </el-menu-item>
         </div>
       </el-menu>
     </el-aside>
     <el-container class="container">
       <el-header height="80px">
         <div class="action">
-          <icon :name="isCollapse ? 'el-icon-arrowright' : 'el-icon-arrowleft'"
-                @click="isCollapse = !isCollapse"></icon>
+          <icon :name="isCollapse ? 'el-icon-arrowright' : 'el-icon-arrowleft'" @click="isCollapse = !isCollapse"></icon>
         </div>
         <div class="message" v-show="!showMenu || !isMobile">
           <el-popover placement="bottom-end" width="300" trigger="click">
@@ -56,27 +63,28 @@
                   <el-col :span="2">
                     <div class="notify-item-type-icon">
                       <icon name="el-icon-successfilled" v-if="msg.type === 'SUCCESS'" style="color: #02b068"></icon>
-                      <icon name="el-icon-warningfilled" v-else-if="msg.type === 'WARNING'"
-                            style="color: #f78f5f"></icon>
-                      <icon name="el-icon-circleclosefilled" v-else-if="msg.type === 'ERROR'"
-                            style="color: #f25643"></icon>
+                      <icon name="el-icon-warningfilled" v-else-if="msg.type === 'WARNING'" style="color: #f78f5f"></icon>
+                      <icon name="el-icon-circleclosefilled" v-else-if="msg.type === 'ERROR'" style="color: #f25643"></icon>
                       <icon name="el-icon-infofilled" v-else style="color: #8c8c8c"></icon>
                     </div>
                   </el-col>
                   <el-col :span="22">
-                    <div class="notify-item-title" @click="toNotify(msg)">{{ msg.title }}</div>
-                    <ellipsis hoverTip class="notify-item-content" :content="msg.content"/>
+                    <div class="notify-item-title" @click="toNotify(msg)">
+                      {{ msg.title }}
+                    </div>
+                    <ellipsis hoverTip class="notify-item-content" :content="msg.content" />
                   </el-col>
                 </el-row>
-                <span class="notify-item-time">{{ msg.createTime.substring(5, 16) }}</span>
+                <span class="notify-item-time">{{
+                  msg.createTime.substring(5, 16)
+                }}</span>
                 <el-button type="primary" link class="notify-btn" @click="readNotify(msg.id)">已读</el-button>
               </div>
             </div>
             <div class="notify-action" v-show="notify.total > 0">
               <el-button type="primary" link @click="--params.pageNo" :disabled="params.pageNo <= 1">上一页</el-button>
               <el-button type="primary" link @click="readNotify(null)">本页已读</el-button>
-              <el-button type="primary" link @click="++params.pageNo"
-                         :disabled="notify.total <= params.pageSize * notify.current">下一页
+              <el-button type="primary" link @click="++params.pageNo" :disabled="notify.total <= params.pageSize * notify.current">下一页
               </el-button>
             </div>
             <template #reference>
@@ -111,18 +119,16 @@
       </el-main>
     </el-container>
     <el-drawer :size="isMobile ? '100%' : '500px'" direction="rtl" title="审批详情" v-model="processVisible">
-      <instance-preview v-if="processVisible" :instance-id="selectInstance" @handler-after="processVisible = false"/>
+      <instance-preview v-if="processVisible" :instance-id="selectInstance" @handler-after="processVisible = false" />
     </el-drawer>
-    <org-picker title="请选择要切换的用户" :pc-mode="!isMobile" type="user" ref="orgPicker" :selected="nowSelected"
-                @ok="selected"/>
+    <org-picker title="请选择要切换的用户" :pc-mode="!isMobile" type="user" ref="orgPicker" :selected="nowSelected" @ok="selected" />
     <w-dialog title="个人中心" v-model="userCenterVisible" @ok="userCenterOk">
-      <el-tabs defaultActive="userInfo" v-if="userCenterVisible" v-model="activeTab" tab-position="left"
-               style="height: 220px">
+      <el-tabs defaultActive="userInfo" v-if="userCenterVisible" v-model="activeTab" tab-position="left" style="height: 220px">
         <el-tab-pane name="userInfo" label="个人信息">
-          <user-info/>
+          <user-info />
         </el-tab-pane>
         <el-tab-pane name="approvalAgent" label="审批代理">
-          <approval-agent ref="agent"/>
+          <approval-agent ref="agent" />
         </el-tab-pane>
         <el-tab-pane name="other" label="其他设置">暂无</el-tab-pane>
       </el-tabs>
@@ -131,16 +137,16 @@
 </template>
 
 <script>
-import {login} from '@/api/sys'
-import UserInfo from './my/UserInfo.vue'
-import ApprovalAgent from './my/ApprovalAgent.vue'
-import {getUserNotify, readNotify} from '@/api/notify'
-import OrgPicker from '../../components/common/OrgPicker.vue'
-import InstancePreview from './approval/ProcessInstancePreview.vue'
+import { login } from '@/api/sys';
+import UserInfo from './my/UserInfo.vue';
+import ApprovalAgent from './my/ApprovalAgent.vue';
+import { getUserNotify, readNotify } from '@/api/notify';
+import OrgPicker from '../../components/common/OrgPicker.vue';
+import InstancePreview from './approval/ProcessInstancePreview.vue';
 
 export default {
   name: 'workSpace',
-  components: {OrgPicker, InstancePreview, UserInfo, ApprovalAgent},
+  components: { OrgPicker, InstancePreview, UserInfo, ApprovalAgent },
   data() {
     return {
       isCollapse: false,
@@ -156,16 +162,16 @@ export default {
       selectInstance: null,
       processVisible: false,
       userCenterVisible: false,
-    }
+    };
   },
   beforeUnmount() {
     if (this.timer) {
-      clearInterval(this.timer)
+      clearInterval(this.timer);
     }
   },
   mounted() {
     if (this.isMobile) {
-      this.isCollapse = true
+      this.isCollapse = true;
     }
     if (!this.loginUser || !this.loginUser.id) {
       this.$alert(
@@ -174,55 +180,57 @@ export default {
         {
           confirmButtonText: '朕知道了',
           callback: (action) => {
-            this.switchUser()
+            this.switchUser();
           },
         }
-      )
+      );
     } else {
-      this.getUserNotify()
-      this.timerGetNotify(5)
+      this.getUserNotify();
+      this.timerGetNotify(5);
     }
   },
   computed: {
     loginUser() {
-      return this.$store.state.loginUser
+      return this.$store.state.loginUser;
     },
     isMobile() {
-      return window.screen.width < 450
+      return window.screen.width < 450;
     },
     showMenu() {
       if (this.isMobile) {
-        return !this.isCollapse
+        return !this.isCollapse;
       }
-      return true
+      return true;
     },
     user() {
-      return this.$store.state.loginUser
+      return this.$store.state.loginUser;
     },
     nowSelected() {
       if (this.user.id) {
-        return [this.user]
+        return [this.user];
       } else {
-        return []
+        return [];
       }
     },
     active() {
       if (this.$route.path === '/workspace') {
-        return this.$router.push('/workspace/forms')
+        return this.$router.push('/workspace/forms');
       }
-      return this.$route.path
+      return this.$route.path;
     },
   },
   methods: {
     getUserNotify() {
-      getUserNotify(this.params).then((res) => {
-        this.notify = res.data
-      }).catch((err) => {
-        if (this.timer) {
-          clearInterval(this.timer)
-        }
-        this.$err(err, '获取通知消息失败')
-      })
+      getUserNotify(this.params)
+        .then((res) => {
+          this.notify = res.data;
+        })
+        .catch((err) => {
+          if (this.timer) {
+            clearInterval(this.timer);
+          }
+          this.$err(err, '获取通知消息失败');
+        });
     },
     userCenterOk() {
       if (this.activeTab === 'approvalAgent') {
@@ -236,39 +244,39 @@ export default {
           }
         ).then(() => {
           this.$refs.agent.setUserAgent(() => {
-            this.userCenterVisible = false
-          })
-        })
+            this.userCenterVisible = false;
+          });
+        });
       }
     },
     showUserCenter() {
-      this.userCenterVisible = true
+      this.userCenterVisible = true;
     },
     switchUser() {
-      this.$refs.orgPicker.show()
+      this.$refs.orgPicker.show();
     },
     toNotify(msg) {
       if (this.$isNotEmpty(msg.instanceId)) {
-        this.selectInstance = msg.instanceId
-        this.processVisible = true
+        this.selectInstance = msg.instanceId;
+        this.processVisible = true;
       }
     },
     readNotify(id) {
-      let list = id ? [id] : this.notify.records.map((n) => n.id)
+      let list = id ? [id] : this.notify.records.map((n) => n.id);
       readNotify(list)
         .then((rsp) => {
-          this.$ok(rsp, '已读成功')
-          this.getUserNotify()
+          this.$ok(rsp, '已读成功');
+          this.getUserNotify();
         })
         .catch((err) => {
-          this.$err(err, '已读失败')
-        })
+          this.$err(err, '已读失败');
+        });
     },
     timerGetNotify(cycle) {
       if (this.timer) {
-        clearInterval(this.timer)
+        clearInterval(this.timer);
       }
-      this.timer = setInterval(() => this.getUserNotify(), cycle * 1000)
+      // this.timer = setInterval(() => this.getUserNotify(), cycle * 1000);
     },
     selected(user) {
       if (user.length > 0) {
@@ -280,15 +288,15 @@ export default {
               avatar: rsp.data.avatar,
               position: rsp.data.position,
               type: 'user',
-            }
-            this.$store.state.loginUser = user
-            localStorage.setItem('loginUser', JSON.stringify(user))
-            localStorage.setItem('wflow-token', rsp.data.token)
-            window.navigation.reload()
+            };
+            this.$store.state.loginUser = user;
+            localStorage.setItem('loginUser', JSON.stringify(user));
+            localStorage.setItem('wflow-token', rsp.data.token);
+            window.navigation.reload();
           })
           .catch((e) => {
-            this.$err(err, '登录失败')
-          })
+            this.$err(err, '登录失败');
+          });
       }
     },
   },
@@ -296,11 +304,11 @@ export default {
     params: {
       deep: true,
       handler() {
-        this.getUserNotify()
+        // this.getUserNotify();
       },
     },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -381,7 +389,6 @@ export default {
 :deep(.el-menu-item.is-active) .icon {
   color: @theme-primary;
 }
-
 
 .aside-menu {
   background: @theme-aside-bgc;

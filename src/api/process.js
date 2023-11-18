@@ -1,5 +1,5 @@
 import request from './request.js'
-import {syncRequest} from './request.js'
+import { syncRequest } from './request.js'
 
 /**
  *
@@ -9,11 +9,11 @@ import {syncRequest} from './request.js'
  * @param skipEmpty 是否跳过空部门
  * @returns {Promise<unknown>}
  */
-export function getUserLeader(level, deptId, skipEmpty){
+export function getUserLeader(level, deptId, skipEmpty) {
   return request({
     url: `wflow/process/step/leader/level`,
     method: 'get',
-    params: {level: level, deptId: deptId, skipEmpty: skipEmpty}
+    params: { level: level, deptId: deptId, skipEmpty: skipEmpty }
   })
 }
 
@@ -23,11 +23,11 @@ export function getUserLeader(level, deptId, skipEmpty){
  * @param deptId 部门ID
  * @param skipEmpty 是否跳过空部门
  */
-export function getUserLeaders(maxLevel, deptId, skipEmpty){
+export function getUserLeaders(maxLevel, deptId, skipEmpty) {
   return request({
     url: `wflow/process/step/leader/to/level`,
     method: 'get',
-    params: {maxLevel: maxLevel, deptId: deptId, skipEmpty: skipEmpty}
+    params: { maxLevel: maxLevel, deptId: deptId, skipEmpty: skipEmpty }
   })
 }
 
@@ -35,7 +35,7 @@ export function getUserLeaders(maxLevel, deptId, skipEmpty){
  * 获取指定系统角色的所有人员
  * @param roles
  */
-export function getUsersByRoles(roles){
+export function getUsersByRoles(roles) {
   return request({
     url: `wflow/process/step/userByRoles`,
     method: 'post',
@@ -47,7 +47,7 @@ export function getUsersByRoles(roles){
  * 查询所有部门主管
  * @param deptIds 部门ID
  */
-export function getLeaderByDepts(deptIds){
+export function getLeaderByDepts(deptIds) {
   return request({
     url: `wflow/process/step/deptLeader`,
     method: 'post',
@@ -60,7 +60,7 @@ export function getLeaderByDepts(deptIds){
  * @param userId 该人员ID
  * @param depts 部门 List
  */
-export function userInDepts(userId, depts){
+export function userInDepts(userId, depts) {
   let result = false
   syncRequest({
     url: `/wflow/process/step/user/${userId}/belong/depts`,
@@ -79,7 +79,7 @@ export function userInDepts(userId, depts){
  * @param userIds 该人员ID集合
  * @param depts 部门 List
  */
-export function usersInDepts(userIds, depts){
+export function usersInDepts(userIds, depts) {
   let result = false
   syncRequest({
     url: `/wflow/process/step/users/belong/depts`,
@@ -101,7 +101,7 @@ export function usersInDepts(userIds, depts){
  * @param depts 该部门ID集合
  * @param parents 父部门 List
  */
-export function deptsInDepts(depts, parents){
+export function deptsInDepts(depts, parents) {
   let result = false
   syncRequest({
     url: `/wflow/process/step/depts/belong/depts`,
@@ -118,14 +118,14 @@ export function deptsInDepts(depts, parents){
   return result
 }
 
-export function getNewVerProcess(code){
+export function getNewVerProcess(code) {
   return request({
     url: `wflow/process/model/${code}`,
     method: 'get'
   })
 }
 
-export function saveProcess(params){
+export function saveProcess(params) {
   return request({
     url: `wflow/process/model/save/`,
     method: 'post',
@@ -133,28 +133,28 @@ export function saveProcess(params){
   })
 }
 
-export function deployProcess(code){
+export function deployProcess(code) {
   return request({
     url: `wflow/process/model/deploy/${code}`,
     method: 'post'
   })
 }
 
-export function getCustomPrintConfig(instanceId){
+export function getCustomPrintConfig(instanceId) {
   return request({
     url: `wflow/process/model/customPrint/${instanceId}`,
     method: 'get'
   })
 }
 
-export function delProcessInst(instanceId){
+export function delProcessInst(instanceId) {
   return request({
     url: `wflow/process/instance/${instanceId}`,
     method: 'delete'
   })
 }
 
-export function startProcess(code, params){
+export function startProcess(code, params) {
   return request({
     url: `wflow/process/start/${code}`,
     method: 'post',

@@ -2,28 +2,28 @@
   <!--渲染表单-->
   <el-form v-if="mode === 'PC'" ref="form" class="process-form" label-position="top" :rules="rules" :model="_value">
     <div :class="{ readonly: isReadonly(item) }" v-show="showItem(item)" v-for="(item, index) in forms" :key="item.name + index">
-      <el-form-item v-if="item.name !== 'SpanLayout' && item.name !== 'Description'" :prop="item.id" :label="item.title">
-        <form-design-render :readonly="isReadonly(item)" :ref="item.id" v-model="_value[item.id]" :formData="_value" :mode="mode" :config="item"/>
+      <el-form-item v-if="item.name !== 'SpanLayout' && item.name !== 'ModuleBlock' && item.name !== 'Description'" :prop="item.id" :label="item.title">
+        <form-design-render :readonly="isReadonly(item)" :ref="item.id" v-model="_value[item.id]" :formData="_value" :mode="mode" :config="item" />
       </el-form-item>
-      <form-design-render :ref="item.id" :readonly="isReadonly(item)" v-else v-model="_value" :formData="_value" :mode="mode" :config="item"/>
+      <form-design-render :ref="item.id" :readonly="isReadonly(item)" v-else v-model="_value" :formData="_value" :mode="mode" :config="item" />
     </div>
   </el-form>
   <div v-else class="process-form">
     <div :class="{ readonly: isReadonly(item) }" v-show="showItem(item)" v-for="(item, index) in forms" :key="item.name + index">
-      <form-item v-if="item.name !== 'SpanLayout' && item.name !== 'Description'" :model="_value" :rule="rules[item.id]" :ref="item.id" :prop="item.id" :label="item.title">
-        <form-design-render :readonly="isReadonly(item)" :formData="_value" :ref="item.id + '_item'" v-model="_value[item.id]" :mode="mode" :config="item"/>
+      <form-item v-if="item.name !== 'SpanLayout' && item.name !== 'ModuleBlock' && item.name !== 'Description'" :model="_value" :rule="rules[item.id]" :ref="item.id" :prop="item.id" :label="item.title">
+        <form-design-render :readonly="isReadonly(item)" :formData="_value" :ref="item.id + '_item'" v-model="_value[item.id]" :mode="mode" :config="item" />
       </form-item>
-      <form-design-render :ref="item.id" :readonly="isReadonly(item)" :formData="_value" v-else v-model="_value" :mode="mode" :config="item"/>
+      <form-design-render :ref="item.id" :readonly="isReadonly(item)" :formData="_value" v-else v-model="_value" :mode="mode" :config="item" />
     </div>
   </div>
 </template>
 
 <script>
 import { Field, Form } from 'vant'
-import {CompareFuncs} from "./components/compare/CompareOptions";
+import { CompareFuncs } from "./components/compare/CompareOptions";
 import FormItem from '@/components/common/FormItem.vue'
 import FormDesignRender from '@/views/admin/layout/form/FormDesignRender.vue'
-import {ValueType} from "./ComponentsConfigExport";
+import { ValueType } from "./ComponentsConfigExport";
 
 const VForm = Form
 export default {
@@ -103,7 +103,7 @@ export default {
   methods: {
     showItem(item) {
       return ((!(this.isReadonly(item) && this.isBlank(this._value[item.id])))
-          || item.name === 'SpanLayout') && item.perm !== 'H'
+        || (item.name === 'SpanLayout' && item.name === 'ModuleBlock')) && item.perm !== 'H'
     },
     isBlank(val) {
       return (
@@ -167,7 +167,7 @@ export default {
         if (item.name === 'TableList') {
           map.set(item.id, item)
           this.loadFormItemMap(item.props.columns, map)
-        } else if (item.name === 'SpanLayout') {
+        } else if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
           this.loadFormItemMap(item.props.items, map)
         } else {
           map.set(item.id, item)
@@ -176,7 +176,7 @@ export default {
     },
     loadFormConfig(forms, rules) {
       forms.forEach((item) => {
-        if (item.name === 'SpanLayout') {
+        if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
           this.loadFormConfig(item.props.items, rules)
         } else {
           this._value[item.id] = this.modelValue[item.id]
@@ -200,14 +200,14 @@ export default {
       if (cdRule.children.length > 0) {
         for (let i = 0; i < cdRule.children.length; i++) {
           const result = this.parserRule(cdRule.children[i])
-          if (cdRule.logic){
+          if (cdRule.logic) {
             //如果是且关系，有一个为假就是假
-            if (!result){
+            if (!result) {
               return false
             }
-          }else {
+          } else {
             //如果是或关系，有一个为真就是真
-            if (result){
+            if (result) {
               return true
             }
           }
@@ -218,15 +218,15 @@ export default {
         //解析条件
         try {
           return this.compare(condition)
-        }catch (e) {
+        } catch (e) {
           return false
         }
       }
     },
-    async doActions(actions){
+    async doActions(actions) {
       (actions || []).forEach(action => {
         //执行预设的动作
-        switch (action.type){
+        switch (action.type) {
           case 'SHOW': action.targets.forEach(tg => this.showField(tg)); break;
           case 'HIDE': action.targets.forEach(tg => this.hideField(tg)); break;
           case 'DISABLE': action.targets.forEach(tg => this.disableField(tg)); break;
@@ -235,21 +235,21 @@ export default {
         }
       })
     },
-    analyseFormRule(){
-      if (this.config.ruleType === 'SIMPLE'){
+    analyseFormRule() {
+      if (this.config.ruleType === 'SIMPLE') {
         this.analyseRules()
-      }else {
+      } else {
         this.analyseJsRules()
       }
     },
-    async analyseJsRules(){
+    async analyseJsRules() {
       if (!(this.execute instanceof Function)) {
         this.execute = new Function('formData', 'formMap',
           `${this.config.ruleJs || 'function doChange(){}'}\r\n doChange(formData, formMap);`)
       }
       this.execute(this._value, this.formItemMap)
     },
-    async analyseRules(){
+    async analyseRules() {
       (this.config.rules || []).forEach((rule, i) => {
         //解析表单联动条件
         const result = this.parserRule(rule.condition)
@@ -299,13 +299,13 @@ export default {
     },
     hideField(id) {
       const field = this.formItemMap.get(id)
-      if (field){
+      if (field) {
         field.perm = 'H'
       }
     },
     showField(id) {
       const field = this.formItemMap.get(id)
-      if (field){
+      if (field) {
         field.perm = this.formPermHis[id] || 'E'
       }
     },
@@ -328,12 +328,12 @@ export default {
       }
     }
   },
-  watch:{
-    modelValue:{
+  watch: {
+    modelValue: {
       deep: true,
-      handler(){
-        if (this.config){
-          if (Object.keys(this.formPermHis).length === 0){
+      handler() {
+        if (this.config) {
+          if (Object.keys(this.formPermHis).length === 0) {
             this.formItemMap.forEach(item => {
               this.formPermHis[item.id] = item.perm
             })
@@ -361,12 +361,13 @@ export default {
   }
 }
 
-:deep(.el-form-item__label){
+:deep(.el-form-item__label) {
   margin-bottom: 0 !important;
 }
 
 :deep(.readonly) {
   font-size: 16px;
+
   .el-form-item {
     margin-bottom: 10px;
 

@@ -1,14 +1,14 @@
 <script lang="jsx">
 import ProcessNodeRender from "./ProcessNodeRender.vue";
-import {forEachNode} from '@/utils/ProcessUtil'
+import { forEachNode } from '@/utils/ProcessUtil'
 import processApi from '@/api/process'
 import OrgPicker from "@/components/common/OrgPicker.vue";
-import {ValueType} from "../common/form/ComponentsConfigExport";
-import {checkElementsExistInArray} from "../common/form/components/compare/CompareOptions";
+import { ValueType } from "../common/form/ComponentsConfigExport";
+import { checkElementsExistInArray } from "../common/form/components/compare/CompareOptions";
 
 export default {
   name: "ProcessRender",
-  components: {OrgPicker, ProcessNodeRender},
+  components: { OrgPicker, ProcessNodeRender },
   props: {
     forms: {
       type: Array,
@@ -80,23 +80,23 @@ export default {
         if (Array.isArray(task.options)) {
           //递归提取维度
           processNodes.push(
-              <el-timeline-item icon={task.icon} size="large" class="task">
-                <el-radio-group v-model={task.active} size="small">
-                  {
-                    task.options.map(option => {
-                      return <el-radio-button label={option.id} class={option.skip ? 'is-false':''} key={option.id}>{option.title}</el-radio-button>
-                    })
-                  }
-                </el-radio-group>
-                <div class="branch-tip">{task.desc}</div>
-              </el-timeline-item>
+            <el-timeline-item icon={task.icon} size="large" class="task">
+              <el-radio-group v-model={task.active} size="small">
+                {
+                  task.options.map(option => {
+                    return <el-radio-button label={option.id} class={option.skip ? 'is-false' : ''} key={option.id}>{option.title}</el-radio-button>
+                  })
+                }
+              </el-radio-group>
+              <div class="branch-tip">{task.desc}</div>
+            </el-timeline-item>
           )
           getNode(task.branchs[task.active], processNodes)
         } else {
           processNodes.push(
-              <el-timeline-item icon={task.icon} size="large" class="task">
-                <ProcessNodeRender ref={task.id} task={task} desc={task.desc} onAddUser={this.addUser} onDelUser={this.delUser}/>
-              </el-timeline-item>
+            <el-timeline-item icon={task.icon} size="large" class="task">
+              <ProcessNodeRender ref={task.id} task={task} desc={task.desc} onAddUser={this.addUser} onDelUser={this.delUser} />
+            </el-timeline-item>
           )
         }
       })
@@ -108,12 +108,12 @@ export default {
         {processNodes}
       </el-timeline>
       <OrgPicker
-          pcMode={this.pcMode}
-          type={this.selectedNode.type || 'user'}
-          multiple={this.selectedNode.multiple || false}
-          ref="orgPicker"
-          selected={this.selectedNode.users || []}
-          onOk={this.selected}/>
+        pcMode={this.pcMode}
+        type={this.selectedNode.type || 'user'}
+        multiple={this.selectedNode.multiple || false}
+        ref="orgPicker"
+        selected={this.selectedNode.users || []}
+        onOk={this.selected} />
     </div>)
   },
   methods: {
@@ -132,8 +132,8 @@ export default {
     },
     loadProcess(processNode, processTasks, bnode, bid) {
       forEachNode(processNode, node => {
-        if (bnode){ //如果是分支内子节点
-          this.branchNodeMap.set(node.id, {node: bnode, id: bid})
+        if (bnode) { //如果是分支内子节点
+          this.branchNodeMap.set(node.id, { node: bnode, id: bid })
         }
         switch (node.type) {
           case 'ROOT':
@@ -174,8 +174,8 @@ export default {
       let result = {
         id: node.id,
         title: node.name,
-        name: isApproval ? '审批人':'办理人',
-        icon: isApproval ? 'el-icon-stamp':'el-icon-checked',
+        name: isApproval ? '审批人' : '办理人',
+        icon: isApproval ? 'el-icon-stamp' : 'el-icon-checked',
         enableEdit: false,
         multiple: false,
         mode: node.props.mode,
@@ -186,7 +186,7 @@ export default {
       switch (node.props.assignedType) {
         case 'ASSIGN_USER':
           result.users = this.$deepCopy(node.props.assignedUser)
-          result.desc = isApproval ? '指定审批人':'指定办理人'
+          result.desc = isApproval ? '指定审批人' : '指定办理人'
           break
         case 'ASSIGN_LEADER':
           processApi.getLeaderByDepts((node.props.assignedDept || []).map(d => d.id)).then(res => {
@@ -196,49 +196,52 @@ export default {
           break
         case 'SELF':
           result.users = [this.loginUser]
-          result.desc = `发起人自己${isApproval?'审批':'办理'}`
+          result.desc = `发起人自己${isApproval ? '审批' : '办理'}`
           break
         case 'SELF_SELECT':
           result.enableEdit = true
           this.selectUserNodes.add(node.id)
           result.multiple = node.props.selfSelect.multiple || false
-          result.desc = isApproval?'自选审批人':'自选办理人'
+          result.desc = isApproval ? '自选审批人' : '自选办理人'
           break
         case 'LEADER_TOP':
-          result.desc = `连续多级主管${isApproval?'审批':'办理'}`
+          result.desc = `连续多级主管${isApproval ? '审批' : '办理'}`
           const leaderTop = node.props.leaderTop
           processApi.getUserLeaders(
             'TOP' === leaderTop.endCondition ? 0 : leaderTop.endLevel,
             this.deptId, leaderTop.skipEmpty).then(res => {
-            result.users = res.data
-          })
+              result.users = res.data
+            })
           break
         case 'LEADER':
           result.desc = node.props.leader.level === 1 ?
-            `直接主管${isApproval?'审批':'办理'}`
-            : `第${node.props.leader.level}级主管${isApproval?'审批':'办理'}`
+            `直接主管${isApproval ? '审批' : '办理'}`
+            : `第${node.props.leader.level}级主管${isApproval ? '审批' : '办理'}`
           processApi.getUserLeader(
             node.props.leader.level,
             this.deptId,
             node.props.leader.skipEmpty).then(res => {
-            result.users = res.data ? [res.data] : []
-          })
+              result.users = res.data ? [res.data] : []
+            })
           break
         case 'ROLE':
-          result.desc = `由角色[${(node.props.role || []).map(r => r.name)}]${isApproval?'审批':'办理'}`
+          result.desc = `由角色[${(node.props.role || []).map(r => r.name)}]${isApproval ? '审批' : '办理'}`
           processApi.getUsersByRoles((node.props.role || []).map(r => r.id)).then(res => {
             result.users = res.data
           })
           break
         case 'FORM_USER':
           loadCatch = false
-          result.desc = `由表单字段内人员${isApproval?'审批':'办理'}`
-          this.conditionFormItem.add(node.props.formUser)
-          result.users = this.formData[node.props.formUser] || []
+          result.desc = `由表单字段内人员${isApproval ? '审批' : '办理'}`
+
+          node.props.formUser.forEach(item => {
+            this.conditionFormItem.add(item)
+            this.formData[item] && result.users.push(this.formData[item])
+          })
           break
         case 'FORM_DEPT':
           loadCatch = false
-          result.desc = `由表单部门内主管${isApproval?'审批':'办理'}`
+          result.desc = `由表单部门内主管${isApproval ? '审批' : '办理'}`
           this.conditionFormItem.add(node.props.formDept)
           processApi.getLeaderByDepts((this.formData[node.props.formDept] || []).map(d => d.id)).then(res => {
             result.users = res.data
@@ -275,7 +278,7 @@ export default {
       this.userCatch[node.id] = result.users
       return result
     },
-    getConditionResultByGroups(groups, groupsType, repel){
+    getConditionResultByGroups(groups, groupsType, repel) {
       let successNum = 0;
       for (let i = 0; i < groups.length; i++) {
         //计算单个组条件结果
@@ -289,7 +292,7 @@ export default {
       }
       return successNum === groups.length
     },
-    getInclusiveNode(node){
+    getInclusiveNode(node) {
       let branchTasks = {
         id: node.id,
         title: node.name,
@@ -306,19 +309,19 @@ export default {
       for (let i = 0; i < node.branchs.length; i++) {
         const cdNode = node.branchs[i]
         cdNode['skip'] = true
-        if (cdNode.props.groups.length > 0){
+        if (cdNode.props.groups.length > 0) {
           //是有条件的分支返回
           let result = this.getConditionResultByGroups(cdNode.props.groups, cdNode.props.groupsType)
-          if (result){
+          if (result) {
             trueCdNode = cdNode
             trueCdNode.skip = false
           }
-        }else if (!defaultNode){
+        } else if (!defaultNode) {
           //是第一个默认分支
           defaultNode = cdNode
         }
       }
-      if (!trueCdNode && defaultNode){
+      if (!trueCdNode && defaultNode) {
         //没用满足的条件分支，并且有默认分支，那么走默认分支
         defaultNode.skip = false
       }
@@ -350,24 +353,24 @@ export default {
       for (let i = 0; i < node.branchs.length; i++) {
         const cdNode = node.branchs[i]
         cdNode['skip'] = true
-        if (trueCdNode){
+        if (trueCdNode) {
           //如果前面有带条件的分支已经满足条件了，那么后续分支全部跳过
           continue
         }
-        if (cdNode.props.groups.length > 0){
+        if (cdNode.props.groups.length > 0) {
           //是有条件的分支
           let result = this.getConditionResultByGroups(cdNode.props.groups, cdNode.props.groupsType)
-          if (result){
+          if (result) {
             trueCdNode = cdNode
             trueCdNode.skip = false
             branchTasks.active = cdNode.id
           }
-        }else if (!defaultNode){
+        } else if (!defaultNode) {
           //是第一个默认分支
           defaultNode = cdNode
         }
       }
-      if (!trueCdNode && defaultNode){
+      if (!trueCdNode && defaultNode) {
         //没用满足的条件分支，并且有默认分支，那么走默认分支
         defaultNode.skip = false
         branchTasks.active = defaultNode.id
@@ -380,7 +383,7 @@ export default {
         })
         branchTasks.branchs[nd.id] = []
         //设置下子级分支的父级分支节点
-        this.branchNodeMap.set(nd.id, {node: pbnode, id: pbid})
+        this.branchNodeMap.set(nd.id, { node: pbnode, id: pbid })
         this.loadProcess(nd.children, branchTasks.branchs[nd.id], branchTasks, nd.id)
       })
       return branchTasks
@@ -484,10 +487,10 @@ export default {
     dateCompare(explain) {
 
     },
-    deptCompare(explain){
+    deptCompare(explain) {
       const deptIds = (this.formData[explain.id] || []).map(v => v.id)
       const parentIds = (explain.value || []).map(v => v.id)
-      if (deptIds.length > 0){
+      if (deptIds.length > 0) {
         return 'true' === processApi.deptsInDepts(deptIds, parentIds)
       }
       return false
@@ -566,28 +569,28 @@ export default {
       this.oldFormData = this.$deepCopy(this.formData)
     },
     //执行校验流程步骤设置
-    validate(call){
+    validate(call) {
       //遍历自选审批人节点
       let isOk = true
       for (let nodeId of this.selectUserNodes) {
-        if ((this._value[nodeId] || []).length === 0){
+        if ((this._value[nodeId] || []).length === 0) {
           //没设置审批人员
           isOk = false
           //遍历所有的分支，从底部向上搜索进行自动切换分支渲染路线
           let brNode = this.branchNodeMap.get(nodeId)
-          while (brNode && brNode.id){
+          while (brNode && brNode.id) {
             brNode.node.active = brNode.id
             brNode = this.branchNodeMap.get(brNode.id)
           }
           this.$nextTick(() => {
-            if (this.$refs[nodeId]){
+            if (this.$refs[nodeId]) {
               this.$refs[nodeId].errorShark()
             }
           })
           break
         }
       }
-      if (call){
+      if (call) {
         call(isOk)
       }
     }
@@ -608,11 +611,13 @@ export default {
 .task {
   height: 50px;
 }
-.branch-tip{
+
+.branch-tip {
   color: @theme-desc-color;
 }
+
 :deep(.process-tree) {
-  .el-timeline-item:last-child{
+  .el-timeline-item:last-child {
     .el-timeline-item__tail {
       display: none;
     }
@@ -641,25 +646,26 @@ export default {
       position: relative;
 
       .process-node-render {
-        & > div {
+        &>div {
           position: absolute;
           display: inline-block;
         }
 
-        & > div:last-child {
+        &>div:last-child {
           right: 0;
           top: -10px;
         }
       }
     }
-    .is-false{
-      span{
+
+    .is-false {
+      span {
         text-decoration: line-through;
         color: #9a9a9a;
       }
     }
 
-    .el-radio-group{
+    .el-radio-group {
       display: flex;
       overflow: auto;
     }
@@ -686,5 +692,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -102,7 +102,7 @@ export default {
   methods: {
     loadItems(items, item, alisa){
       this.formItemMap.set(item.id, item)
-      if (item.name === 'SpanLayout'){
+      if (item.name === 'SpanLayout' || item.name === 'ModuleBlock'){
         item.props.items.forEach(it => this.loadItems(items, it))
       }else if (item.name === 'TableList'){
         items.push(item)

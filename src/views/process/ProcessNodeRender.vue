@@ -1,6 +1,6 @@
 <template>
   <div class="process-node-render" ref="tip">
-    <div :class="{'process-node-error': error}">
+    <div :class="{ 'process-node-error': error }">
       <div style="font-size: 16px">
         <span v-if="task.enableEdit" style="color: red"> * </span>
         {{ task.title }}
@@ -8,8 +8,7 @@
       <span style="color:#a8adaf;" v-if="task.users">{{ desc }}</span>
     </div>
     <div style="display:flex;">
-      <avatar :closeable="user.enableEdit" @close="delUser(i)" :size="38" showY :src="user.avatar"
-              :type="user.type" :name="user.name" v-for="(user, i) in task.users" :key="'user_'+i"></avatar>
+      <avatar :closeable="user.enableEdit" @close="delUser(i)" :size="38" showY :src="user.avatar" :type="user.type" :name="user.name" v-for="(user, i) in task.users" :key="'user_' + i"></avatar>
       <span class="add-user" v-if="task.enableEdit && (task.multiple || task.users.length === 0)" @click="$emit('addUser', task)">
         <icon name="el-icon-plus"></icon>
         <div>添加</div>
@@ -21,19 +20,19 @@
 <script>
 export default {
   name: "ProcessNodeRender",
-  props:{
-    desc:{
+  props: {
+    desc: {
       type: String,
       required: '',
     },
-    task:{
+    task: {
       type: Object,
       required: true,
       default: () => {
         return {}
       }
     },
-    error:{
+    error: {
       type: Boolean,
       default: false
     }
@@ -47,7 +46,7 @@ export default {
       this.task.users.splice(i, 1)
       this.$emit('delUser', this.task.id, i)
     },
-    errorShark(){
+    errorShark() {
       this.$refs.tip.classList.add('shake-tip')
       setTimeout(() => this.$refs.tip.classList.remove('shake-tip'), 1200)
     }
@@ -56,8 +55,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-.process-node-error{
+.process-node-error {
   color: @theme-danger;
 }
 
@@ -84,12 +82,32 @@ export default {
 .shake-tip {
   animation: shake 1s ease-in-out;
 }
+
 //水平抖动提示
 @keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(+2px, 0, 0); }
-  30%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(+4px, 0, 0); }
-  50% { transform: translate3d(-4px, 0, 0); }
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(+2px, 0, 0);
+  }
+
+  30%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(+4px, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(-4px, 0, 0);
+  }
 }
 </style>

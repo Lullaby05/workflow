@@ -148,7 +148,7 @@ export default {
   methods: {
     itemToMap(map, item){
       map.set(item.id, item)
-      if (item.name === 'SpanLayout'){
+      if (item.name === 'SpanLayout' || item.name === 'ModuleBlock'){
         item.props.items.forEach(sub => this.itemToMap(map, sub))
       }
     },
@@ -179,7 +179,7 @@ export default {
       this.$refs.orgPicker.show()
     },
     filterCondition(item, list){
-      if (item.name === 'SpanLayout'){
+      if (item.name === 'SpanLayout' || item.name === 'ModuleBlock'){
         item.props.items.forEach(sub => this.filterCondition(sub, list))
       }else if (this.supportTypes.indexOf(item.valueType) > -1 && item.props.required){
         list.push({title: item.title, id: item.id, valueType: item.valueType})

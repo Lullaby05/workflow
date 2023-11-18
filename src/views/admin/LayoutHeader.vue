@@ -8,6 +8,7 @@
         <el-menu-item index="proSetting" @click="to('proSetting')">④ 扩展设置</el-menu-item>
       </el-menu>
       <div class="publish">
+        <el-button size="default" @click="getFormData">获取表单数据</el-button>
         <el-button size="default" @click="save">
           <icon name="el-icon-folderchecked"></icon>
           &nbsp;&nbsp;保存
@@ -20,7 +21,7 @@
       <div class="back">
         <el-button @click="exit" icon="el-icon-arrowleft" circle></el-button>
         <icon :key="setup.logo.icon" :name="setup.logo.icon" :style="'background:' + setup.logo.background"></icon>
-        <span>{{ setup.formName }}</span>
+        <span>{{ setup.operationType ? setup.operationType + setup.formName : setup.formName }}</span>
       </div>
     </div>
 
@@ -42,31 +43,31 @@ export default {
   data() {
     return {
       viewCode: false,
-    }
+    };
   },
   computed: {
     setup() {
-      return this.$store.state.design
+      return this.$store.state.design;
     },
   },
   created() {
-    this.check()
+    this.check();
   },
   mounted() {
-    console.log(document.body.offsetWidth)
+    console.log(document.body.offsetWidth);
     if (document.body.offsetWidth <= 970) {
       this.$msgbox.alert(
         '本设计器未适配中小屏幕，建议您在PC电脑端浏览器进行操作'
-      )
+      );
     }
-    this.listener()
+    this.listener();
   },
   methods: {
     publish() {
-      this.$emit('publish')
+      this.$emit('publish');
     },
     save() {
-      this.$emit( 'save')
+      this.$emit('save');
     },
     exit() {
       this.$confirm('未发布的内容将不会被保存，是否直接退出 ?', '提示', {
@@ -76,23 +77,23 @@ export default {
       }).then(() => {
         //window.location.reload()
         //this.$store.commit('clearTemplate')
-        this.$router.push('/workspace/formsPanel')
-      })
+        this.$router.push('/workspace/formsPanel');
+      });
     },
     to(path) {
-      this.$emit('update:modelValue', path)
+      this.$emit('update:modelValue', path);
     },
     handleSelect(key, keyPath) {
-      console.log(key, keyPath)
+      console.log(key, keyPath);
     },
     listener() {
-      window.onunload = this.closeBefore()
-      window.onbeforeunload = this.closeBefore()
+      window.onunload = this.closeBefore();
+      window.onbeforeunload = this.closeBefore();
       //window.on('beforeunload',this.closeBefore())
     },
     closeBefore() {
       //alert("您将要离开本页")
-      return false
+      return false;
     },
     check() {
       if (this.$store.state.isEdit === null) {
@@ -101,13 +102,14 @@ export default {
     },
   },
   emits: ['update:modelValue', 'publish', 'save'],
-}
+};
 </script>
 
 <style lang="less" scoped>
 :deep(.header) {
   min-width: 980px;
   position: relative;
+
   .el-menu {
     top: 0;
     z-index: 999;
