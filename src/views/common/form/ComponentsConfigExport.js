@@ -276,8 +276,8 @@ export const baseComponents = [
         title: '多级联动',
         name: 'MultilevelLink',
         icon: 'el-icon-warning',
-        value: '',
-        valueType: ValueType.string,
+        value: {},
+        valueType: ValueType.object,
         props: {
           required: false,
           enablePrint: true,

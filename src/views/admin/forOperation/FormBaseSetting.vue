@@ -25,19 +25,19 @@
       <el-form-item label="表单名称" :rules="getRule('请输入表单名称')" prop="formName">
         <el-input v-model="setup.formName" size="default"></el-input>
       </el-form-item>
-      <el-form-item label="作业类型" :rules="getRule('请选择作业类型')" prop="operationType">
-        <el-select v-model="setup.operationType" filterable @change="handleChangeOperationType">
+      <el-form-item label="作业类型" :rules="getRule('请选择作业类型')" prop="settings.operationType">
+        <el-select v-model="setup.settings.operationType" filterable @change="handleChangeOperationType">
           <el-option v-for="item in operationTypes" :key="item.dictValue" :label="item.dictKey" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="企业名称" :rules="getRule('请输入企业名称')" prop="enterpriseName">
-        <el-select v-model="setup.enterpriseName" placeholder="请选择企业名称" clearable filterable size="default">
+      <el-form-item label="企业名称" :rules="getRule('请输入企业名称')" prop="companyName">
+        <el-select v-model="setup.companyName" placeholder="请选择企业名称" clearable filterable size="default">
           <el-option value="1">1</el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所在分组" :rules="getRule('请选择表单分组')" class="group" prop="groupId">
-        <el-select v-model="setup.groupId" size="default" placeholder="请选择分组">
-          <el-option v-for="(op, index) in fromGroup" :key="index" v-show="op.groupId > 1" :label="op.groupName" :value="op.groupId"></el-option>
+      <el-form-item label="所在分组" class="group" prop="groupId">
+        <el-select v-model="setup.groupId" disabled size="default" placeholder="请选择分组">
+          <el-option v-for="(op, index) in fromGroup" :key="index" :label="op.groupName" :value="op.groupId"></el-option>
         </el-select>
         <el-popover placement="bottom-end" title="新建表单分组" width="300" trigger="click">
           <el-input v-model="newGroup" size="default" placeholder="请输入新的分组名">
@@ -140,7 +140,12 @@ export default {
   },
   computed: {
     setup() {
-      return this.$store.state.design;
+      const setup = this.$store.state.design;
+      if (setup.settings.operationType) {
+        // 初始化
+        this.handleChangeOperationType(setup.settings.operationType)
+      }
+      return setup;
     },
   },
   created() {
@@ -150,8 +155,21 @@ export default {
     this.getGroups();
   },
   methods: {
-    handleChangeOperationType() {
-      getValueKeyEnum(this.setup.operationType).then((res) => {
+    handleChangeOperationType(operationType) {
+      if (!operationType) {
+        this.$confirm('您确定要修改作业类型吗', '修改作业类型可能会导致数据丢失，请谨慎操作！', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(() => {
+          this.setup.settings.operationType = '';
+          this.handleChangeOperationType();
+        }).catch(() => {
+          this.setup.settings.operationType = this.setup.formName.substring(0, 1);
+        })
+      };
+      const type = operationType || this.setup.settings.operationType;
+      getValueKeyEnum(type).then((res) => {
         const dataMap = [];
         Object.keys(res.data.data).forEach((key) => {
           dataMap.push({
@@ -161,7 +179,7 @@ export default {
         });
         this.$store.commit('setCertValueKeys', dataMap);
       });
-      getProcessKeyEnum(this.setup.operationType).then((res) => {
+      getProcessKeyEnum(type).then((res) => {
         const dataMap = [];
         Object.keys(res.data.data).forEach((key) => {
           dataMap.push({
@@ -216,10 +234,13 @@ export default {
       if (!this.$isNotEmpty(this.setup.formName)) {
         err.push('表单名称未设置');
       }
+      if (!this.$isNotEmpty(this.setup.settings.operationType)) {
+        err.push('表单名称未设置');
+      }
       if (!this.$isNotEmpty(this.setup.groupId)) {
         err.push('表单分组未设置');
       }
-      if (!this.$isNotEmpty(this.setup.enterpriseName)) {
+      if (!this.$isNotEmpty(this.setup.companyName)) {
         err.push('企业名称未设置');
       }
       if (this.setup.settings.notify.types.length === 0) {

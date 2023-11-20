@@ -41,8 +41,8 @@ export default {
   components: { Radio, RadioGroup },
   props: {
     modelValue: {
-      type: String,
-      default: null,
+      type: Object,
+      default: () => { },
     },
     expanding: {
       type: Boolean,
@@ -65,14 +65,10 @@ export default {
         if (this.$isNotEmpty(this.modelValue)) {
           return this.modelValue;
         }
-        const fields = this.currentOptions.fields;
-        const obj = {}
-        fields.map((v) => {
-          obj[v] = '';
-        })
-        return obj
+        return {};
       },
       set(val) {
+        console.log('@', val);
         this.$emit('update:modelValue', val);
       },
     },
@@ -87,19 +83,21 @@ export default {
       if (val) {
         // 清空后续下拉框的数据以及_valuePc对应字段的数据
         for (let i = index + 1; i < this.currentOptions.options.length; i++) {
-          this._valuePc[this.currentOptions.fields[i]] = ''
+          this._valuePc[this.currentOptions.fields[i]] = '';
           this.currentOptions.options[i] = [];
         }
         // 将值放到对应的字段中
         this._valuePc[this.currentOptions.fields[index]] = val;
+        this.$emit('update:modelValue', this._valuePc);
         if (index >= this.currentOptions.columns - 1) {
           this.$emit('update:currentOptions', this.currentOptions);
-          return
+          return;
         }
         // 请求下一个下拉框的数据
-        const { data } = await multilevelLinkApi[
-          this.currentOptions.apis[index + 1]
-        ](val);
+        const { data } = await multilevelLinkApi.getMultilevelLink(
+          this.currentOptions.apis[index + 1],
+          val
+        );
         this.currentOptions.options[index + 1] = data.map((ele) => ({
           key: ele.name,
           value: ele.id,

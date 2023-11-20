@@ -36,14 +36,14 @@
       </el-form-item>
     </el-form>
     <el-form-item label="选项展开">
-      <el-switch v-model="modelValue.expanding"></el-switch>
+      <el-switch v-model="modelValue.expanding" :disabled="modelValue.isNeedApi"></el-switch>
     </el-form-item>
     <el-form-item label="获取列表">
       <el-switch v-model="modelValue.isNeedApi"></el-switch>
     </el-form-item>
     <el-form-item label="接口类型" v-if="modelValue.isNeedApi" :required="modelValue.isNeedApi">
       <el-select v-model="modelValue.apiType" clearable filterable>
-        <el-option v-for="item in inerfaceOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-option v-for="item in interfaceOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </el-form-item>
   </div>
@@ -71,7 +71,7 @@ export default {
         sort: true,
         group: 'option'
       },
-      inerfaceOptions: []
+      interfaceOptions: []
     }
   },
   computed: {
@@ -82,28 +82,34 @@ export default {
   watch: {
     'modelValue.isNeedApi'(val) {
       if (val) {
-        this.inerfaceOptions = [
+        this.interfaceOptions = [
           {
             label: '获取省',
-            value: '1'
+            value: '1',
+            url: 'oa/org/province'
           }
         ]
         this.modelValue.apiType = ''
+        this.modelValue.expanding = false
       } else {
-        this.inerfaceOptions = []
+        this.interfaceOptions = []
         this.modelValue.options = ['选项1', '选项2']
         this.modelValue.apiType = ''
       }
     },
     'modelValue.apiType'(val) {
-      if (val === '1') {
-        multilevelLinkApi.getProvince().then(res => {
-          this.modelValue.options = res.data.map(item => ({ label: item.name, value: item.id }))
-        })
-      }
+      const requestUrl = this.interfaceOptions.find(item => item.value === val).url
+      multilevelLinkApi.getRemoteOptions(requestUrl).then(res => {
+        this.modelValue.options = res.data.map(item => ({ label: item.name, value: item.id }))
+      })
+      this.modelValue.requestUrl = requestUrl
     }
   },
-  methods: {},
+  methods: {
+    initInterfaceOptions() {
+
+    }
+  },
   emits: ['update:modelValue'],
 }
 </script>

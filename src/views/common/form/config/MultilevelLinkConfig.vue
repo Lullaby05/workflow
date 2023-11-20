@@ -26,7 +26,7 @@ export default {
     'modelValue.optionsKey'(val) {
       if (!val) return;
       const current = this.allOptions.find((item) => item.key === val);
-      multilevelLinkApi[current.apis[0]]().then((res) => {
+      multilevelLinkApi.getMultilevelLink(current.apis[0], '').then((res) => {
         current.options = new Array(current.columns).fill(0).map(() => []);
         current.options[0] = res.data.map((ele) => ({
           key: ele.name,
@@ -41,7 +41,7 @@ export default {
       allOptions: [
         {
           key: '1',
-          apis: ['getProvince', 'getCity', 'getCounty'],
+          apis: ['oa/org/province', 'oa/org/city?param=', 'oa/org/county?param='],
           columns: 3,
           fields: ['province', 'city', 'county'],
           placeholder: ['省', '市', '区'],

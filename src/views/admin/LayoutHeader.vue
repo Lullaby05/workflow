@@ -21,7 +21,7 @@
       <div class="back">
         <el-button @click="exit" icon="el-icon-arrowleft" circle></el-button>
         <icon :key="setup.logo.icon" :name="setup.logo.icon" :style="'background:' + setup.logo.background"></icon>
-        <span>{{ setup.operationType ? setup.operationType + setup.formName : setup.formName }}</span>
+        <span>{{ setup.formName }}</span>
       </div>
     </div>
 
@@ -63,6 +63,9 @@ export default {
     this.listener();
   },
   methods: {
+    getFormData() {
+      console.log('@', this.setup);
+    },
     publish() {
       this.$emit('publish');
     },
@@ -77,7 +80,10 @@ export default {
       }).then(() => {
         //window.location.reload()
         //this.$store.commit('clearTemplate')
-        this.$router.push('/workspace/formsPanel');
+        if (this.$route.name.includes('ForOperation')) {
+          this.$router.push('/workspace/formsPanel');
+        }
+
       });
     },
     to(path) {

@@ -141,7 +141,6 @@ export default {
     },
     loadFormInfo(formId) {
       this.loading = true;
-      console.log('!!', formId);
       getNewVerProcess(formId)
         .then((rsp) => {
           this.loading = false;

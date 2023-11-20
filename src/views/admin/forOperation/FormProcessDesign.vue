@@ -175,7 +175,7 @@ export default {
     loadInitFrom() {
       this.$store.commit('loadForm', {
         formId: null,
-        formName: '未命名表单',
+        formName: '',
         logo: {
           icon: 'el-icon-eleme',
           background: '#1e90ff',
@@ -320,8 +320,8 @@ export default {
     getDataFromStore() {
       return {
         formId: this.setup.formId,
-        formName: this.setup.operationType + this.setup.formName,
-        enterpriseName: this.setup.enterpriseName,
+        formName: this.setup.formName,
+        companyName: this.setup.companyName,
         logo: JSON.stringify(this.setup.logo),
         settings: JSON.stringify(this.setup.settings),
         groupId: this.setup.groupId,
@@ -333,8 +333,8 @@ export default {
     },
     getCheckModelData() {
       return {
-        operationType: this.setup.operationType,
-        enterpriseName: this.setup.enterpriseName,
+        operationType: this.setup.settings.operationType,
+        companyName: this.setup.companyName,
         formItems: this.setup.formItems,
         progress: this.setup.process,
       };
