@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Editor from '@/components/common/Editor.vue'
+import Editor from '@/components/common/Editor.vue';
 
 export default {
   name: 'PrintTemplateDesign',
@@ -66,69 +66,74 @@ export default {
         },
         { id: 'startTime', title: '发起时间', icon: 'el-icon-promotion' },
         { id: 'finishTime', title: '完成时间', icon: 'el-icon-clock' },
+        {
+          id: 'apply',
+          title: '作业申请节点人与签名',
+          icon: 'iconfont icon-iconfonticon3',
+        },
       ],
-    }
+    };
   },
   computed: {
     formItems() {
-      let items = []
-      this.getItems(items, this.$store.state.design.formItems)
-      return items
+      let items = [];
+      this.getItems(items, this.$store.state.design.formItems);
+      return items;
     },
     _value: {
       get() {
-        return this.modelValue
+        return this.modelValue;
       },
       set(val) {
-        this.$emit('update:modelValue', val)
+        this.$emit('update:modelValue', val);
       },
     },
   },
   mounted() { },
   methods: {
     getItems(options, items) {
-      items.forEach(item => {
+      items.forEach((item) => {
         if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
-          this.getItems(options, item.props.items)
+          this.getItems(options, item.props.items);
         } else {
-          options.push(item)
+          options.push(item);
         }
-      })
+      });
     },
     dragstart(field, event) {
-      event.dataTransfer.setData('text/plain', '')
-      this.$refs["wflow-print"].setTempDropData(field)
+      event.dataTransfer.setData('text/plain', '');
+      this.$refs['wflow-print'].setTempDropData(field);
     },
     initDragEvent() {
-      const sheet = this.$refs['wflow-print-sheet']
+      const sheet = this.$refs['wflow-print-sheet'];
       // 拖拽开始
       sheet.ondragover = (ev) => {
-        ev.preventDefault()
-      }
+        ev.preventDefault();
+      };
       // 拖拽结束，提取坐标进行设置单元格内容
       sheet.ondrop = (ev) => {
-        console.log('拖拽结束:', ev.dataTransfer.getData('id'), this.table)
-        ev.preventDefault()
-        let id = ev.dataTransfer.getData('id')
-        let text = ev.dataTransfer.getData('text')
+        console.log('拖拽结束:', ev.dataTransfer.getData('id'), this.table);
+        ev.preventDefault();
+        let id = ev.dataTransfer.getData('id');
+        let text = ev.dataTransfer.getData('text');
         let { ri, ci } = this.table.datas[0].getCellRectByXY(
           ev.offsetX,
           ev.offsetY
-        )
+        );
         console.log(
           '目标释放单元格：',
           this.table.datas[0].getCellRectByXY(ev.offsetX, ev.offsetY)
-        )
-        console.log('合并信息：', this.table.sheet.data.getCell(ri, ci))
-        this.table.cellText(ri, ci, '${(' + text + ')' + id + '}').reRender()
+        );
+        console.log('合并信息：', this.table.sheet.data.getCell(ri, ci));
+        this.table.cellText(ri, ci, '${(' + text + ')' + id + '}').reRender();
         //设置撤销操作
-        this.table.sheet.toolbar.undoEl.setState(false)
-        console.log('选中单元格', id, ri, ci)
-      }
+        this.table.sheet.toolbar.undoEl.setState(false);
+        console.log('选中单元格', id, ri, ci);
+      };
     },
   },
   emits: ['update:modelValue'],
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -190,4 +195,5 @@ export default {
       color: @theme-primary;
     }
   }
-}</style>
+}
+</style>

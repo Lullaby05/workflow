@@ -157,6 +157,7 @@ export default {
       getNewVerProcess(formId)
         .then((rsp) => {
           this.loading = false;
+          console.log('@', rsp);
           let form = rsp.data;
           form.logo = JSON.parse(form.logo);
           form.settings = JSON.parse(form.settings);
@@ -297,6 +298,11 @@ export default {
         const checkModelData = this.getCheckModelData();
         this.loading = true;
         const res = await checkValueKey(checkModelData);
+        if (res.data.code !== 0) {
+          this.$message.warning(res.data.msg);
+          this.loading = false;
+          return;
+        }
         saveProcess(modelData)
           .then((rsp) => {
             this.loading = false;
@@ -322,6 +328,7 @@ export default {
         formId: this.setup.formId,
         formName: this.setup.formName,
         companyName: this.setup.companyName,
+        operationType: this.setup.operationType,
         logo: JSON.stringify(this.setup.logo),
         settings: JSON.stringify(this.setup.settings),
         groupId: this.setup.groupId,
@@ -329,14 +336,16 @@ export default {
         formConfig: JSON.stringify(this.setup.formConfig || {}),
         process: JSON.stringify(this.setup.process),
         remark: this.setup.remark,
+        tenantId: '1',
       };
     },
     getCheckModelData() {
       return {
-        operationType: this.setup.settings.operationType,
+        operationType: this.setup.operationType,
         companyName: this.setup.companyName,
         formItems: this.setup.formItems,
         progress: this.setup.process,
+        tenantId: '1',
       };
     },
     createReload(groupId, formId) {

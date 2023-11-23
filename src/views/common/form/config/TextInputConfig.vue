@@ -11,6 +11,9 @@
     <el-form-item label="扫码录入">
       <el-switch v-model="modelValue.enableScan"></el-switch>
     </el-form-item>
+    <el-form-item label="是否禁用">
+      <el-switch v-model="modelValue.disabled"></el-switch>
+    </el-form-item>
   </div>
 </template>
 
@@ -22,21 +25,21 @@ export default {
     modelValue: {
       type: Object,
       default: () => {
-        return {}
+        return {};
       },
     },
   },
   data() {
-    return {}
+    return {};
   },
   methods: {},
   computed: {
     certValueKeys() {
-      return this.$store.state.certValueKeys
-    }
+      return this.$store.state.certValueKeys;
+    },
   },
   emits: ['update:modelValue'],
-}
+};
 </script>
 
 <style scoped></style>

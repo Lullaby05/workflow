@@ -9,11 +9,11 @@
           </el-radio-group>
         </div>
         <!--渲染表单-->
-        <form-render v-if="!loading" class="process-form" ref="form" mode="PC" :forms="forms" v-model="formData" :config="form.formConfig"/>
+        <form-render v-if="!loading" class="process-form" ref="form" mode="PC" :forms="forms" v-model="formData" :config="form.formConfig" />
       </el-col>
       <el-col :span="9">
         <!--渲染执行流程-->
-        <process-render ref="process" v-if="!loading && userDeptId" :dept-id="userDeptId" v-model="processUsers" :forms="forms" :formData="formData" :process="process"/>
+        <process-render ref="process" v-if="!loading && userDeptId" :dept-id="userDeptId" v-model="processUsers" :forms="forms" :formData="formData" :process="process" />
       </el-col>
     </el-row>
   </div>

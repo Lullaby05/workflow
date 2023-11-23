@@ -9,19 +9,18 @@
       <div v-if="userDepts.length > 1" style="margin-bottom: 10px">
         本次发起部门：
         <radio-group v-model="userDeptId" direction="horizontal">
-          <radio v-for="dept in userDepts" :key="dept.id" :name="dept.id">{{dept.name }}</radio>
+          <radio v-for="dept in userDepts" :key="dept.id" :name="dept.id">{{ dept.name }}</radio>
         </radio-group>
       </div>
-      <form-render v-if="!loading" v-show="active === 0" mode="MOBILE" class="process-form" ref="form" :forms="forms" v-model="formData" :config="form.formConfig"/>
-      <process-render ref="process" :dept-id="userDeptId" :pc-mode="false" v-model="processUsers" v-if="!loading && userDeptId"
-                      style="padding: 10px" v-show="active === 1" :forms="forms" :formData="formData" :process="process"/>
+      <form-render v-if="!loading" v-show="active === 0" mode="MOBILE" class="process-form" ref="form" :forms="forms" v-model="formData" :config="form.formConfig" />
+      <process-render ref="process" :dept-id="userDeptId" :pc-mode="false" v-model="processUsers" v-if="!loading && userDeptId" style="padding: 10px" v-show="active === 1" :forms="forms" :formData="formData" :process="process" />
     </div>
     <v-button class="submit-btn" round type="primary" @click="submit">提交审批</v-button>
   </div>
 </template>
 
 <script>
-import {Radio, RadioGroup, NavBar, Tabs, Tab, Button, showFailToast} from 'vant'
+import { Radio, RadioGroup, NavBar, Tabs, Tab, Button, showFailToast } from 'vant'
 import ProcessRender from '../process/ProcessRender.vue'
 import FormRender from '@/views/common/form/FormRender.vue'
 import FormDesignRender from '@/views/admin/layout/form/FormDesignRender.vue'
@@ -169,17 +168,21 @@ export default {
     padding: 0 0;
   }
 }
+
 :deep(.van-tabs) {
   .van-tabs__wrap {
     border-bottom: 1px solid @theme-aside-bgc;
   }
+
   .van-tabs__line {
     background-color: @theme-primary;
   }
+
   .van-tab--active .van-tab__text {
     color: @theme-primary;
   }
 }
+
 .submit-btn {
   position: fixed;
   bottom: 2rem;

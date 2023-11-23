@@ -4,10 +4,10 @@
       <el-input disabled :placeholder="placeholder" />
     </div>
     <div v-else-if="mode === 'PC' && !readonly">
-      <el-input clearable v-model="_value" :placeholder="placeholder">
+      <el-input clearable v-model="_value" :placeholder="placeholder" :disabled="disabled">
         <template #append v-if="enableScan">
           <el-button @click="scanCode">
-            <icon name="el-icon-fullscreen"/>
+            <icon name="el-icon-fullscreen" />
           </el-button>
         </template>
       </el-input>
@@ -47,6 +47,9 @@ export default {
     enableScan: {
       type: Boolean,
       default: false,
+    },
+    disabled: {
+      type: Boolean,
     },
   },
   data() {

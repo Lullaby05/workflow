@@ -3,7 +3,7 @@ import request from '@/api/request.js'
 // 查询组织架构树
 export function getOrgTree(param) {
   return request({
-    url: 'oa/org/tree',
+    url: 'uaa/org/tree',
     method: 'get',
     params: param,
   })
@@ -11,7 +11,7 @@ export function getOrgTree(param) {
 
 export function getUserSign() {
   return request({
-    url: 'oa/org/user/sign',
+    url: 'uaa/org/user/sign',
     method: 'get'
   })
 }
@@ -19,7 +19,7 @@ export function getUserSign() {
 // 查询系统角色
 export function getRole() {
   return request({
-    url: 'oa/org/role',
+    url: 'uaa/org/role',
     method: 'get',
   })
 }
@@ -27,7 +27,7 @@ export function getRole() {
 // 搜索人员
 export function getUserByName(param) {
   return request({
-    url: 'oa/org/tree/user/search',
+    url: 'uaa/org/tree/user/search',
     method: 'get',
     params: param,
   })
@@ -36,7 +36,7 @@ export function getUserByName(param) {
 // 搜索人员
 export function getUserDepts(userId) {
   return request({
-    url: `oa/org/user/${userId}/dept`,
+    url: `uaa/org/user/${userId}/dept`,
     method: 'get',
   })
 }
@@ -44,7 +44,7 @@ export function getUserDepts(userId) {
 // 获取审批代理人
 export function getUserAgent() {
   return request({
-    url: `oa/org/user/agent`,
+    url: `uaa/org/user/agent`,
     method: 'get',
   })
 }
@@ -52,7 +52,7 @@ export function getUserAgent() {
 // 获取审批代理人
 export function setUserAgent(params) {
   return request({
-    url: `oa/org/user/agent`,
+    url: `uaa/org/user/agent`,
     method: 'put',
     data: params,
   })
@@ -61,7 +61,7 @@ export function setUserAgent(params) {
 // 获取审批代理人
 export function cancelUserAgent() {
   return request({
-    url: `oa/org/user/agent`,
+    url: `uaa/org/user/agent`,
     method: 'delete',
   })
 }

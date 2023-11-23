@@ -67,6 +67,15 @@ function decodeFieldVal(formData, item, val) {
         });
       });
       break;
+    case 'SafetyMeasure':
+      value = [];
+      (formData[item.id] || []).forEach((row, i) => {
+        value.push({});
+        item.props.columns.forEach((col) => {
+          decodeFieldVal(row, col, value[i]);
+        });
+      });
+      break;
     case 'TimeRangePicker':
     case 'DateTimeRange':
       const v = formData[item.id];
@@ -83,9 +92,8 @@ function decodeFieldVal(formData, item, val) {
       break;
     case 'SignPanel':
       if (formData[item.id]) {
-        value = `<img style="width: 150px; height: 100px; padding: 2px;" src="${
-          formData[item.id]
-        }"/>`;
+        value = `<img style="width: 150px; height: 100px; padding: 2px;" src="${formData[item.id]
+          }"/>`;
       }
       break;
     case 'ImageUpload':
@@ -274,15 +282,15 @@ Print.prototype = {
   isDOM:
     typeof HTMLElement === 'object'
       ? function (obj) {
-          return obj instanceof HTMLElement;
-        }
+        return obj instanceof HTMLElement;
+      }
       : function (obj) {
-          return (
-            obj &&
-            typeof obj === 'object' &&
-            obj.nodeType === 1 &&
-            typeof obj.nodeName === 'string'
-          );
-        },
+        return (
+          obj &&
+          typeof obj === 'object' &&
+          obj.nodeType === 1 &&
+          typeof obj.nodeName === 'string'
+        );
+      },
 };
 export default Print;

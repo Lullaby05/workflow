@@ -1,15 +1,20 @@
 <template>
   <div>
     <div v-if="mode === 'DESIGN'">
-      <el-select class="max-fill" v-if="!expanding" multiple v-model="_value" disabled :placeholder="placeholder"/>
+      <el-select class="max-fill" v-if="!expanding" multiple v-model="_value" disabled :placeholder="placeholder" />
       <el-checkbox-group v-else v-model="_value">
         <el-checkbox class="w-row-text" disabled v-for="(op, index) in options" :key="index" :label="op">{{ op }}</el-checkbox>
       </el-checkbox-group>
     </div>
     <div v-else-if="mode === 'PC' && !readonly">
-      <el-select class="max-fill" v-if="!expanding" v-model="_value" multiple clearable :placeholder="placeholder">
-        <el-option v-for="(op, index) in options" :key="index" :value="op" :label="op"></el-option>
-      </el-select>
+      <div v-if="!expanding">
+        <el-select class="max-fill" v-if="isNeedApi" v-model="_value" multiple clearable :placeholder="placeholder">
+          <el-option v-for="(op, index) in options" :key="index" :value="op.value" :label="op.label"></el-option>
+        </el-select>
+        <el-select class="max-fill" v-if="!isNeedApi" v-model="_value" multiple clearable :placeholder="placeholder">
+          <el-option v-for="(op, index) in options" :key="index" :value="op" :label="op"></el-option>
+        </el-select>
+      </div>
       <el-checkbox-group v-else v-model="_value">
         <el-checkbox class="w-row-text" style="margin: 5px" v-for="(op, index) in options" :key="index" :label="op">{{ op }}</el-checkbox>
       </el-checkbox-group>
@@ -60,6 +65,10 @@ export default {
         return []
       },
     },
+    isNeedApi: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {},
   data() {
@@ -69,7 +78,7 @@ export default {
     }
   },
   methods: {
-    onConfirm() {},
+    onConfirm() { },
   },
   emits: ['update:modelValue'],
 }

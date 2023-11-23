@@ -1,16 +1,9 @@
 <template>
-  <div
-    v-loading="loading"
-    class="preview"
-  >
+  <div v-loading="loading" class="preview">
     <div v-if="instanceData.instanceId">
       <div class="title">
         <div v-if="instanceData.staterUser">
-          <avatar
-            showY
-            :name="instanceData.staterUser.name"
-            :src="instanceData.staterUser.avatar"
-          />
+          <avatar showY :name="instanceData.staterUser.name" :src="instanceData.staterUser.avatar" />
         </div>
         <div class="title-info">
           <div class="name">
@@ -23,112 +16,54 @@
             <span style="color: #6c6c6c">编号：</span>
             <span class="id">{{ instanceData.instanceId }}</span>
           </div>
-          <img
-            v-if="status.img"
-            :src="status.img"
-            :style="isMobile ? 'right: -20px' : ''"
-          />
+          <img v-if="status.img" :src="status.img" :style="isMobile ? 'right: -20px' : ''" />
           <!--          <div style="font-size: 13px; color: rgb(142 141 141)" v-if="instanceData.staterUser">
                         由 {{instanceData.staterUser.name}} 在{{instanceData.startTime}}发起
                       </div>-->
         </div>
-        <div
-          class="extend-options"
-          v-if="!isMobile"
-        >
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="打印"
-            placement="top-start"
-          >
-            <icon
-              name="el-icon-printer"
-              @click="print"
-            ></icon>
+        <div class="extend-options" v-if="!isMobile">
+          <el-tooltip class="item" effect="dark" content="打印" placement="top-start">
+            <icon name="el-icon-printer" @click="print"></icon>
           </el-tooltip>
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="手机扫码"
-            placement="top-start"
-          >
-            <icon
-              name="iconfont icon-iconfonterweima"
-              @click="scanQr"
-            ></icon>
+          <el-tooltip class="item" effect="dark" content="手机扫码" placement="top-start">
+            <icon name="iconfont icon-iconfonterweima" @click="scanQr"></icon>
           </el-tooltip>
         </div>
       </div>
       <div class="form">
-        <form-render
-          class="process-form"
-          :config="instanceData.formConfig"
-          :mode="isMobile ? 'MOBILE' : 'PC'"
-          ref="form"
-          :forms="instanceData.formItems"
-          v-model="instanceData.formData"
-        />
+        <form-render class="process-form" :config="instanceData.formConfig" :mode="isMobile ? 'MOBILE' : 'PC'" ref="form" :forms="instanceData.formItems" v-model="instanceData.formData" />
       </div>
       <div class="process">
-        <process-progress
-          :result="instanceData.result"
-          :status="instanceData.status"
-          :progress="instanceData.progress"
-        />
+        <process-progress :result="instanceData.result" :status="instanceData.status" :progress="instanceData.progress" />
       </div>
     </div>
-    <div
-      class="actions"
-      v-if="isNeedExamine && instanceData.result === 'RUNNING'"
-    >
+    <div class="actions" v-if="isNeedExamine && instanceData.result === 'RUNNING'">
       <div style="position: relative; width: 100%">
-        <div
-          class="comment"
-          @click="comment"
-        >
+        <div class="comment" @click="comment">
           <icon name="el-icon-chatlineround"></icon>
           <div>评论</div>
         </div>
         <template v-if="instanceData.operationPerm">
-          <div
-            v-if="activeTasks.length > 0 && showMore"
-            class="action-more"
-          >
+          <div v-if="activeTasks.length > 0 && showMore" class="action-more">
             <el-dropdown>
-              <el-button
-                type="primary"
-                link
-              >
+              <el-button type="primary" link>
                 更多<icon name="el-icon-arrowdown"></icon>
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item
-                    v-if="opPerms?.transfer?.show"
-                    @click="handler('transfer')"
-                  >
+                  <el-dropdown-item v-if="opPerms?.transfer?.show" @click="handler('transfer')">
                     <icon name="iconfont icon-zhuanyi-16"></icon>
                     {{ opPerms?.transfer?.alisa }}
                   </el-dropdown-item>
-                  <el-dropdown-item
-                    v-if="opPerms?.recall?.show"
-                    @click="handler('recall')"
-                  >
+                  <el-dropdown-item v-if="opPerms?.recall?.show" @click="handler('recall')">
                     <icon name="el-icon-failed"></icon>
                     {{ opPerms?.recall?.alisa }}
                   </el-dropdown-item>
-                  <el-dropdown-item
-                    v-if="opPerms?.afterAdd?.show"
-                    @click="handler('afterAdd')"
-                  >
+                  <el-dropdown-item v-if="opPerms?.afterAdd?.show" @click="handler('afterAdd')">
                     <icon name="iconfont icon-zhaopinguanli"></icon>
                     {{ opPerms?.afterAdd?.alisa }}
                   </el-dropdown-item>
-                  <el-dropdown-item
-                    v-if="enableCancel"
-                    @click.native="handler('cancel')"
-                  >
+                  <el-dropdown-item v-if="enableCancel" @click.native="handler('cancel')">
                     <icon name="el-icon-refreshleft"></icon>
                     撤销
                   </el-dropdown-item>
@@ -136,95 +71,34 @@
               </template>
             </el-dropdown>
           </div>
-          <div
-            v-if="activeTasks.length > 0"
-            class="ok-refuse"
-          >
-            <el-button
-              size="small"
-              type="danger"
-              v-if="opPerms?.refuse?.show"
-              round
-              plain
-              @click="handler('refuse')"
-              >{{ opPerms?.refuse?.alisa }}</el-button
-            >
-            <el-button
-              size="small"
-              type="primary"
-              v-if="opPerms?.agree?.show"
-              round
-              @click="handler('agree')"
-              >{{ opPerms?.agree?.alisa }}</el-button
-            >
+          <div v-if="activeTasks.length > 0" class="ok-refuse">
+            <el-button size="small" type="danger" v-if="opPerms?.refuse?.show" round plain @click="handler('refuse')">{{ opPerms?.refuse?.alisa }}</el-button>
+            <el-button size="small" type="primary" v-if="opPerms?.agree?.show" round @click="handler('agree')">{{ opPerms?.agree?.alisa }}</el-button>
           </div>
         </template>
-        <div
-          class="cancel"
-          v-else-if="enableCancel"
-        >
-          <el-button
-            type="primary"
-            link
-            @click="handler('cancel')"
-          >
+        <div class="cancel" v-else-if="enableCancel">
+          <el-button type="primary" link @click="handler('cancel')">
             <icon name="el-icon-refreshleft"></icon>
             撤销
           </el-button>
         </div>
       </div>
     </div>
-    <w-dialog
-      v-model="printVisible"
-      width="700px"
-      title="打印预览"
-      okText="打 印"
-      @ok="doPrint"
-    >
+    <w-dialog v-model="printVisible" width="700px" title="打印预览" okText="打 印" @ok="doPrint">
       <template #title>
         <div>
           <span>打印预览</span>
-          <el-radio-group
-            style="margin: 0 30px"
-            v-model="printCheck"
-            @change="renderPrint"
-            v-if="printTemplateConfig.customPrint"
-          >
+          <el-radio-group style="margin: 0 30px" v-model="printCheck" @change="renderPrint" v-if="printTemplateConfig.customPrint">
             <el-radio :label="false">默认模板</el-radio>
             <el-radio :label="true">自定义模板</el-radio>
           </el-radio-group>
         </div>
       </template>
-      <div
-        v-if="printCheck"
-        id="printDom"
-        ref="print"
-        v-html="printTemplateConfig.printTemplate"
-      ></div>
-      <default-printer
-        v-else
-        ref="print"
-        :status="status"
-        :instance="instanceData"
-      />
+      <div v-if="printCheck" id="printDom" ref="print" v-html="printTemplateConfig.printTemplate"></div>
+      <default-printer v-else ref="print" :status="status" :instance="instanceData" />
     </w-dialog>
-    <w-dialog
-      v-model="actionVisible"
-      :width="isMobile ? '100%' : '500px'"
-      :title="actionDesc.title"
-      okText="提 交"
-      @ok="doAction"
-    >
-      <process-action
-        ref="action"
-        @success="handlerOk"
-        :form-data="formData"
-        v-if="actionVisible"
-        :active-tasks="activeTasks"
-        :instance="instanceData"
-        :action="actionType"
-        :action-desc="actionDesc"
-      />
+    <w-dialog v-model="actionVisible" :width="isMobile ? '100%' : '500px'" :title="actionDesc.title" okText="提 交" @ok="doAction">
+      <process-action ref="action" @success="handlerOk" :form-data="formData" v-if="actionVisible" :active-tasks="activeTasks" :instance="instanceData" :action="actionType" :action-desc="actionDesc" />
     </w-dialog>
   </div>
 </template>
@@ -298,6 +172,8 @@ export default {
         this.instanceData.formItems || [],
         val
       );
+      val['apply'] = '111';
+      console.log('@',);
       val.ownerDept = this.instanceData.starterDept;
       val.owner = this.instanceData.staterUser.name;
       val.startTime = this.instanceData.startTime;
@@ -587,7 +463,8 @@ export default {
   background: #eeeeee;
   position: relative;
   height: 100%;
-  & > div:nth-child(1) {
+
+  &>div:nth-child(1) {
     overflow-y: auto;
     height: 100%;
     //padding-bottom: 50px;
@@ -640,10 +517,12 @@ export default {
     }
   }
 }
+
 .process {
   background: white;
   padding: 20px 10px 50px 10px;
 }
+
 .title {
   background: white;
   display: flex;
@@ -651,7 +530,8 @@ export default {
   flex-wrap: nowrap;
   position: relative;
   padding: 0 10px 10px 10px;
-  & > div {
+
+  &>div {
     color: #666666;
     display: inline-block;
   }
@@ -697,6 +577,7 @@ export default {
     }
   }
 }
+
 .form {
   margin: 15px 0;
   padding: 10px 10px 1px 10px;

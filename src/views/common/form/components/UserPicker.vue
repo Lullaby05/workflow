@@ -6,19 +6,18 @@
     </div>
     <div v-else-if="mode === 'PC' && !readonly" style="max-width: 350px">
       <el-button icon="el-icon-user" type="primary" size="default" round @click="$refs.orgPicker.show()">选择人员</el-button>
-      <org-picker type="user" :multiple="multiple" ref="orgPicker" :selected="_value" @ok="selected"/>
+      <org-picker type="user" :multiple="multiple" ref="orgPicker" :selected="_value" @ok="selected" />
       <span class="placeholder"> {{ placeholder }}</span>
       <div style="margin-top: 5px">
         <el-tag size="small" style="margin: 5px" closable v-for="(dept, i) in _value" @close="delDept(i)">{{ dept.name }}</el-tag>
       </div>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <field readonly clearable @clear="_value = []" right-icon="arrow" clickable
-        v-model="deptDesc" :placeholder="placeholder" @click="$refs.orgPicker.show()"></field>
-      <org-picker :pc-mode="false" type="user" :multiple="multiple" ref="orgPicker" :selected="_value" @ok="selected"/>
+      <field readonly clearable @clear="_value = []" right-icon="arrow" clickable v-model="deptDesc" :placeholder="placeholder" @click="$refs.orgPicker.show()"></field>
+      <org-picker :pc-mode="false" type="user" :multiple="multiple" ref="orgPicker" :selected="_value" @ok="selected" />
     </div>
     <div v-else class="preview">
-      <avatar :size="35" :name="user.name" showY :src="user.avatar" v-for="user in _value"/>
+      <avatar :size="35" :name="user.name" showY :src="user.avatar" v-for="user in _value" />
     </div>
   </div>
 </template>
@@ -69,7 +68,7 @@ export default {
           return null
         }
       },
-      set(val) {},
+      set(val) { },
     },
   },
   data() {
@@ -96,9 +95,11 @@ export default {
   color: #adabab;
   font-size: smaller;
 }
+
 .preview {
   display: flex;
   justify-content: left;
+
   :deep(.avatar) {
     margin: 0 5px;
   }

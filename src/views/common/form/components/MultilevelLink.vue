@@ -68,7 +68,6 @@ export default {
         return {};
       },
       set(val) {
-        console.log('@', val);
         this.$emit('update:modelValue', val);
       },
     },
@@ -98,10 +97,20 @@ export default {
           this.currentOptions.apis[index + 1],
           val
         );
-        this.currentOptions.options[index + 1] = data.map((ele) => ({
-          key: ele.name,
-          value: ele.id,
-        }));
+        let dataArr = data
+        // 后台返回值可能是Map，需要转换成数组
+        if (Object.prototype.toString.call(dataArr) === '[object Object]') {
+          this.currentOptions.options[index + 1] = Object.keys(dataArr)
+            .map((key) => ({
+              key,
+              value: dataArr[key],
+            }))
+        } else {
+          this.currentOptions.options[index + 1] = dataArr.map((ele) => ({
+            key: ele.name,
+            value: ele.id,
+          }));
+        }
         this.$emit('update:currentOptions', this.currentOptions);
       } else {
         this._valuePc[this.currentOptions.fields[index]] = '';

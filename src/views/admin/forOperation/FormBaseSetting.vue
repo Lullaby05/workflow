@@ -25,8 +25,8 @@
       <el-form-item label="表单名称" :rules="getRule('请输入表单名称')" prop="formName">
         <el-input v-model="setup.formName" size="default"></el-input>
       </el-form-item>
-      <el-form-item label="作业类型" :rules="getRule('请选择作业类型')" prop="settings.operationType">
-        <el-select v-model="setup.settings.operationType" filterable @change="handleChangeOperationType">
+      <el-form-item label="作业类型" :rules="getRule('请选择作业类型')" prop="operationType">
+        <el-select v-model="setup.operationType" filterable>
           <el-option v-for="item in operationTypes" :key="item.dictValue" :label="item.dictKey" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
@@ -141,9 +141,10 @@ export default {
   computed: {
     setup() {
       const setup = this.$store.state.design;
-      if (setup.settings.operationType) {
+      setup.groupId = 116;
+      if (setup.operationType) {
         // 初始化
-        this.handleChangeOperationType(setup.settings.operationType)
+        this.handleChangeOperationType(setup.operationType);
       }
       return setup;
     },
@@ -156,19 +157,29 @@ export default {
   },
   methods: {
     handleChangeOperationType(operationType) {
-      if (!operationType) {
-        this.$confirm('您确定要修改作业类型吗', '修改作业类型可能会导致数据丢失，请谨慎操作！', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }).then(() => {
-          this.setup.settings.operationType = '';
-          this.handleChangeOperationType();
-        }).catch(() => {
-          this.setup.settings.operationType = this.setup.formName.substring(0, 1);
-        })
+      // if (operationType) {
+      //   this.$confirm(
+      //     '您确定要修改作业类型吗',
+      //     '修改作业类型可能会导致数据丢失，请谨慎操作！',
+      //     {
+      //       confirmButtonText: '确定',
+      //       cancelButtonText: '取消',
+      //       type: 'warning',
+      //     }
+      //   )
+      //     .then(() => {
+
+      //     })
+      // }
+      const clearProcessKey = (treeData) => {
+        treeData.props.processKey = '';
+        if (Object.keys(treeData.children).length) {
+          clearProcessKey(treeData.children);
+        }
+        return treeData;
       };
-      const type = operationType || this.setup.settings.operationType;
+      clearProcessKey(this.setup.process);
+      const type = operationType || this.setup.operationType;
       getValueKeyEnum(type).then((res) => {
         const dataMap = [];
         Object.keys(res.data.data).forEach((key) => {
@@ -234,7 +245,7 @@ export default {
       if (!this.$isNotEmpty(this.setup.formName)) {
         err.push('表单名称未设置');
       }
-      if (!this.$isNotEmpty(this.setup.settings.operationType)) {
+      if (!this.$isNotEmpty(this.setup.operationType)) {
         err.push('表单名称未设置');
       }
       if (!this.$isNotEmpty(this.setup.groupId)) {

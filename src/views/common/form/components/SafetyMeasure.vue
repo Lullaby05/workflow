@@ -1,81 +1,252 @@
 <template>
   <div>
     <div v-if="mode === 'DESIGN'">
-      <el-table :cell-style="cellStyle" :header-cell-style="tbCellStyle" :border="showBorder" :summary-method="getSummaries" :show-summary="showSummary" :data="_value" style="width: 100%">
-        <el-table-column fixed type="index" label="序号" width="55"></el-table-column>
-        <el-table-column label="安全措施" props="safetyMeasure"></el-table-column>
-        <el-table-column label="是否涉及" props="isRelated">
+      <el-table
+        :cell-style="cellStyle"
+        :header-cell-style="tbCellStyle"
+        :border="showBorder"
+        :summary-method="getSummaries"
+        :show-summary="showSummary"
+        :data="_value"
+        style="width: 100%"
+      >
+        <el-table-column
+          fixed
+          type="index"
+          label="序号"
+          width="55"
+        ></el-table-column>
+        <el-table-column
+          label="安全措施"
+          props="safetyMeasure"
+        ></el-table-column>
+        <el-table-column
+          label="是否涉及"
+          props="isRelated"
+        >
           <template #default="scope">
             <el-radio-group v-model="_value[scope.$index].isRelated">
-              <el-radio label="1" size="large">是</el-radio>
-              <el-radio label="0" size="large">否</el-radio>
+              <el-radio
+                label="1"
+                size="large"
+                >是</el-radio
+              >
+              <el-radio
+                label="0"
+                size="large"
+                >否</el-radio
+              >
             </el-radio-group>
           </template>
         </el-table-column>
-        <el-table-column label="确认人" props="confirmPerson">
+        <el-table-column
+          label="确认人"
+          props="confirmPerson"
+        >
           <form-design-render :config="signPanalConfig" />
         </el-table-column>
       </el-table>
     </div>
     <div v-else-if="mode === 'MOBILE'">
       <collapse v-model="actives">
-        <div class="m-tb-empty" v-if="_value.length === 0">
+        <div
+          class="m-tb-empty"
+          v-if="_value.length === 0"
+        >
           点击下方 + 添加安全措施
         </div>
-        <collapse-item :lazy-render="false" style="background: #f7f8fa" :name="i" v-for="(row, i) in _value" :key="i">
+        <collapse-item
+          :lazy-render="false"
+          style="background: #f7f8fa"
+          :name="i"
+          v-for="(row, i) in _value"
+          :key="i"
+        >
           <template #title>
             <span>第 {{ i + 1 }} 项 </span>
-            <span class="m-valid-error" v-show="isError(i)">
+            <span
+              class="m-valid-error"
+              v-show="isError(i)"
+            >
               <icon name="el-icon-warning"></icon>
             </span>
-            <span class="del-row" @click.stop="delRow(i, row)" v-if="!readonly">删除</span>
+            <span
+              class="del-row"
+              @click.stop="delRow(i, row)"
+              v-if="!readonly"
+              >删除</span
+            >
           </template>
-          <form-item :model="row" :rule="rules[column.id]" :ref="`${column.id}_${i}`" :prop="column.id" :label="column.title" v-for="(column, index) in _columns" :key="'column_' + index">
-            <form-design-render :index="i + 1" :formData="formData" :readonly="isReadonly(signPanalConfig)" v-model="scoped.row.confirmPerson" :mode="mode" :config="signPanalConfig" />
+          <form-item
+            :model="row"
+            :rule="rules[column.id]"
+            :ref="`${column.id}_${i}`"
+            :prop="column.id"
+            :label="column.title"
+            v-for="(column, index) in _columns"
+            :key="'column_' + index"
+          >
+            <form-design-render
+              :index="i + 1"
+              :formData="formData"
+              :readonly="isReadonly(signPanalConfig)"
+              v-model="scoped.row.confirmPerson"
+              :mode="mode"
+              :config="signPanalConfig"
+            />
           </form-item>
         </collapse-item>
       </collapse>
-      <div class="m-add-row" @click="addRow" v-if="!readonly">
+      <div
+        class="m-add-row"
+        @click="addRow"
+        v-if="!readonly"
+      >
         <icon name="el-icon-plus"></icon>
         <span> {{ placeholder }}</span>
       </div>
     </div>
     <template v-else>
       <template v-if="rowLayout">
-        <el-table :cell-style="cellStyle" :header-cell-style="tbCellStyle" :border="showBorder" :summary-method="getSummaries" :show-summary="showSummary" :data="_value" style="width: 100%">
-          <el-table-column fixed type="index" label="序号" width="55"></el-table-column>
-          <el-table-column label="安全措施" props="safetyMeasure">
+        <el-table
+          :cell-style="cellStyle"
+          :header-cell-style="tbCellStyle"
+          :border="showBorder"
+          :summary-method="getSummaries"
+          :show-summary="showSummary"
+          :data="_value.tableData"
+          style="width: 100%"
+        >
+          <el-table-column
+            fixed
+            type="index"
+            label="序号"
+            width="55"
+          ></el-table-column>
+          <el-table-column
+            label="安全措施"
+            props="safetyMeasure"
+          >
             <template #default="scope">
-              {{ _value[scope.$index].safetyMeasure }}
+              {{ _value.tableData[scope.$index].securityMeasure }}
             </template>
           </el-table-column>
-          <el-table-column label="是否涉及" props="isRelated">
+          <el-table-column
+            label="是否涉及"
+            props="isRelated"
+          >
             <template #default="scope">
-              <el-radio-group v-model="_value[scope.$index].isRelated">
-                <el-radio size="large" label="1">是</el-radio>
-                <el-radio size="large" label="0">否</el-radio>
+              <el-radio-group
+                v-model="_value.tableData[scope.$index].isRelated"
+              >
+                <el-radio
+                  size="large"
+                  label="1"
+                  >是</el-radio
+                >
+                <el-radio
+                  size="large"
+                  label="0"
+                  >否</el-radio
+                >
               </el-radio-group>
             </template>
           </el-table-column>
-          <el-table-column label="确认人" props="confirmPerson">
+          <el-table-column
+            label="确认人"
+            props="confirmPerson"
+          >
             <template #default="scope">
-              <signPanal :config="signPanalConfig" :mode="mode" v-model="_value[scope.$index].confirmPerson" />
+              <signPanal
+                :config="signPanalConfig"
+                :mode="mode"
+                v-model="_value.tableData[scope.$index].confirmPerson"
+              />
             </template>
           </el-table-column>
         </el-table>
-        <el-button size="default" icon="el-icon-plus" @click="addSafetyMeasure" v-if="!readonly">{{ placeholder }}</el-button>
+        <el-button
+          size="default"
+          icon="el-icon-plus"
+          style="display: block; margin: 12px 0"
+          type="primary"
+          @click="addSafetyMeasure"
+          v-if="!readonly"
+          >{{ '添加其他安全措施' }}</el-button
+        >
+        <div
+          class="otherSafetyMeasure"
+          v-for="(item, index) in _value.otherSafetyMeasure"
+          :key="index"
+        >
+          <el-form
+            :model="item"
+            inline
+          >
+            <el-form-item field="otherMeasure">
+              <el-input
+                v-model="item.otherMeasure"
+                clearable
+                placeholder="请输入其他安全措施"
+              ></el-input>
+            </el-form-item>
+            <el-form-item field="organizer">
+              <el-input
+                v-model="item.organizer"
+                clearable
+                placeholder="请输入编制人"
+              ></el-input>
+            </el-form-item>
+            <el-form-item field="confirmPerson">
+              <el-input
+                v-model="item.confirmPerson"
+                clearable
+                placeholder="请输入确认人"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
       </template>
       <template v-else>
-        <el-form :rules="rules" :model="row" :ref="`table-form-${i}`" class="table-column" v-for="(row, i) in _value" :key="i">
+        <el-form
+          :rules="rules"
+          :model="row"
+          :ref="`table-form-${i}`"
+          class="table-column"
+          v-for="(row, i) in _value"
+          :key="i"
+        >
           <div class="table-column-action">
             <span>第 {{ i + 1 }} 项</span>
-            <icon name="el-icon-close" @click="delRow(i, row)" v-if="!readonly"></icon>
+            <icon
+              name="el-icon-close"
+              @click="delRow(i, row)"
+              v-if="!readonly"
+            ></icon>
           </div>
-          <el-form-item v-for="(column, index) in _columns" :key="'column_' + index" :prop="column.id" :label="column.title">
-            <form-design-render :index="index + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column" />
+          <el-form-item
+            v-for="(column, index) in _columns"
+            :key="'column_' + index"
+            :prop="column.id"
+            :label="column.title"
+          >
+            <form-design-render
+              :index="index + 1"
+              :formData="formData"
+              :readonly="isReadonly(column)"
+              v-model="row[column.id]"
+              :mode="mode"
+              :config="column"
+            />
           </el-form-item>
         </el-form>
-        <el-button size="small" icon="el-icon-plus" @click="addRow" v-if="!readonly">{{ placeholder }}</el-button>
+        <el-button
+          size="small"
+          icon="el-icon-plus"
+          @click="addRow"
+          v-if="!readonly"
+          >{{ placeholder }}</el-button
+        >
       </template>
     </template>
   </div>
@@ -89,6 +260,7 @@ import FormItem from '@/components/common/FormItem.vue';
 import FormDesignRender from '@/views/admin/layout/form/FormDesignRender.vue';
 import componentMinxins from '../ComponentMinxins';
 import signPanal from './SignPanel.vue';
+import multilevelLink from '../../../../api/multilevelLink';
 
 export default {
   mixins: [componentMinxins],
@@ -103,9 +275,12 @@ export default {
   },
   props: {
     modelValue: {
-      type: Array,
+      type: Object,
       default: () => {
-        return [];
+        return {
+          tableData: [],
+          otherSafetyMeasure: [],
+        };
       },
     },
     placeholder: {
@@ -142,12 +317,14 @@ export default {
     },
   },
   created() {
-    if (!Array.isArray(this.modelValue)) {
-      this._value = [];
+    if (Array.isArray(this.modelValue)) {
+      this._value = {
+        tableData: [],
+        otherSafetyMeasure: [],
+      };
     } else if (this.$isNotEmpty(this.modelValue)) {
-      this._value = [{ number: 1, safetyMeasure: '123123', isRelated: '', confirmPerson: '' }];
+      this.loadSecurityMeasure();
     }
-    this.loadSecurityMeasure();
   },
   computed: {
     rules() {
@@ -217,10 +394,41 @@ export default {
         value: '',
         valueType: 'String',
       },
+      _value: {
+        tableData: [],
+        otherSafetyMeasure: [],
+      },
     };
   },
+  watch: {
+    _value: {
+      deep: true,
+      handler(val) {
+        this.$emit('update:modelValue', val);
+      },
+    },
+  },
   methods: {
-    loadSecurityMeasure() { },
+    async loadSecurityMeasure() {
+      // const { data } = await multilevelLink.getSafetyMeasureSmiple('5');
+      // this._value.tableData = data.data.map((ele, index) => {
+      //   return {
+      //     number: index + 1,
+      //     securityMeasure: ele.securityMeasure,
+      //     isRelated: '',
+      //     confirmPerson: '',
+      //   };
+      // });
+      this._value.tableData = [
+        {
+          number: 1,
+          securityMeasure: '测试安全措施',
+          isRelated: '',
+          confirmPerson: '',
+        },
+      ];
+      this._value.otherSafetyMeasure = [];
+    },
     isReadonly(item) {
       return item.perm === 'R';
     },
@@ -261,10 +469,13 @@ export default {
       }
       return false;
     },
-    copyData(i, row) {
-      this._value.push(this.$deepCopy(row));
+    addSafetyMeasure() {
+      this._value.otherSafetyMeasure.push({
+        otherMeasure: '',
+        organizer: '',
+        confirmPerson: '',
+      });
     },
-    addSafetyMeasure() { },
     delRow(i, row) {
       if (this.mode === 'PC') {
         this.$confirm('您确定要删除该行数据吗？', '提示', {
@@ -342,10 +553,10 @@ export default {
           let result = true;
           for (let i = 0; i < this.columns.length; i++) {
             if (this.columns[i].props.required) {
-              for (let j = 0; j < this._value.length; j++) {
+              for (let j = 0; j < this._value.tableData.length; j++) {
                 result = !this.showError(
                   this.columns[i],
-                  this._value[j][this.columns[i].id]
+                  this._value.tableData[j][this.columns[i].id]
                 );
                 if (!result) {
                   call(false);
@@ -357,7 +568,7 @@ export default {
           call(result);
         } else {
           let success = 0;
-          this._value.forEach((v, i) => {
+          this._value.tableData.forEach((v, i) => {
             let formRef = this.$refs[`table-form-${i}`];
             if (formRef && Array.isArray(formRef) && formRef.length > 0) {
               formRef[0].validate((valid) => {
@@ -367,7 +578,7 @@ export default {
               });
             }
           });
-          setTimeout(() => call(success === this._value.length), 500);
+          setTimeout(() => call(success === this._value.tableData.length), 500);
         }
       } else {
         let success = true;
@@ -392,6 +603,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.otherSafetyMeasure .el-form .el-input {
+  width: 256px;
+}
+
 .m-valid-error {
   margin-left: 10px;
   font-size: 1rem;
@@ -427,7 +642,6 @@ export default {
   }
 
   .cell {
-
     .el-input__wrapper,
     .el-input__inner,
     .el-textarea__inner {

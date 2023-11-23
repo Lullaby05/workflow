@@ -4,12 +4,12 @@
       <el-tab-pane label="基本信息" name="basic" v-if="isOperationPage">
         <el-form :model="selectNode" label-width="130px">
           <el-form-item field="processKey" label="processKey">
-            <el-select v-model="selectNode.processKey" placeholder="请选择processKey">
+            <el-select v-model="selectNode.props.processKey" placeholder="请选择processKey" clearable filterable>
               <el-option v-for="item in processKeyOptions" :key="item.dictValue" :disabled="item.disabled" :label="item.dictKey" :value="item.dictValue"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item field="processFormKey" label="processFormKey">
-            <el-select v-model="selectNode.processFormKey" placeholder="请选择processFormKey">
+            <el-select v-model="selectNode.props.processFormKey" placeholder="请选择processFormKey" clearable filterable>
               <el-option v-for="item in processFormKeyOptions" :key="item.dictValue" :label="item.dictKey" :value="item.dictValue"></el-option>
             </el-select>
           </el-form-item>
@@ -64,7 +64,7 @@ export default {
     };
   },
   watch: {
-    'selectNode.processKey'(newVal, oldVal) {
+    'selectNode.props.processKey'(newVal, oldVal) {
       this.$store.commit('setCertProcessKeyDisabled', { newVal, oldVal })
     }
   },
