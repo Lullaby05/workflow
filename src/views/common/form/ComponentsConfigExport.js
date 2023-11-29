@@ -402,8 +402,8 @@ export const baseComponents = [
         title: '安全措施',
         name: 'SafetyMeasure',
         icon: 'el-icon-tickets',
-        value: [],
-        valueType: ValueType.array,
+        value: {},
+        valueType: ValueType.object,
         props: {
           required: false,
           enablePrint: true,
@@ -413,10 +413,16 @@ export const baseComponents = [
           summaryColumns: [],
           maxSize: 0, //最大条数，为0则不限制
           columns: [
-            { id: 'number' },
-            { id: 'safetyMeasure' },
-            { id: 'isRealted' },
-            { id: 'confirmPerson' },
+            { id: 'number', title: '序号' },
+            { id: 'securityMeasure', title: '安全措施' },
+            { id: 'isRelated', title: '是否涉及' },
+            {
+              id: 'confirmPerson',
+              title: '确认人',
+              name: 'SignPanel',
+              value: '',
+              valueType: 'String',
+            },
           ], //列设置
         },
       },

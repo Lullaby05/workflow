@@ -116,6 +116,7 @@ export default {
     },
     validate(call) {
       this.$refs.form.validate(validForm => {
+        console.log('@', validForm);
         this.$refs.process.validate(validProcess => {
           call(validForm, validProcess)
         });

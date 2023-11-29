@@ -65,6 +65,7 @@ export default {
   methods: {
     getFormData() {
       console.log('@', this.setup);
+      console.log('!', JSON.stringify(this.setup));
     },
     publish() {
       this.$emit('publish');
@@ -83,7 +84,6 @@ export default {
         if (this.$route.name.includes('ForOperation')) {
           this.$router.push('/workspace/formsPanel');
         }
-
       });
     },
     to(path) {

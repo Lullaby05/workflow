@@ -85,7 +85,7 @@ import InitiateProcess from '../InitiateProcess.vue'
 
 export default {
   name: 'ApprovalGroup',
-  components: {InitiateProcess },
+  components: { InitiateProcess },
   data() {
     return {
       taskCount: {
@@ -203,7 +203,7 @@ export default {
     },
     submitForm() {
       this.$refs.processForm.validate((validForm, validProcess) => {
-        if (!this.isMobile){
+        if (!this.isMobile) {
           if (validForm && validProcess) {
             this.$refs.processForm.submit()
           } else {
@@ -222,6 +222,7 @@ export default {
   padding: 20px 20px;
   margin: 0 15px 15px 15px;
   background: @theme-aside-bgc;
+
   .group-title {
     font-size: 15px;
     color: #303133;
@@ -251,11 +252,13 @@ export default {
       height: 20px;
       width: 20px;
       line-height: 20px;
+
       &:hover {
         box-shadow: 0 0 15px 0 #9f9999;
         //padding: 10px;
       }
     }
+
     .item-name {
       font-size: 12px;
       color: #303133;
@@ -263,18 +266,20 @@ export default {
       margin-top: 3px;
     }
 
-    & > div {
+    &>div {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
   }
 }
+
 .fixed-search {
   position: fixed;
   top: 25px;
   right: 220px;
 }
+
 .count {
   cursor: pointer;
   position: relative;
@@ -282,19 +287,23 @@ export default {
   border-radius: 8px;
   height: 80px;
   margin: 0 15px 20px 15px;
-  & > div {
+
+  &>div {
     left: 15px;
     position: absolute;
+
     div {
       color: #b9b8b8;
       font-size: 17px;
       font-weight: bold;
     }
   }
+
   p {
     color: #303133;
     font-size: 14px;
   }
+
   img {
     position: absolute;
     right: 15px;
@@ -302,6 +311,7 @@ export default {
     width: 40px;
     height: 40px;
   }
+
   &:hover {
     box-shadow: 0 0 10px #eeeeee;
   }

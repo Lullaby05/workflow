@@ -1,0 +1,1614 @@
+{
+  "processDefId": null,
+  "formId": null,
+  "formName": "临时用电安全作业证",
+  "operationType": "8",
+  "companyName": "1",
+  "version": 1,
+  "settings": {
+    "sign": false,
+    "admin": [],
+    "notify": { "title": "消息通知标题", "types": ["APP"] },
+    "commiter": [],
+    "enableCancel": true
+  },
+  "groupId": 116,
+  "process": {
+    "id": "root",
+    "desc": "任何人",
+    "name": "作业申请",
+    "type": "ROOT",
+    "props": {
+      "formPerms": [
+        {
+          "id": "field6068779432502",
+          "perm": "E",
+          "title": "作业申请单位",
+          "required": true
+        },
+        {
+          "id": "field2566379434210",
+          "perm": "E",
+          "title": "作业编号",
+          "required": true
+        },
+        {
+          "id": "field5902079826046",
+          "perm": "E",
+          "title": "作业地点",
+          "required": true
+        },
+        {
+          "id": "field3824279832282",
+          "perm": "E",
+          "title": "作业内容",
+          "required": true
+        },
+        {
+          "id": "field8307279853953",
+          "perm": "E",
+          "title": "电源接入点",
+          "required": true
+        },
+        {
+          "id": "field6460879865358",
+          "perm": "E",
+          "title": "电源接入点许可用电功率",
+          "required": true
+        },
+        {
+          "id": "field1103579860561",
+          "perm": "E",
+          "title": "工作电压",
+          "required": true
+        },
+        {
+          "id": "field9867279914484",
+          "perm": "E",
+          "title": "用电人",
+          "required": true
+        },
+        {
+          "id": "field3897879863030",
+          "perm": "E",
+          "title": "用电设备名称",
+          "required": true
+        },
+        {
+          "id": "field5318179861978",
+          "perm": "E",
+          "title": "用电设备额定功率",
+          "required": true
+        },
+        {
+          "id": "field1409579856002",
+          "perm": "E",
+          "title": "作业人",
+          "required": true
+        },
+        {
+          "id": "field5542779857804",
+          "perm": "E",
+          "title": "",
+          "required": true
+        },
+        {
+          "id": "field7885580487906",
+          "perm": "E",
+          "title": "作业负责人",
+          "required": false
+        },
+        {
+          "id": "field3680280096465",
+          "perm": "E",
+          "title": "",
+          "required": true
+        },
+        {
+          "id": "field5041780151857",
+          "perm": "E",
+          "title": "作业开始时间",
+          "required": true
+        },
+        {
+          "id": "field2167680150417",
+          "perm": "E",
+          "title": "作业结束时间",
+          "required": true
+        },
+        {
+          "id": "field4864980195302",
+          "perm": "E",
+          "title": "监护人",
+          "required": true
+        },
+        {
+          "id": "field5516380193328",
+          "perm": "E",
+          "title": "完工验收人",
+          "required": true
+        },
+        {
+          "id": "field7036080192340",
+          "perm": "E",
+          "title": "安全交底人",
+          "required": true
+        },
+        {
+          "id": "field3804080190054",
+          "perm": "E",
+          "title": "接受交底人",
+          "required": true
+        },
+        {
+          "id": "field6654080289310",
+          "perm": "E",
+          "title": "关联的其它作业证及作业证编号",
+          "required": false
+        },
+        {
+          "id": "field7837880360801",
+          "perm": "E",
+          "title": "危害辨识",
+          "required": true
+        },
+        {
+          "id": "field3584880391397",
+          "perm": "E",
+          "title": "安全措施",
+          "required": true
+        }
+      ],
+      "processKey": "apply",
+      "assignedUser": [],
+      "operationPerm": { "agree": { "show": true, "alisa": "提交" } },
+      "processFormKey": "field1758979406311"
+    },
+    "children": {
+      "id": "node_805707425724",
+      "name": "作业分析",
+      "type": "APPROVAL",
+      "props": {
+        "mode": "AND",
+        "role": [],
+        "sign": false,
+        "leader": { "level": 1, "skipEmpty": true },
+        "nobody": { "handler": "TO_PASS", "assignedUser": [] },
+        "refuse": { "type": "TO_NODE", "target": "root" },
+        "formDept": "",
+        "formUser": [],
+        "formPerms": [
+          {
+            "id": "field6068779432502",
+            "perm": "R",
+            "title": "作业申请单位",
+            "required": true
+          },
+          {
+            "id": "field2566379434210",
+            "perm": "R",
+            "title": "作业编号",
+            "required": true
+          },
+          {
+            "id": "field5902079826046",
+            "perm": "R",
+            "title": "作业地点",
+            "required": true
+          },
+          {
+            "id": "field3824279832282",
+            "perm": "R",
+            "title": "作业内容",
+            "required": true
+          },
+          {
+            "id": "field8307279853953",
+            "perm": "R",
+            "title": "电源接入点",
+            "required": true
+          },
+          {
+            "id": "field6460879865358",
+            "perm": "R",
+            "title": "电源接入点许可用电功率",
+            "required": true
+          },
+          {
+            "id": "field1103579860561",
+            "perm": "R",
+            "title": "工作电压",
+            "required": true
+          },
+          {
+            "id": "field9867279914484",
+            "perm": "R",
+            "title": "用电人",
+            "required": true
+          },
+          {
+            "id": "field3897879863030",
+            "perm": "R",
+            "title": "用电设备名称",
+            "required": true
+          },
+          {
+            "id": "field5318179861978",
+            "perm": "R",
+            "title": "用电设备额定功率",
+            "required": true
+          },
+          {
+            "id": "field1409579856002",
+            "perm": "R",
+            "title": "作业人",
+            "required": true
+          },
+          {
+            "id": "field5542779857804",
+            "perm": "R",
+            "title": "",
+            "required": true
+          },
+          {
+            "id": "field7885580487906",
+            "perm": "R",
+            "title": "作业负责人",
+            "required": false
+          },
+          {
+            "id": "field3680280096465",
+            "perm": "R",
+            "title": "",
+            "required": true
+          },
+          {
+            "id": "field5041780151857",
+            "perm": "R",
+            "title": "作业开始时间",
+            "required": true
+          },
+          {
+            "id": "field2167680150417",
+            "perm": "R",
+            "title": "作业结束时间",
+            "required": true
+          },
+          {
+            "id": "field4864980195302",
+            "perm": "R",
+            "title": "监护人",
+            "required": true
+          },
+          {
+            "id": "field5516380193328",
+            "perm": "R",
+            "title": "完工验收人",
+            "required": true
+          },
+          {
+            "id": "field7036080192340",
+            "perm": "R",
+            "title": "安全交底人",
+            "required": true
+          },
+          {
+            "id": "field3804080190054",
+            "perm": "R",
+            "title": "接受交底人",
+            "required": true
+          },
+          {
+            "id": "field6654080289310",
+            "perm": "R",
+            "title": "关联的其它作业证及作业证编号",
+            "required": false
+          },
+          {
+            "id": "field7837880360801",
+            "perm": "R",
+            "title": "危害辨识",
+            "required": true
+          },
+          {
+            "id": "field3584880391397",
+            "perm": "R",
+            "title": "安全措施",
+            "required": true
+          }
+        ],
+        "leaderTop": {
+          "endLevel": 0,
+          "skipEmpty": false,
+          "endCondition": "TOP"
+        },
+        "listeners": [],
+        "timeLimit": {
+          "handler": {
+            "type": "REFUSE",
+            "notify": { "hour": 1, "once": true }
+          },
+          "timeout": { "unit": "H", "value": 0 }
+        },
+        "processKey": "analyse",
+        "selfSelect": { "multiple": false },
+        "assignedDept": [],
+        "assignedType": "ASSIGN_USER",
+        "assignedUser": [
+          {
+            "id": "1",
+            "sex": null,
+            "name": "管理员",
+            "type": "user",
+            "avatar": "https://pic.rmb.bdstatic.com/bjh/203726324a891b1946ba223209cb3fee.png",
+            "deptId": 100,
+            "mobile": "15612345678",
+            "status": 0,
+            "postIds": [1],
+            "isLeader": false,
+            "nickname": "管理员",
+            "parentId": null,
+            "selected": false,
+            "leaderUserId": null
+          }
+        ],
+        "operationPerm": {
+          "agree": { "show": true, "alisa": "同意" },
+          "recall": { "show": true, "alisa": "退回" },
+          "refuse": { "show": true, "alisa": "拒绝" },
+          "afterAdd": { "show": true, "alisa": "后加签" },
+          "transfer": { "show": true, "alisa": "转交" }
+        }
+      },
+      "children": {
+        "id": "node_805726761337",
+        "name": "书面审查",
+        "type": "APPROVAL",
+        "props": {
+          "mode": "AND",
+          "role": [],
+          "sign": false,
+          "leader": { "level": 1, "skipEmpty": true },
+          "nobody": { "handler": "TO_PASS", "assignedUser": [] },
+          "refuse": { "type": "TO_NODE", "target": "root" },
+          "formDept": "",
+          "formUser": [],
+          "formPerms": [
+            {
+              "id": "field6068779432502",
+              "perm": "R",
+              "title": "作业申请单位",
+              "required": true
+            },
+            {
+              "id": "field2566379434210",
+              "perm": "R",
+              "title": "作业编号",
+              "required": true
+            },
+            {
+              "id": "field5902079826046",
+              "perm": "R",
+              "title": "作业地点",
+              "required": true
+            },
+            {
+              "id": "field3824279832282",
+              "perm": "R",
+              "title": "作业内容",
+              "required": true
+            },
+            {
+              "id": "field8307279853953",
+              "perm": "R",
+              "title": "电源接入点",
+              "required": true
+            },
+            {
+              "id": "field6460879865358",
+              "perm": "R",
+              "title": "电源接入点许可用电功率",
+              "required": true
+            },
+            {
+              "id": "field1103579860561",
+              "perm": "R",
+              "title": "工作电压",
+              "required": true
+            },
+            {
+              "id": "field9867279914484",
+              "perm": "R",
+              "title": "用电人",
+              "required": true
+            },
+            {
+              "id": "field3897879863030",
+              "perm": "R",
+              "title": "用电设备名称",
+              "required": true
+            },
+            {
+              "id": "field5318179861978",
+              "perm": "R",
+              "title": "用电设备额定功率",
+              "required": true
+            },
+            {
+              "id": "field1409579856002",
+              "perm": "R",
+              "title": "作业人",
+              "required": true
+            },
+            {
+              "id": "field5542779857804",
+              "perm": "R",
+              "title": "",
+              "required": true
+            },
+            {
+              "id": "field7885580487906",
+              "perm": "R",
+              "title": "作业负责人",
+              "required": false
+            },
+            {
+              "id": "field3680280096465",
+              "perm": "R",
+              "title": "",
+              "required": true
+            },
+            {
+              "id": "field5041780151857",
+              "perm": "R",
+              "title": "作业开始时间",
+              "required": true
+            },
+            {
+              "id": "field2167680150417",
+              "perm": "R",
+              "title": "作业结束时间",
+              "required": true
+            },
+            {
+              "id": "field4864980195302",
+              "perm": "R",
+              "title": "监护人",
+              "required": true
+            },
+            {
+              "id": "field5516380193328",
+              "perm": "R",
+              "title": "完工验收人",
+              "required": true
+            },
+            {
+              "id": "field7036080192340",
+              "perm": "R",
+              "title": "安全交底人",
+              "required": true
+            },
+            {
+              "id": "field3804080190054",
+              "perm": "R",
+              "title": "接受交底人",
+              "required": true
+            },
+            {
+              "id": "field6654080289310",
+              "perm": "R",
+              "title": "关联的其它作业证及作业证编号",
+              "required": false
+            },
+            {
+              "id": "field7837880360801",
+              "perm": "R",
+              "title": "危害辨识",
+              "required": true
+            },
+            {
+              "id": "field3584880391397",
+              "perm": "R",
+              "title": "安全措施",
+              "required": true
+            }
+          ],
+          "leaderTop": {
+            "endLevel": 0,
+            "skipEmpty": false,
+            "endCondition": "TOP"
+          },
+          "listeners": [],
+          "timeLimit": {
+            "handler": {
+              "type": "REFUSE",
+              "notify": { "hour": 1, "once": true }
+            },
+            "timeout": { "unit": "H", "value": 0 }
+          },
+          "processKey": "review",
+          "selfSelect": { "multiple": false },
+          "assignedDept": [],
+          "assignedType": "ASSIGN_USER",
+          "assignedUser": [
+            {
+              "id": "1",
+              "sex": null,
+              "name": "管理员",
+              "type": "user",
+              "avatar": "https://pic.rmb.bdstatic.com/bjh/203726324a891b1946ba223209cb3fee.png",
+              "deptId": 100,
+              "mobile": "15612345678",
+              "status": 0,
+              "postIds": [1],
+              "isLeader": false,
+              "nickname": "管理员",
+              "parentId": null,
+              "selected": false,
+              "leaderUserId": null
+            }
+          ],
+          "operationPerm": {
+            "agree": { "show": true, "alisa": "同意" },
+            "recall": { "show": true, "alisa": "退回" },
+            "refuse": { "show": true, "alisa": "拒绝" },
+            "afterAdd": { "show": true, "alisa": "后加签" },
+            "transfer": { "show": true, "alisa": "转交" }
+          }
+        },
+        "children": {
+          "id": "node_805746061952",
+          "name": "现场核查",
+          "type": "APPROVAL",
+          "props": {
+            "mode": "AND",
+            "role": [],
+            "sign": false,
+            "leader": { "level": 1, "skipEmpty": true },
+            "nobody": { "handler": "TO_PASS", "assignedUser": [] },
+            "refuse": { "type": "TO_NODE", "target": "root" },
+            "formDept": "",
+            "formUser": [],
+            "formPerms": [
+              {
+                "id": "field6068779432502",
+                "perm": "R",
+                "title": "作业申请单位",
+                "required": true
+              },
+              {
+                "id": "field2566379434210",
+                "perm": "R",
+                "title": "作业编号",
+                "required": true
+              },
+              {
+                "id": "field5902079826046",
+                "perm": "R",
+                "title": "作业地点",
+                "required": true
+              },
+              {
+                "id": "field3824279832282",
+                "perm": "R",
+                "title": "作业内容",
+                "required": true
+              },
+              {
+                "id": "field8307279853953",
+                "perm": "R",
+                "title": "电源接入点",
+                "required": true
+              },
+              {
+                "id": "field6460879865358",
+                "perm": "R",
+                "title": "电源接入点许可用电功率",
+                "required": true
+              },
+              {
+                "id": "field1103579860561",
+                "perm": "R",
+                "title": "工作电压",
+                "required": true
+              },
+              {
+                "id": "field9867279914484",
+                "perm": "R",
+                "title": "用电人",
+                "required": true
+              },
+              {
+                "id": "field3897879863030",
+                "perm": "R",
+                "title": "用电设备名称",
+                "required": true
+              },
+              {
+                "id": "field5318179861978",
+                "perm": "R",
+                "title": "用电设备额定功率",
+                "required": true
+              },
+              {
+                "id": "field1409579856002",
+                "perm": "R",
+                "title": "作业人",
+                "required": true
+              },
+              {
+                "id": "field5542779857804",
+                "perm": "R",
+                "title": "",
+                "required": true
+              },
+              {
+                "id": "field7885580487906",
+                "perm": "R",
+                "title": "作业负责人",
+                "required": false
+              },
+              {
+                "id": "field3680280096465",
+                "perm": "R",
+                "title": "",
+                "required": true
+              },
+              {
+                "id": "field5041780151857",
+                "perm": "R",
+                "title": "作业开始时间",
+                "required": true
+              },
+              {
+                "id": "field2167680150417",
+                "perm": "R",
+                "title": "作业结束时间",
+                "required": true
+              },
+              {
+                "id": "field4864980195302",
+                "perm": "R",
+                "title": "监护人",
+                "required": true
+              },
+              {
+                "id": "field5516380193328",
+                "perm": "R",
+                "title": "完工验收人",
+                "required": true
+              },
+              {
+                "id": "field7036080192340",
+                "perm": "R",
+                "title": "安全交底人",
+                "required": true
+              },
+              {
+                "id": "field3804080190054",
+                "perm": "R",
+                "title": "接受交底人",
+                "required": true
+              },
+              {
+                "id": "field6654080289310",
+                "perm": "R",
+                "title": "关联的其它作业证及作业证编号",
+                "required": false
+              },
+              {
+                "id": "field7837880360801",
+                "perm": "R",
+                "title": "危害辨识",
+                "required": true
+              },
+              {
+                "id": "field3584880391397",
+                "perm": "R",
+                "title": "安全措施",
+                "required": true
+              }
+            ],
+            "leaderTop": {
+              "endLevel": 0,
+              "skipEmpty": false,
+              "endCondition": "TOP"
+            },
+            "listeners": [],
+            "timeLimit": {
+              "handler": {
+                "type": "REFUSE",
+                "notify": { "hour": 1, "once": true }
+              },
+              "timeout": { "unit": "H", "value": 0 }
+            },
+            "processKey": "siteCheck",
+            "selfSelect": { "multiple": false },
+            "assignedDept": [],
+            "assignedType": "ASSIGN_USER",
+            "assignedUser": [
+              {
+                "id": "1",
+                "sex": null,
+                "name": "管理员",
+                "type": "user",
+                "avatar": "https://pic.rmb.bdstatic.com/bjh/203726324a891b1946ba223209cb3fee.png",
+                "deptId": 100,
+                "mobile": "15612345678",
+                "status": 0,
+                "postIds": [1],
+                "isLeader": false,
+                "nickname": "管理员",
+                "parentId": null,
+                "selected": false,
+                "leaderUserId": null
+              }
+            ],
+            "operationPerm": {
+              "agree": { "show": true, "alisa": "同意" },
+              "recall": { "show": true, "alisa": "退回" },
+              "refuse": { "show": true, "alisa": "拒绝" },
+              "afterAdd": { "show": true, "alisa": "后加签" },
+              "transfer": { "show": true, "alisa": "转交" }
+            }
+          },
+          "children": {
+            "id": "node_805846848776",
+            "name": "安全交底",
+            "type": "TASK",
+            "props": {
+              "mode": "AND",
+              "role": [],
+              "sign": false,
+              "leader": { "level": 1, "skipEmpty": true },
+              "nobody": { "handler": "TO_PASS", "assignedUser": [] },
+              "formDept": "",
+              "formUser": ["field7036080192340", "field3804080190054"],
+              "formPerms": [
+                {
+                  "id": "field6068779432502",
+                  "perm": "R",
+                  "title": "作业申请单位",
+                  "required": true
+                },
+                {
+                  "id": "field2566379434210",
+                  "perm": "R",
+                  "title": "作业编号",
+                  "required": true
+                },
+                {
+                  "id": "field5902079826046",
+                  "perm": "R",
+                  "title": "作业地点",
+                  "required": true
+                },
+                {
+                  "id": "field3824279832282",
+                  "perm": "R",
+                  "title": "作业内容",
+                  "required": true
+                },
+                {
+                  "id": "field8307279853953",
+                  "perm": "R",
+                  "title": "电源接入点",
+                  "required": true
+                },
+                {
+                  "id": "field6460879865358",
+                  "perm": "R",
+                  "title": "电源接入点许可用电功率",
+                  "required": true
+                },
+                {
+                  "id": "field1103579860561",
+                  "perm": "R",
+                  "title": "工作电压",
+                  "required": true
+                },
+                {
+                  "id": "field9867279914484",
+                  "perm": "R",
+                  "title": "用电人",
+                  "required": true
+                },
+                {
+                  "id": "field3897879863030",
+                  "perm": "R",
+                  "title": "用电设备名称",
+                  "required": true
+                },
+                {
+                  "id": "field5318179861978",
+                  "perm": "R",
+                  "title": "用电设备额定功率",
+                  "required": true
+                },
+                {
+                  "id": "field1409579856002",
+                  "perm": "R",
+                  "title": "作业人",
+                  "required": true
+                },
+                {
+                  "id": "field5542779857804",
+                  "perm": "R",
+                  "title": "",
+                  "required": true
+                },
+                {
+                  "id": "field7885580487906",
+                  "perm": "R",
+                  "title": "作业负责人",
+                  "required": false
+                },
+                {
+                  "id": "field3680280096465",
+                  "perm": "R",
+                  "title": "",
+                  "required": true
+                },
+                {
+                  "id": "field5041780151857",
+                  "perm": "R",
+                  "title": "作业开始时间",
+                  "required": true
+                },
+                {
+                  "id": "field2167680150417",
+                  "perm": "R",
+                  "title": "作业结束时间",
+                  "required": true
+                },
+                {
+                  "id": "field4864980195302",
+                  "perm": "R",
+                  "title": "监护人",
+                  "required": true
+                },
+                {
+                  "id": "field5516380193328",
+                  "perm": "R",
+                  "title": "完工验收人",
+                  "required": true
+                },
+                {
+                  "id": "field7036080192340",
+                  "perm": "R",
+                  "title": "安全交底人",
+                  "required": true
+                },
+                {
+                  "id": "field3804080190054",
+                  "perm": "R",
+                  "title": "接受交底人",
+                  "required": true
+                },
+                {
+                  "id": "field6654080289310",
+                  "perm": "R",
+                  "title": "关联的其它作业证及作业证编号",
+                  "required": false
+                },
+                {
+                  "id": "field7837880360801",
+                  "perm": "R",
+                  "title": "危害辨识",
+                  "required": true
+                },
+                {
+                  "id": "field3584880391397",
+                  "perm": "R",
+                  "title": "安全措施",
+                  "required": true
+                }
+              ],
+              "leaderTop": {
+                "endLevel": 0,
+                "skipEmpty": false,
+                "endCondition": "TOP"
+              },
+              "listeners": [],
+              "timeLimit": {
+                "handler": {
+                  "type": "PASS",
+                  "notify": { "hour": 1, "once": true }
+                },
+                "timeout": { "unit": "H", "value": 0 }
+              },
+              "processKey": "safeDisclosure",
+              "selfSelect": { "multiple": false },
+              "assignedDept": [],
+              "assignedType": "FORM_USER",
+              "assignedUser": [],
+              "operationPerm": {
+                "agree": { "show": true, "alisa": "提交" },
+                "recall": { "show": true, "alisa": "退回" },
+                "afterAdd": { "show": true, "alisa": "后加签" },
+                "transfer": { "show": true, "alisa": "转办" }
+              }
+            },
+            "children": {
+              "id": "node_805864581889",
+              "name": "作业关闭",
+              "type": "APPROVAL",
+              "props": {
+                "mode": "AND",
+                "role": [],
+                "sign": false,
+                "leader": { "level": 1, "skipEmpty": true },
+                "nobody": { "handler": "TO_PASS", "assignedUser": [] },
+                "refuse": { "type": "TO_END", "target": "root" },
+                "formDept": "",
+                "formUser": ["field5516380193328"],
+                "formPerms": [
+                  {
+                    "id": "field6068779432502",
+                    "perm": "R",
+                    "title": "作业申请单位",
+                    "required": true
+                  },
+                  {
+                    "id": "field2566379434210",
+                    "perm": "R",
+                    "title": "作业编号",
+                    "required": true
+                  },
+                  {
+                    "id": "field5902079826046",
+                    "perm": "R",
+                    "title": "作业地点",
+                    "required": true
+                  },
+                  {
+                    "id": "field3824279832282",
+                    "perm": "R",
+                    "title": "作业内容",
+                    "required": true
+                  },
+                  {
+                    "id": "field8307279853953",
+                    "perm": "R",
+                    "title": "电源接入点",
+                    "required": true
+                  },
+                  {
+                    "id": "field6460879865358",
+                    "perm": "R",
+                    "title": "电源接入点许可用电功率",
+                    "required": true
+                  },
+                  {
+                    "id": "field1103579860561",
+                    "perm": "R",
+                    "title": "工作电压",
+                    "required": true
+                  },
+                  {
+                    "id": "field9867279914484",
+                    "perm": "R",
+                    "title": "用电人",
+                    "required": true
+                  },
+                  {
+                    "id": "field3897879863030",
+                    "perm": "R",
+                    "title": "用电设备名称",
+                    "required": true
+                  },
+                  {
+                    "id": "field5318179861978",
+                    "perm": "R",
+                    "title": "用电设备额定功率",
+                    "required": true
+                  },
+                  {
+                    "id": "field1409579856002",
+                    "perm": "R",
+                    "title": "作业人",
+                    "required": true
+                  },
+                  {
+                    "id": "field5542779857804",
+                    "perm": "R",
+                    "title": "",
+                    "required": true
+                  },
+                  {
+                    "id": "field7885580487906",
+                    "perm": "R",
+                    "title": "作业负责人",
+                    "required": false
+                  },
+                  {
+                    "id": "field3680280096465",
+                    "perm": "R",
+                    "title": "",
+                    "required": true
+                  },
+                  {
+                    "id": "field5041780151857",
+                    "perm": "R",
+                    "title": "作业开始时间",
+                    "required": true
+                  },
+                  {
+                    "id": "field2167680150417",
+                    "perm": "R",
+                    "title": "作业结束时间",
+                    "required": true
+                  },
+                  {
+                    "id": "field4864980195302",
+                    "perm": "R",
+                    "title": "监护人",
+                    "required": true
+                  },
+                  {
+                    "id": "field5516380193328",
+                    "perm": "R",
+                    "title": "完工验收人",
+                    "required": true
+                  },
+                  {
+                    "id": "field7036080192340",
+                    "perm": "R",
+                    "title": "安全交底人",
+                    "required": true
+                  },
+                  {
+                    "id": "field3804080190054",
+                    "perm": "R",
+                    "title": "接受交底人",
+                    "required": true
+                  },
+                  {
+                    "id": "field6654080289310",
+                    "perm": "R",
+                    "title": "关联的其它作业证及作业证编号",
+                    "required": false
+                  },
+                  {
+                    "id": "field7837880360801",
+                    "perm": "R",
+                    "title": "危害辨识",
+                    "required": true
+                  },
+                  {
+                    "id": "field3584880391397",
+                    "perm": "R",
+                    "title": "安全措施",
+                    "required": true
+                  }
+                ],
+                "leaderTop": {
+                  "endLevel": 0,
+                  "skipEmpty": false,
+                  "endCondition": "TOP"
+                },
+                "listeners": [],
+                "timeLimit": {
+                  "handler": {
+                    "type": "REFUSE",
+                    "notify": { "hour": 1, "once": true }
+                  },
+                  "timeout": { "unit": "H", "value": 0 }
+                },
+                "processKey": "acceptance",
+                "selfSelect": { "multiple": false },
+                "assignedDept": [],
+                "assignedType": "FORM_USER",
+                "assignedUser": [],
+                "operationPerm": {
+                  "agree": { "show": true, "alisa": "同意" },
+                  "recall": { "show": true, "alisa": "退回" },
+                  "refuse": { "show": true, "alisa": "拒绝" },
+                  "afterAdd": { "show": true, "alisa": "后加签" },
+                  "transfer": { "show": true, "alisa": "转交" }
+                }
+              },
+              "children": {},
+              "parentId": "node_805846848776"
+            },
+            "parentId": "node_805746061952"
+          },
+          "parentId": "node_805726761337"
+        },
+        "parentId": "node_805707425724"
+      },
+      "parentId": "root"
+    },
+    "parentId": null
+  },
+  "remark": "备注说明",
+  "created": "2023-11-27 18:027:50",
+  "formItems": [
+    {
+      "id": "field1758979406311",
+      "icon": "el-icon-scaletooriginal",
+      "name": "ModuleBlock",
+      "props": {
+        "items": [
+          {
+            "id": "field9758679425880",
+            "icon": "el-icon-scaletooriginal",
+            "name": "SpanLayout",
+            "props": {
+              "items": [
+                {
+                  "id": "field6068779432502",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "disabled": true,
+                    "required": true,
+                    "valueKey": "applyDeptId",
+                    "enableScan": false,
+                    "enablePrint": true
+                  },
+                  "title": "作业申请单位",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field2566379434210",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "disabled": true,
+                    "required": true,
+                    "valueKey": "certNum",
+                    "enableScan": false,
+                    "enablePrint": true
+                  },
+                  "title": "作业编号",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field5902079826046",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "required": true,
+                    "valueKey": "",
+                    "enableScan": false,
+                    "enablePrint": true,
+                    "placeholder": "请输入作业地点"
+                  },
+                  "title": "作业地点",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field3824279832282",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "required": true,
+                    "valueKey": "",
+                    "enableScan": false,
+                    "enablePrint": true,
+                    "placeholder": "请输入作业内容"
+                  },
+                  "title": "作业内容",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field8307279853953",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "required": true,
+                    "valueKey": "",
+                    "enableScan": false,
+                    "enablePrint": true,
+                    "placeholder": "请输入电源接入点"
+                  },
+                  "title": "电源接入点",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field6460879865358",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "required": true,
+                    "valueKey": "",
+                    "enableScan": false,
+                    "enablePrint": true,
+                    "placeholder": "请输入电源接入点许可用电功率"
+                  },
+                  "title": "电源接入点许可用电功率",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field1103579860561",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "required": true,
+                    "valueKey": "",
+                    "enableScan": false,
+                    "enablePrint": true,
+                    "placeholder": "请输入工作电压"
+                  },
+                  "title": "工作电压",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field9867279914484",
+                  "icon": "el-icon-avatar",
+                  "name": "UserPicker",
+                  "props": {
+                    "options": [],
+                    "multiple": false,
+                    "required": true,
+                    "valueKey": "",
+                    "expansion": false,
+                    "enablePrint": true,
+                    "placeholder": "请选择用电人"
+                  },
+                  "title": "用电人",
+                  "value": [],
+                  "valueType": "User"
+                },
+                {
+                  "id": "field3897879863030",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "required": true,
+                    "valueKey": "",
+                    "enableScan": false,
+                    "enablePrint": true,
+                    "placeholder": "请输入用电设备名称"
+                  },
+                  "title": "用电设备名称",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field5318179861978",
+                  "icon": "el-icon-edit",
+                  "name": "TextInput",
+                  "props": {
+                    "required": true,
+                    "valueKey": "",
+                    "enableScan": false,
+                    "enablePrint": true,
+                    "placeholder": "请输入用电设备额定功率"
+                  },
+                  "title": "用电设备额定功率",
+                  "value": "",
+                  "valueType": "String"
+                },
+                {
+                  "id": "field8012879964246",
+                  "icon": "el-icon-scaletooriginal",
+                  "name": "SpanLayout",
+                  "props": {
+                    "items": [
+                      {
+                        "id": "field1409579856002",
+                        "icon": "el-icon-edit",
+                        "name": "TextInput",
+                        "props": {
+                          "required": true,
+                          "valueKey": "",
+                          "enableScan": false,
+                          "enablePrint": true,
+                          "placeholder": "请输入作业人姓名"
+                        },
+                        "title": "作业人",
+                        "value": "",
+                        "valueType": "String"
+                      },
+                      {
+                        "id": "field5542779857804",
+                        "icon": "el-icon-edit",
+                        "name": "TextInput",
+                        "props": {
+                          "required": true,
+                          "valueKey": "",
+                          "enableScan": false,
+                          "enablePrint": true,
+                          "placeholder": "请输入作业人电工证号"
+                        },
+                        "title": "",
+                        "value": "",
+                        "valueType": "String"
+                      }
+                    ],
+                    "number": 2
+                  },
+                  "title": "分栏布局",
+                  "value": [],
+                  "valueType": "Array"
+                },
+                {
+                  "id": "field5621380088512",
+                  "icon": "el-icon-scaletooriginal",
+                  "name": "SpanLayout",
+                  "props": {
+                    "items": [
+                      {
+                        "id": "field7885580487906",
+                        "icon": "el-icon-avatar",
+                        "name": "UserPicker",
+                        "props": {
+                          "options": [],
+                          "multiple": false,
+                          "required": false,
+                          "valueKey": "operationMasterId",
+                          "expansion": false,
+                          "enablePrint": true,
+                          "placeholder": "请选择作业负责人"
+                        },
+                        "title": "作业负责人",
+                        "value": [],
+                        "valueType": "User"
+                      },
+                      {
+                        "id": "field3680280096465",
+                        "icon": "el-icon-edit",
+                        "name": "TextInput",
+                        "props": {
+                          "required": true,
+                          "valueKey": "",
+                          "enableScan": false,
+                          "enablePrint": true,
+                          "placeholder": "请输入作业负责人电工证号"
+                        },
+                        "title": "",
+                        "value": "",
+                        "valueType": "String"
+                      }
+                    ],
+                    "number": 2
+                  },
+                  "title": "分栏布局",
+                  "value": [],
+                  "valueType": "Array"
+                },
+                {
+                  "id": "field5041780151857",
+                  "icon": "el-icon-calendar",
+                  "name": "DateTime",
+                  "props": {
+                    "format": "YYYY-MM-DD HH:mm",
+                    "required": true,
+                    "valueKey": "operationBeginTime",
+                    "enablePrint": true,
+                    "placeholder": "请选择作业开始时间"
+                  },
+                  "title": "作业开始时间",
+                  "value": "",
+                  "valueType": "Date"
+                },
+                {
+                  "id": "field2167680150417",
+                  "icon": "el-icon-calendar",
+                  "name": "DateTime",
+                  "props": {
+                    "format": "YYYY-MM-DD HH:mm",
+                    "required": true,
+                    "valueKey": "operationEndTime",
+                    "enablePrint": true,
+                    "placeholder": "请选择作业结束时间"
+                  },
+                  "title": "作业结束时间",
+                  "value": "",
+                  "valueType": "Date"
+                },
+                {
+                  "id": "field4864980195302",
+                  "icon": "el-icon-avatar",
+                  "name": "UserPicker",
+                  "props": {
+                    "options": [],
+                    "multiple": false,
+                    "required": true,
+                    "valueKey": "guardianUserId",
+                    "expansion": false,
+                    "enablePrint": true,
+                    "placeholder": "请选择作业监护人"
+                  },
+                  "title": "监护人",
+                  "value": [],
+                  "valueType": "User"
+                },
+                {
+                  "id": "field5516380193328",
+                  "icon": "el-icon-avatar",
+                  "name": "UserPicker",
+                  "props": {
+                    "options": [],
+                    "multiple": false,
+                    "required": true,
+                    "valueKey": "",
+                    "expansion": false,
+                    "enablePrint": true,
+                    "placeholder": "请选择完工验收人"
+                  },
+                  "title": "完工验收人",
+                  "value": [],
+                  "valueType": "User"
+                },
+                {
+                  "id": "field7036080192340",
+                  "icon": "el-icon-avatar",
+                  "name": "UserPicker",
+                  "props": {
+                    "options": [],
+                    "multiple": false,
+                    "required": true,
+                    "valueKey": "",
+                    "expansion": false,
+                    "enablePrint": true,
+                    "placeholder": "请选择安全交底人"
+                  },
+                  "title": "安全交底人",
+                  "value": [],
+                  "valueType": "User"
+                },
+                {
+                  "id": "field3804080190054",
+                  "icon": "el-icon-avatar",
+                  "name": "UserPicker",
+                  "props": {
+                    "options": [],
+                    "multiple": false,
+                    "required": true,
+                    "valueKey": "",
+                    "expansion": false,
+                    "enablePrint": true,
+                    "placeholder": "请选择接受交底人"
+                  },
+                  "title": "接受交底人",
+                  "value": [],
+                  "valueType": "User"
+                }
+              ],
+              "number": 2
+            },
+            "title": "分栏布局",
+            "value": [],
+            "valueType": "Array"
+          },
+          {
+            "id": "field6654080289310",
+            "icon": "el-icon-warning",
+            "name": "MultilevelLink",
+            "props": {
+              "linkType": "",
+              "required": false,
+              "optionsKey": "1",
+              "enablePrint": true,
+              "currentOptions": {
+                "key": "1",
+                "apis": [
+                  "/business/system-dict/key?code=WORK_CERT_TYPE",
+                  "/business/operation/get-list-simple?param="
+                ],
+                "label": "作业证类型与编号联动",
+                "fields": ["type", "certNum"],
+                "columns": 2,
+                "options": [
+                  [
+                    { "key": "盲板抽堵", "value": "1" },
+                    { "key": "受限空间", "value": "2" },
+                    { "key": "动土", "value": "3" },
+                    { "key": "高处", "value": "4" },
+                    { "key": "动火", "value": "5" },
+                    { "key": "吊装", "value": "6" },
+                    { "key": "断路", "value": "7" },
+                    { "key": "临时用电", "value": "8" }
+                  ],
+                  []
+                ],
+                "placeholder": ["作业证类型", "作业证编号"]
+              }
+            },
+            "title": "关联的其它作业证及作业证编号",
+            "value": {},
+            "valueType": "Object"
+          },
+          {
+            "id": "field7614180415628",
+            "icon": "el-icon-scaletooriginal",
+            "name": "SpanLayout",
+            "props": {
+              "items": [
+                {
+                  "id": "field7837880360801",
+                  "icon": "iconfont icon-duoxuankuang",
+                  "name": "MultipleSelect",
+                  "props": {
+                    "apiType": "2",
+                    "options": [
+                      { "label": "坍塌", "value": "10" },
+                      { "label": "物体打击", "value": "01" },
+                      { "label": "车辆伤害", "value": "02" },
+                      { "label": "机械伤害", "value": "03" },
+                      { "label": "起重伤害", "value": "04" },
+                      { "label": "触电", "value": "05" },
+                      { "label": "淹溺", "value": "06" },
+                      { "label": "灼烫", "value": "07" },
+                      { "label": "火灾", "value": "08" },
+                      { "label": "高处坠落", "value": "09" },
+                      { "label": "冒顶片帮", "value": "011" },
+                      { "label": "透水", "value": "012" },
+                      { "label": "放炮", "value": "013" },
+                      { "label": "瓦斯爆炸", "value": "014" },
+                      { "label": "火药爆炸", "value": "015" },
+                      { "label": "锅炉爆炸", "value": "016" },
+                      { "label": "容器爆炸", "value": "017" },
+                      { "label": "其他爆炸", "value": "018" },
+                      { "label": "中毒和窒息", "value": "019" },
+                      { "label": "其他伤害", "value": "020" }
+                    ],
+                    "required": true,
+                    "expanding": false,
+                    "isNeedApi": true,
+                    "requestUrl": "/business/system-dict/key?code=acc_type",
+                    "enablePrint": true,
+                    "placeholder": "请选择危害辨识"
+                  },
+                  "title": "危害辨识",
+                  "value": [],
+                  "valueType": "Array"
+                }
+              ],
+              "number": 2
+            },
+            "title": "分栏布局",
+            "value": [],
+            "valueType": "Array"
+          },
+          {
+            "id": "field3584880391397",
+            "icon": "el-icon-tickets",
+            "name": "SafetyMeasure",
+            "props": {
+              "columns": [
+                { "id": "number" },
+                { "id": "safetyMeasure" },
+                { "id": "isRealted" },
+                { "id": "confirmPerson" }
+              ],
+              "maxSize": 0,
+              "required": true,
+              "rowLayout": true,
+              "showBorder": true,
+              "enablePrint": true,
+              "showSummary": false,
+              "summaryColumns": []
+            },
+            "title": "安全措施",
+            "value": {},
+            "valueType": "Object"
+          }
+        ],
+        "number": 1
+      },
+      "title": "作业申请信息",
+      "value": [],
+      "valueType": "Array"
+    }
+  ],
+  "formConfig": {
+    "rules": [],
+    "ruleJs": "//formData: 表单数据  formMap: 表单字段id -> 字段json配置\r\nfunction doChange(formData, formMap){\r\n\t\r\n}",
+    "labelPos": "top",
+    "ruleType": "SIMPLE",
+    "labelWidth": ""
+  },
+  "logo": { "icon": "el-icon-eleme", "background": "#1e90ff" },
+  "tenantId": "1"
+}

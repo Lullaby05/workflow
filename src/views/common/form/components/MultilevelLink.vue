@@ -102,8 +102,8 @@ export default {
         if (Object.prototype.toString.call(dataArr) === '[object Object]') {
           this.currentOptions.options[index + 1] = Object.keys(dataArr)
             .map((key) => ({
-              key,
-              value: dataArr[key],
+              key: dataArr[key],
+              value: key,
             }))
         } else {
           this.currentOptions.options[index + 1] = dataArr.map((ele) => ({

@@ -6,7 +6,6 @@
         item.name !== 'ModuleBlock' &&
         item.name !== 'Description'
         " :prop="item.id" :label="item.title">
-        {{ _value[item.id] }}
         <form-design-render :readonly="isReadonly(item)" :ref="item.id" v-model="_value[item.id]" :formData="_value" :mode="mode" :config="item" />
       </el-form-item>
       <form-design-render :ref="item.id" :readonly="isReadonly(item)" v-else v-model="_value" :formData="_value" :mode="mode" :config="item" />
@@ -175,7 +174,7 @@ export default {
     },
     loadFormItemMap(forms, map) {
       forms.forEach((item) => {
-        if (item.name === 'TableList') {
+        if (item.name === 'TableList' || item.name === 'SafetyMeasure') {
           map.set(item.id, item);
           this.loadFormItemMap(item.props.columns, map);
         } else if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
@@ -191,10 +190,18 @@ export default {
           this.loadFormConfig(item.props.items, rules);
         } else {
           this._value[item.id] = this.modelValue[item.id];
-          if (item.props.required && this.showItem(item)) {
+          if (item.props.required && this.showItem(item) && item.name !== 'SafetyMeasure') {
             rules[item.id] = [
               {
                 type: ValueType.getValidType(item.valueType),
+                required: true,
+                message: `请完成${item.title}`,
+                trigger: 'blur',
+              },
+            ];
+          } else if (item.props.required && item.name === 'SafetyMeasure') {
+            rules[item.id] = [
+              {
                 required: true,
                 message: `请完成${item.title}`,
                 trigger: 'blur',

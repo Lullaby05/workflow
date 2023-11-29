@@ -46,11 +46,13 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/businessApi': {
-        target: 'http://172.16.16.9:10000',
+        // target: 'http://172.16.16.9:10000',
+        target: 'http://119.91.134.51:10000/', // 测试服务器
         changeOrigin: true,
       },
       '/outer': {
-        target: 'http://172.16.16.9:32200',
+        // target: 'http://172.16.16.9:32200',
+        target: 'http://119.91.134.51:32200', // 测试服务器
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/outer/, '/businessApi'),
       },

@@ -9,10 +9,10 @@
       <el-table-column fixed prop="processDefName" label="审批类型" show-overflow-tooltip></el-table-column>
       <el-table-column prop="owner" show-overflow-tooltip label="发起人" min-width="100px">
         <template v-slot="scope">
-          <avatar :size="35" :name="scope.row.owner.name" :src="scope.row.owner.avatar"/>
+          <avatar :size="35" :name="scope.row.owner.name" :src="scope.row.owner.avatar" />
         </template>
       </el-table-column>
-      <el-table-column show-overflow-tooltip prop="taskName" label="任务节点名"/>
+      <el-table-column show-overflow-tooltip prop="taskName" label="任务节点名" />
       <el-table-column show-overflow-tooltip prop="taskCreateTime" label="任务开始时间" min-width="120px"></el-table-column>
       <el-table-column show-overflow-tooltip prop="taskEndTime" label="处理完成时间" min-width="120px"></el-table-column>
       <el-table-column show-overflow-tooltip prop="duration" label="处理耗时" min-width="120px">
@@ -22,8 +22,8 @@
       </el-table-column>
       <el-table-column prop="status" label="处理结果">
         <template v-slot="scope">
-          <el-tag :type="getTaskResult({result: scope.row.taskResult}).type">
-            {{getTaskResult({result: scope.row.taskResult}).text}}
+          <el-tag :type="getTaskResult({ result: scope.row.taskResult }).type">
+            {{ getTaskResult({ result: scope.row.taskResult }).text }}
           </el-tag>
         </template>
       </el-table-column>
@@ -35,12 +35,8 @@
       <instance-preview v-if="processVisible" :instance-id="selectInstance.instanceId" @handler-after="handlerAfter"></instance-preview>
     </el-drawer>
 
-    <w-dialog v-if="!isMobile" :title="`发起 - ${selectInstance.processDefName}`" closeFree
-              width="1000px" v-model="openItemDl" okText="提 交"
-              @cancel="openItemDl = false" @ok="submitForm">
-      <initiate-process ref="processForm" :node-id="selectInstance.nodeId"
-                        :instance-id="selectInstance.instanceId" :code="selectInstance.formId"
-                        v-if="openItemDl" @ok="openItemDl = false"></initiate-process>
+    <w-dialog v-if="!isMobile" :title="`发起 - ${selectInstance.processDefName}`" closeFree width="1000px" v-model="openItemDl" okText="提 交" @cancel="openItemDl = false" @ok="submitForm">
+      <initiate-process ref="processForm" :node-id="selectInstance.nodeId" :instance-id="selectInstance.instanceId" :code="selectInstance.formId" v-if="openItemDl" @ok="openItemDl = false"></initiate-process>
     </w-dialog>
   </div>
 </template>
@@ -50,7 +46,7 @@ import taskApi from '@/api/processTask'
 import moment from 'moment'
 import InstancePreview from '../approval/ProcessInstancePreview.vue'
 import InitiateProcess from '../InitiateProcess.vue'
-import {getTaskResult} from "@/utils/ProcessUtil.js";
+import { getTaskResult } from "@/utils/ProcessUtil.js";
 
 export default {
   name: 'Finished',
@@ -106,7 +102,7 @@ export default {
     },
     submitForm() {
       this.$refs.processForm.validate((validForm, validProcess) => {
-        if (!this.isMobile){
+        if (!this.isMobile) {
           if (validForm && validProcess) {
             this.$refs.processForm.submit()
           } else {

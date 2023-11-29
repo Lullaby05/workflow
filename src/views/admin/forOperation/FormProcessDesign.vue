@@ -51,6 +51,7 @@ import FormProSetting from '@/views/admin/layout/FormProSetting.vue';
 import MobilePreview from '../layout/FormDesignMobilePreview.vue';
 import { ElMessage } from 'element-plus';
 import { checkValueKey } from '@/api/operation';
+import data from './data.json';
 
 export default {
   name: 'FormProcessDesign',

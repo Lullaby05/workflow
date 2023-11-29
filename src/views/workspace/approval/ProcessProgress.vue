@@ -30,7 +30,9 @@
       </div>
       <div v-show="(item.comment && item.comment.length > 0) || item.signature" class="user-comment">
         <div v-if="item.signature" style="display: flex; align-items: center">
-          <span><icon name="el-icon-editpen"></icon> 签字：</span>
+          <span>
+            <icon name="el-icon-editpen"></icon> 签字：
+          </span>
           <img :src="item.signature" style="width: 140px; height: 60px">
         </div>
         <div v-for="cmt in item.comment" :key="cmt.id" style="position: relative">
@@ -69,7 +71,7 @@
 </template>
 
 <script>
-import {getTaskResult} from "@/utils/ProcessUtil.js";
+import { getTaskResult } from "@/utils/ProcessUtil.js";
 
 export default {
   name: 'ProcessProgress',
@@ -86,14 +88,14 @@ export default {
       required: true,
       default: null
     },
-    status:{
+    status: {
       required: true,
       default: '未知'
     }
   },
   computed: {
     statusIcon() {
-      switch (this.result){
+      switch (this.result) {
         case 'RUNNING':
           return 'el-icon-morefilled icon-morefilled'
         case 'COMPLETE':
@@ -198,6 +200,7 @@ export default {
 .progress {
   position: relative;
 }
+
 .progress::after {
   content: '';
   position: absolute;
@@ -208,40 +211,49 @@ export default {
   background: #e4e4e4;
   height: 100%;
 }
+
 .end-process {
   height: 40px;
+
   .node-icon {
     span {
       font-size: 30px;
     }
+
     .icon {
       left: 0 !important;
       top: 0 !important;
     }
+
     .icon-success {
       color: @theme-success !important;
       background: white !important;
     }
+
     .icon-error {
       color: @theme-danger !important;
       background: white !important;
     }
+
     .icon-circleclose {
       color: #979797 !important;
       background: white !important;
     }
+
     .icon-morefilled {
       color: #b0b0b0 !important;
       background: #e4e4e4 !important;
     }
   }
 }
+
 .progress-item {
   z-index: 1;
   margin-bottom: 30px;
   position: relative;
+
   .item-user {
-    & > div {
+    &>div {
       display: inline-block;
     }
   }
@@ -251,13 +263,16 @@ export default {
     font-size: 14px;
     position: relative;
     padding-top: 5px;
+
     .user-comment-user {
       display: flex;
       align-items: center;
     }
+
     :deep(.a-img span) {
       font-size: 12px;
     }
+
     .user-comment-time {
       position: absolute;
       right: 8px;
@@ -265,6 +280,7 @@ export default {
       color: #8c8c8c;
       font-size: small;
     }
+
     .user-comment-content {
       margin: 5px 0;
       background: #eeeeee;
@@ -273,15 +289,18 @@ export default {
 
       :deep(.image-comment) {
         padding: 5px 0;
+
         .image {
           height: 60px;
           width: 60px;
           padding: 5px;
         }
+
         img {
           border-radius: 5px;
         }
       }
+
       .file-comment {
         .file-item {
           color: @theme-primary;
@@ -311,6 +330,7 @@ export default {
       padding: 1px;
       font-size: 12px;
     }
+
     .el-icon-more {
       color: white;
       font-size: 6px !important;
@@ -347,6 +367,7 @@ export default {
     }
   }
 }
+
 .time {
   font-size: 15px;
   color: #8a8a8a;
@@ -354,6 +375,7 @@ export default {
   right: 0;
   top: 0;
 }
+
 .multi-user {
   margin-top: 25px;
   display: grid;

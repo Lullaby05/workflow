@@ -9,7 +9,7 @@
       <el-table-column fixed prop="processDefName" label="审批类型" show-overflow-tooltip></el-table-column>
       <el-table-column prop="staterUser" show-overflow-tooltip label="发起人" min-width="100px">
         <template v-slot="scope">
-          <avatar :size="35" :name="scope.row.staterUser.name" :src="scope.row.staterUser.avatar"/>
+          <avatar :size="35" :name="scope.row.staterUser.name" :src="scope.row.staterUser.avatar" />
         </template>
       </el-table-column>
       <el-table-column show-overflow-tooltip prop="startTime" label="提交时间" min-width="120px"></el-table-column>
@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column prop="status" label="审批状态">
         <template v-slot="scope">
-          <el-tag :type="getProcTag(scope.row.result)">{{scope.row.status}}</el-tag>
+          <el-tag :type="getProcTag(scope.row.result)">{{ scope.row.status }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column show-overflow-tooltip prop="duration" label="已耗时" min-width="120px">
@@ -39,10 +39,8 @@
       <instance-preview v-if="processVisible" :node-id="selectInstance.nodeId" :instance-id="selectInstance.instanceId" @handler-after="handlerAfter"></instance-preview>
     </el-drawer>
 
-    <w-dialog v-if="!isMobile" :title="`发起 - ${selectInstance.processDefName}`" closeFree width="1000px"
-      v-model="openItemDl" okText="提 交" @cancel="openItemDl = false" @ok="submitForm">
-      <initiate-process ref="processForm" :node-id="selectInstance.nodeId" :instance-id="selectInstance.instanceId"
-        :code="selectInstance.formId" v-if="openItemDl" @ok="openItemDl = false"></initiate-process>
+    <w-dialog v-if="!isMobile" :title="`发起 - ${selectInstance.processDefName}`" closeFree width="1000px" v-model="openItemDl" okText="提 交" @cancel="openItemDl = false" @ok="submitForm">
+      <initiate-process ref="processForm" :node-id="selectInstance.nodeId" :instance-id="selectInstance.instanceId" :code="selectInstance.formId" v-if="openItemDl" @ok="openItemDl = false"></initiate-process>
     </w-dialog>
   </div>
 </template>
@@ -52,7 +50,7 @@ import taskApi from '@/api/processTask'
 import moment from 'moment'
 import InstancePreview from '../approval/ProcessInstancePreview.vue'
 import InitiateProcess from '../InitiateProcess.vue'
-import {getProcTag} from "@/utils/ProcessUtil.js";
+import { getProcTag } from "@/utils/ProcessUtil.js";
 
 export default {
   name: 'MySubmit',
@@ -108,7 +106,7 @@ export default {
     },
     submitForm() {
       this.$refs.processForm.validate((validForm, validProcess) => {
-        if (!this.isMobile){
+        if (!this.isMobile) {
           if (validForm && validProcess) {
             this.$refs.processForm.submit()
           } else {

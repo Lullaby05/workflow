@@ -172,8 +172,6 @@ export default {
         this.instanceData.formItems || [],
         val
       );
-      val['apply'] = '111';
-      console.log('@',);
       val.ownerDept = this.instanceData.starterDept;
       val.owner = this.instanceData.staterUser.name;
       val.startTime = this.instanceData.startTime;

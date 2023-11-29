@@ -32,8 +32,8 @@ export default {
         // 后台返回值可能是Map，需要转换成数组
         if (Object.prototype.toString.call(data) === '[object Object]') {
           current.options[0] = Object.keys(data).map((key) => ({
-            key,
-            value: data[key],
+            key: data[key],
+            value: key,
           }));
         } else {
           current.options[0] = data.map((ele) => ({
