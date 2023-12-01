@@ -4,13 +4,13 @@
       <el-date-picker disabled :type="type" :placeholder="placeholder"></el-date-picker>
     </div>
     <div v-else-if="mode === 'PC' && !readonly">
-      <el-date-picker v-model="_value" :value-format="format" :format="format" clearable :type="type" :placeholder="placeholder"></el-date-picker>
+      <el-date-picker :disabled-date="disabledDate" v-model="_value" :value-format="format" :format="format" clearable :type="type" :placeholder="placeholder"></el-date-picker>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <field readonly right-icon="arrow" clickable name="datetimePicker" :model-value="_value" :placeholder="placeholder" @click="showPicker = true"/>
-      <popup v-model:show="showPicker" position="bottom" >
+      <field readonly right-icon="arrow" clickable name="datetimePicker" :model-value="_value" :placeholder="placeholder" @click="showPicker = true" />
+      <popup v-model:show="showPicker" position="bottom">
         <picker-group :title="desc" :tabs="['选择日期', '选择时间']" @confirm="onConfirm">
-          <date-picker :formatter="formatter" v-model="currentDate"/>
+          <date-picker :formatter="formatter" v-model="currentDate" />
           <time-picker :formatter="formatter" v-model="currentTime" />
         </picker-group>
       </popup>
@@ -102,7 +102,7 @@ export default {
       return `${val[0].selectedValues.join('-')} ${val[1].selectedValues.join(':')}`
     },
     formatter(type, option) {
-      switch (type){
+      switch (type) {
         case 'year': option.text += ' 年'; break;
         case 'month': option.text += ' 月'; break;
         case 'day': option.text += ' 日'; break;

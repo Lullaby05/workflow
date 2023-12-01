@@ -3,6 +3,9 @@
     <el-form-item label="提示文字">
       <el-input v-model="modelValue.placeholder" placeholder="请设置日期提示" />
     </el-form-item>
+    <el-form-item label="是否允许选择过去日期">
+      <el-switch v-model="modelValue.passDate" placeholder="请设置是否允许选择过去日期" />
+    </el-form-item>
     <el-form-item label="valueKey">
       <el-select size="default" v-model="modelValue.valueKey" placeholder="请设置对应valueKey值" clearable filterable>
         <el-option v-for="item in certValueKeys" :key="item.dictValue" :label="item.dictKey" :value="item.dictValue"></el-option>

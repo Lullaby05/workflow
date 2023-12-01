@@ -4,12 +4,12 @@
       <el-time-picker disabled :placeholder="placeholder"></el-time-picker>
     </div>
     <div v-else-if="mode === 'PC' && !readonly">
-      <el-time-picker v-model="_value" :value-format="format" :placeholder="placeholder"/>
+      <el-time-picker v-model="_value" :value-format="format" :placeholder="placeholder" />
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <field readonly right-icon="arrow" clickable name="datetimePicker" v-model="_value" :placeholder="placeholder" @click="showPicker = true"/>
+      <field readonly right-icon="arrow" clickable name="datetimePicker" v-model="_value" :placeholder="placeholder" @click="showPicker = true" />
       <popup v-model:show="showPicker" position="bottom">
-        <v-time-picker v-model="timeVal" :formatter="formatter" :columns-type="columnsType" title="选择时间" type="time" @confirm="onConfirm" @cancel="showPicker = false"/>
+        <v-time-picker v-model="timeVal" :formatter="formatter" :columns-type="columnsType" title="选择时间" type="time" @confirm="onConfirm" @cancel="showPicker = false" />
       </popup>
     </div>
     <div v-else>
@@ -49,13 +49,13 @@ export default {
         this.timeVals = val
       },
     },
-    columnsType(){
+    columnsType() {
       const result = []
-      if (this.format.indexOf('HH')){
+      if (this.format.indexOf('HH')) {
         result.push('hour')
-      }else if(this.format.indexOf('mm')){
+      } else if (this.format.indexOf('mm')) {
         result.push('minute')
-      }else if(this.format.indexOf('ss')){
+      } else if (this.format.indexOf('ss')) {
         result.push('second')
       }
     }
@@ -72,7 +72,7 @@ export default {
       this._value = (val.selectedValues || []).join(':')
     },
     formatter(type, option) {
-      switch (type){
+      switch (type) {
         case 'hour': option.text += ' 时'; break;
         case 'minute': option.text += ' 分'; break;
         case 'second': option.text += ' 秒'; break;

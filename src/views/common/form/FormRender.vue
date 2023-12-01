@@ -84,6 +84,7 @@ export default {
       //缓存所有用到的条件字段
       conditionFields: new Set(),
       execute: null,
+      rules: {},
     };
   },
   computed: {
@@ -95,16 +96,14 @@ export default {
         this.$emit('update:modelValue', val);
       },
     },
-    rules() {
-      let rules = {};
-      this.loadFormConfig(this.forms, rules);
-      return rules;
-    },
     formItemMap() {
       const map = new Map();
       this.loadFormItemMap(this.forms, map);
       return map;
     },
+  },
+  created() {
+    this.loadFormConfig(this.forms, this.rules);
   },
   methods: {
     showItem(item) {
@@ -187,11 +186,15 @@ export default {
     loadFormConfig(forms, rules) {
       forms.forEach((item) => {
         if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {
-          this.loadFormConfig(item.props.items, rules);
+          this.loadFormConfig(item.props.items, this.rules);
         } else {
           this._value[item.id] = this.modelValue[item.id];
-          if (item.props.required && this.showItem(item) && item.name !== 'SafetyMeasure') {
-            rules[item.id] = [
+          if (
+            item.props.required &&
+            this.showItem(item) &&
+            item.name !== 'SafetyMeasure'
+          ) {
+            this.rules[item.id] = [
               {
                 type: ValueType.getValidType(item.valueType),
                 required: true,
@@ -200,7 +203,7 @@ export default {
               },
             ];
           } else if (item.props.required && item.name === 'SafetyMeasure') {
-            rules[item.id] = [
+            this.rules[item.id] = [
               {
                 required: true,
                 message: `请完成${item.title}`,

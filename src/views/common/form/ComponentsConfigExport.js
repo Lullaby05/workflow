@@ -170,6 +170,7 @@ export const baseComponents = [
           enablePrint: true,
           format: 'YYYY-MM-DD HH:mm',
           valueKey: '',
+          passTime: true,
         },
       },
       {
@@ -276,8 +277,8 @@ export const baseComponents = [
         title: '多级联动',
         name: 'MultilevelLink',
         icon: 'el-icon-warning',
-        value: {},
-        valueType: ValueType.object,
+        value: [],
+        valueType: ValueType.array,
         props: {
           required: false,
           enablePrint: true,
