@@ -3,7 +3,7 @@
     <el-aside :class="{ 'aside-menu': true }" v-show="showMenu">
       <div class="logo">
         <img src="../../assets/image/logo.png" />
-        <span v-show="!isCollapse">wflow-pro</span>
+        <span v-show="!isCollapse">wflow-pro1</span>
       </div>
       <el-menu router class="el-menu-vertical" :default-active="active" :collapse="isCollapse">
         <el-menu-item index="/workspace/forms">
