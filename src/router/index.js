@@ -44,7 +44,7 @@ const router = createRouter({
           path: 'unfinishedForOperation',
           name: 'unfinishedForOperation',
           component: () =>
-            import('@/views/workspace/oa/UnfinishedForOperation.vue'),
+            import('@/views/workspace/oa/UnFinishedForOperation.vue'),
           meta: { title: 'wflow-pro | 未完成的', viewport: viewport },
         },
         {
