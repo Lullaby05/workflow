@@ -23,6 +23,14 @@
               </div>
             </div>
           </div>
+          <div class="field-group">
+            <div>流程信息</div>
+            <div class="form-fields">
+              <div class="form-field" v-for="field in processItems" :key="field.id" draggable="true" @dragstart="dragstart(field, $event)">
+                {{ field.name }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </el-aside>
@@ -80,6 +88,10 @@ export default {
       this.getItems(items, this.$store.state.design.formItems);
       return items;
     },
+    processItems() {
+      const process = this.flatProcess(JSON.parse(JSON.stringify(this.$store.state.design.process)))
+      return process
+    },
     _value: {
       get() {
         return this.modelValue;
@@ -91,6 +103,19 @@ export default {
   },
   mounted() { },
   methods: {
+    flatProcess(progress) {
+      const flatArr = []
+      const flatObject = (progress) => {
+        flatArr.push(progress);
+        if (progress.children && progress.children.id) {
+          flatObject(progress.children);
+        }
+        delete progress.children;
+        return flatArr;
+      }
+      flatObject(progress)
+      return flatArr
+    },
     getItems(options, items) {
       items.forEach((item) => {
         if (item.name === 'SpanLayout' || item.name === 'ModuleBlock') {

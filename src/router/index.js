@@ -99,6 +99,12 @@ const router = createRouter({
         import('@/views/admin/forOperation/FormProcessDesign.vue'),
       meta: { title: 'wflow-pro | 表单流程设计', viewport: viewport },
     },
+    {
+      path: '/web-view/formRender',
+      name: 'webViewFormRender',
+      component: () => import('@/views/admin/webViewFormRender.vue'),
+      meta: { title: 'wflow-pro | 表单展示', viewport: viewport },
+    },
   ],
 });
 

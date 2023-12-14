@@ -1,9 +1,5 @@
 <template>
-  <vue-editor
-    v-model="_value"
-    :init="init"
-    :disabled="readonly"
-  ></vue-editor>
+  <vue-editor v-model="_value" :init="init" :disabled="readonly"></vue-editor>
 </template>
 
 <script>
@@ -107,7 +103,7 @@ export default {
       },
     },
   },
-  mounted() {},
+  mounted() { },
   methods: {
     dropElOnEditor(ev) {
       tinymce.activeEditor.focus();
@@ -119,10 +115,24 @@ export default {
           this.tempDropData.name === 'SafetyMeasure')
       ) {
         this.insertDom(this.createTable(this.tempDropData));
+      } else if (this.tempDropData.name === 'MultilevelLink') {
+        const tableConfig = this.tempDropData.props.currentOptions.fields.map((ele, index) => {
+          return {
+            id: ele,
+            title: this.tempDropData.props.currentOptions.placeholder[index],
+          };
+        })
+        this.tempDropData.props.columns = tableConfig
+        this.insertDom(this.createTable(this.tempDropData));
+      } else if (this.isNode(this.tempDropData)) {
+        this.insertText(this.tempDropData.name + '结果：${' + this.tempDropData.id + '}');
       } else {
         this.insertText('${' + this.tempDropData.id + '}');
       }
       //this.tempDropData = null
+    },
+    isNode(data) {
+      return data.id.includes('node') || data.id === 'root'
     },
     insertText(text) {
       this.editor.execCommand('mceInsertContent', false, text);

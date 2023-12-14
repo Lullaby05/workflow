@@ -27,7 +27,7 @@
           </popup>
         </div>-->
       <checkbox-group v-model="_value" direction="horizontal">
-        <checkbox style="margin: 5px" :name="op" shape="square" v-for="(op, index) in options" :key="index">{{ op }}</checkbox>
+        <checkbox style="margin: 5px" :name="op.value" shape="square" v-for="(op, index) in options" :key="index">{{ op.label }}</checkbox>
       </checkbox-group>
     </div>
     <div v-else>

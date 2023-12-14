@@ -1,13 +1,24 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-
+import viteCompression from 'vite-plugin-compression';
 import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './', // 开发或生产环境服务的公共基础路径
-  plugins: [vue(), vueJsx()],
+  plugins: [
+    vue(),
+    vueJsx(),
+    viteCompression({
+      verbose: true, // 默认即可
+      disable: false, //开启压缩(不禁用)，默认即可
+      deleteOriginFile: true, //删除源文件
+      algorithm: 'gzip', //压缩算法
+      ext: '.gz', //文件类型
+      threshold: 1024, // 对大于 1kb 的文件进行压缩
+    }),
+  ],
   resolve: {
     alias: {
       // 配置路径别名

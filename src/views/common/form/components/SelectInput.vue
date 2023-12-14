@@ -27,7 +27,7 @@
           </popup>
         </div>-->
       <radio-group v-model="_value" direction="horizontal">
-        <radio style="margin: 5px" v-for="(op, index) in options" :key="index" :name="op">{{ op }}</radio>
+        <radio style="margin: 5px" v-for="(op, index) in options" :key="index" :name="op.value">{{ op.label }}</radio>
       </radio-group>
     </div>
     <div v-else>
@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import { Field, Popup, Picker, Radio, RadioGroup } from 'vant'
-import componentMinxins from '../ComponentMinxins'
+import { Field, Popup, Picker, Radio, RadioGroup } from 'vant';
+import componentMinxins from '../ComponentMinxins';
 
 export default {
   mixins: [componentMinxins],
@@ -60,7 +60,7 @@ export default {
     options: {
       type: Array,
       default: () => {
-        return []
+        return [];
       },
     },
     isNeedApi: {
@@ -71,16 +71,16 @@ export default {
   data() {
     return {
       showPicker: false,
-    }
+    };
   },
   methods: {
     onConfirm(val) {
-      this.showPicker = false
-      this._value = val
+      this.showPicker = false;
+      this._value = val;
     },
   },
   emits: ['update:modelValue'],
-}
+};
 </script>
 
 <style scoped></style>

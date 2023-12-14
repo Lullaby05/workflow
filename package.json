@@ -27,10 +27,12 @@
     "signature_pad": "^4.1.5",
     "tinymce": "^6.0.3",
     "vant": "^4.1.0",
+    "vite-plugin-compression": "^0.5.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vuedraggable": "^4.1.0",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "weixin-js-sdk": "^1.6.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
