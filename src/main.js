@@ -1,5 +1,7 @@
 import { createApp } from 'vue';
 import router from './router';
+// import storeWX from './storeWX';
+import { createPinia } from 'pinia'
 import store from './store';
 import App from './App.vue';
 
@@ -33,10 +35,11 @@ initAMapApiLoader({
     'AMap.Geolocation',
   ],
 });
-
+const pinia = createPinia()
 const app = createApp(App)
   .use(router)
   .use(store)
+  .use(pinia)
   .use(VueAMap)
   .use(ElementPlus)
   .use(wxsdk)

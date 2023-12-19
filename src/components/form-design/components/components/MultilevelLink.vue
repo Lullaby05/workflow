@@ -1,0 +1,296 @@
+<template>
+  <div>
+    <div v-if="mode === 'DESIGN'">
+      <div v-if="!expanding">
+        <el-select
+          class="max-fill"
+          v-model="_value"
+          v-for="(item, index) in currentOptions.columns"
+          :key="index"
+          disabled
+          :placeholder="'请选择' + currentOptions.placeholder[index]"
+        />
+      </div>
+      <el-radio-group v-model="_value" v-else>
+        <el-radio
+          class="w-row-text"
+          style="margin: 5px"
+          disabled
+          v-for="(op, index) in options"
+          :key="index"
+          :label="op"
+          >{{ op }}</el-radio
+        >
+      </el-radio-group>
+    </div>
+    <div v-else-if="mode === 'PC' && !readonly">
+      <div v-if="!expanding">
+        <div class="link-list">
+          <div
+            class="link-list-item"
+            v-for="(ele, i) in _valuePc"
+            :key="i + key"
+          >
+            <el-select
+              v-model="_valuePc[i][currentOptions.fields[index]]"
+              v-for="(item, index) in currentOptions.options"
+              class="multi-link-select"
+              :key="currentOptions.fields[index]"
+              clearable
+              :placeholder="'请选择' + currentOptions.placeholder[index]"
+              @change="(val) => changeLink(val, i, index)"
+            >
+              <el-option
+                v-if="index === 0"
+                v-for="(op, sort) in allOptionsMap[index]"
+                :key="sort"
+                :value="op.value"
+                :label="op.key"
+              ></el-option>
+              <el-option
+                v-else
+                v-for="(op, sort) in mapToArray(
+                  index,
+                  _valuePc[i][currentOptions.fields[index - 1]]
+                )"
+                key="other"
+                :value="op.value"
+                :label="op.key"
+              ></el-option>
+            </el-select>
+            <el-button
+              v-if="i === 0"
+              style="margin-left: 12px"
+              @click="addLink"
+              type="primary"
+              >添加</el-button
+            >
+            <el-button
+              v-else
+              style="margin-left: 12px"
+              @click="removeLink(i)"
+              type="danger"
+              >删除</el-button
+            >
+          </div>
+        </div>
+      </div>
+      <el-radio-group v-model="_valuePc" v-else>
+        <el-radio
+          class="w-row-text"
+          style="margin: 5px"
+          v-for="(op, index) in options"
+          :key="index"
+          :label="op"
+          >{{ op }}</el-radio
+        >
+      </el-radio-group>
+    </div>
+    <div v-else-if="mode === 'MOBILE' && !readonly">
+      <radio-group v-model="_valuePc" direction="horizontal">
+        <radio
+          style="margin: 5px"
+          v-for="(op, index) in options"
+          :key="index"
+          :name="op"
+          >{{ op }}</radio
+        >
+      </radio-group>
+    </div>
+    <div v-else>
+      <el-table
+        :data="_valuePc"
+        :border="true"
+        :cell-style="cellStyle"
+        :header-cell-style="tbCellStyle"
+      >
+        <el-table-column type="index" label="序号" width="60"></el-table-column>
+        <el-table-column
+          v-for="(item, index) in currentOptions.placeholder"
+          :key="index"
+          :label="item"
+          :prop="currentOptions.fields[index]"
+          ><template #default="scoped">
+            {{ formatValue(scoped.row, index) }}
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { Radio, RadioGroup } from 'vant';
+  import componentMinxins from '../ComponentMinxins';
+  import multilevelLinkApi from '@/api/multilevelLink';
+  import { cloneDeep } from 'lodash';
+
+  export default {
+    mixins: [componentMinxins],
+    name: 'MultilevelLink',
+    components: { Radio, RadioGroup },
+    props: {
+      modelValue: {
+        type: Object,
+        default: () => [{}],
+      },
+      expanding: {
+        type: Boolean,
+        default: false,
+      },
+      currentOptions: {
+        type: Object,
+        default: () => {
+          return [
+            {
+              key: '0',
+              options: [],
+            },
+          ];
+        },
+      },
+    },
+    created() {
+      this.allOptionsMap = this.currentOptions.options.map((item, index) => {
+        if (index === 0) {
+          return item;
+        }
+        return new Map();
+      });
+      if (this.modelValue.length) {
+        this.readonlyVal = cloneDeep(this.modelValue);
+        for (let i = 0; i < this.modelValue.length; i++) {
+          this.changeLink(
+            this.modelValue[i][this.currentOptions.fields[0]],
+            i,
+            0,
+            false
+          );
+        }
+      }
+    },
+    computed: {
+      _valuePc: {
+        get() {
+          if (this.$isNotEmpty(this.modelValue)) {
+            return this.modelValue;
+          }
+          return [{}];
+        },
+        set(val) {
+          this.$emit('update:modelValue', val);
+        },
+      },
+    },
+    data() {
+      return {
+        showPicker: false,
+        readonlyVal: [],
+        tbCellStyle: {
+          background: '#e8e8e8',
+          padding: '10px 0',
+        },
+        cellStyle: {
+          padding: '0',
+          height: '40px',
+        },
+        allOptionsMap: [],
+        key: 1,
+      };
+    },
+    methods: {
+      mapToArray(index, val) {
+        return this.allOptionsMap[index].get(val);
+      },
+      addLink() {
+        this._valuePc.push({});
+        this.key++;
+      },
+      removeLink(i) {
+        this._valuePc.splice(i, 1);
+        this.key++;
+      },
+      formatValue(row, index) {
+        let result = undefined;
+        if (index === 0) {
+          result = this.allOptionsMap[index].find(
+            (item) => item.value === row[this.currentOptions.fields[index]]
+          );
+        } else {
+          const arr = this.mapToArray(
+            index,
+            row[this.currentOptions.fields[index - 1]]
+          );
+          if (arr) {
+            result = arr.find(
+              (item) => item.value === row[this.currentOptions.fields[index]]
+            );
+          }
+        }
+        return result ? result.key : '';
+      },
+      async changeLink(val, currentIndex, index, needClear = true) {
+        if (val) {
+          // 清空后续下拉框的数据以及_valuePc对应字段的数据
+          for (let i = index + 1; i < this.currentOptions.options.length; i++) {
+            if (needClear) {
+              this._valuePc[currentIndex][this.currentOptions.fields[i]] = '';
+            }
+            this.currentOptions.options[i] = [];
+          }
+          // 将值放到对应的字段中
+          this._valuePc[currentIndex][this.currentOptions.fields[index]] = val;
+          this.$emit('update:modelValue', this._valuePc);
+          if (index >= this.currentOptions.columns - 1) {
+            this.$emit('update:currentOptions', this.currentOptions);
+            return;
+          }
+          // 请求下一个下拉框的数据，如果map里有直接从map拿
+          if (!this.allOptionsMap[index + 1].has(val)) {
+            const { data } = await multilevelLinkApi.getMultilevelLink(
+              this.currentOptions.apis[index + 1],
+              val
+            );
+            let dataArr = data;
+            // 后台返回值可能是Map，需要转换成数组
+            if (Object.prototype.toString.call(dataArr) === '[object Object]') {
+              this.currentOptions.options[index + 1] = Object.keys(dataArr).map(
+                (key) => ({
+                  key,
+                  value: dataArr[key],
+                })
+              );
+            } else {
+              this.currentOptions.options[index + 1] = dataArr.map((ele) => ({
+                key: ele.name,
+                value: ele.id,
+              }));
+            }
+            // 把选择的值和下一个下拉框的数据保存到Map中
+            this.allOptionsMap[index + 1].set(
+              val,
+              this.currentOptions.options[index + 1]
+            );
+          }
+          this.$emit('update:currentOptions', this.currentOptions);
+        } else {
+          // 清空后续下拉框的数据以及_valuePc对应字段的数据
+          for (let i = index + 1; i < this.currentOptions.options.length; i++) {
+            this._valuePc[currentIndex][this.currentOptions.fields[i]] = '';
+            this.currentOptions.options[i] = [];
+          }
+        }
+      },
+    },
+    emits: ['update:modelValue', 'update:currentOptions'],
+  };
+</script>
+
+<style scoped lang="less">
+  .multi-link-select + .multi-link-select {
+    margin-left: 9px;
+  }
+  .link-list-item + .link-list-item {
+    margin-top: 10px;
+  }
+</style>

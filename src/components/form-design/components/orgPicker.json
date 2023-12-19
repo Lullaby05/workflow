@@ -1,0 +1,96 @@
+{
+    "getOrgTree":[
+        {
+            "id": "1486186",
+            "name": "xx科技有限公司",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "231535",
+            "name": "生产管理部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "264868",
+            "name": "行政人事部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "4319868",
+            "name": "销售服务部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "6179678",
+            "name": "研发部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        }
+    ],
+    "getUserByName":[
+        {
+            "id": "1486186",
+            "name": "xx科技有限公司",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "231535",
+            "name": "生产管理部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "264868",
+            "name": "行政人事部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "4319868",
+            "name": "销售服务部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        },
+        {
+            "id": "6179678",
+            "name": "研发部",
+            "type": "dept",
+            "isLeader": null,
+            "avatar": null,
+            "sex": null,
+            "selected": null
+        }
+    ]
+}

@@ -32,7 +32,8 @@
     "vue-router": "^4.1.6",
     "vuedraggable": "^4.1.0",
     "vuex": "^4.1.0",
-    "weixin-js-sdk": "^1.6.5"
+    "weixin-js-sdk": "^1.6.5",
+    "pinia": "^2.0.23"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
