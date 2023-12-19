@@ -71,12 +71,11 @@ const router = createRouter({
           component: () =>
             import('@/views/admin/forOperation/formsPanelForOperation.vue'),
           meta: { title: 'wflow-pro | 表单列表', viewport: viewport },
-        }, 
+        },
         {
           path: 'webView',
           name: 'webView',
-          component: () =>
-            import('@/views/admin/webViewFormRender.vue'),
+          component: () => import('@/views/admin/webViewFormRender.vue'),
           meta: { title: 'wflow-pro | 表单展示', viewport: viewport },
         },
       ],
@@ -111,6 +110,15 @@ const router = createRouter({
       name: 'webViewFormRender',
       component: () => import('@/views/admin/webViewFormRender.vue'),
       meta: { title: 'wflow-pro | 表单展示', viewport: viewport },
+    },
+    {
+      path: '/admin/operationWebView',
+      name: 'OperationWebView',
+      component: () => import('@/views/admin/operationFormRender.vue'),
+      meta: {
+        title: 'wflow-pro | 作业表单展示',
+        viewport: viewport,
+      },
     },
   ],
 });

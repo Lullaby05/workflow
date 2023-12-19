@@ -9,7 +9,10 @@
         disabled
         :placeholder="placeholder"
       />
-      <el-checkbox-group v-else v-model="_value">
+      <el-checkbox-group
+        v-else
+        v-model="_value"
+      >
         <el-checkbox
           class="w-row-text"
           disabled
@@ -53,7 +56,10 @@
           ></el-option>
         </el-select>
       </div>
-      <el-checkbox-group v-else v-model="_value">
+      <el-checkbox-group
+        v-else
+        v-model="_value"
+      >
         <el-checkbox
           class="w-row-text"
           style="margin: 5px"
@@ -71,14 +77,17 @@
             <picker :title="placeholder" show-toolbar :columns="options" @confirm="onConfirm" @cancel="showPicker = false"></picker>
           </popup>
         </div>-->
-      <checkbox-group v-model="_value" direction="horizontal">
+      <checkbox-group
+        v-model="_value"
+        direction="horizontal"
+      >
         <checkbox
           style="margin: 5px"
-          :name="op"
+          :name="op.value"
           shape="square"
           v-for="(op, index) in options"
           :key="index"
-          >{{ op }}</checkbox
+          >{{ op.label }}</checkbox
         >
       </checkbox-group>
     </div>
@@ -89,67 +98,67 @@
 </template>
 
 <script>
-  import { Checkbox, CheckboxGroup, Picker, Field, Popup } from 'vant';
-  import componentMinxins from '../ComponentMinxins';
+import { Checkbox, CheckboxGroup, Picker, Field, Popup } from 'vant';
+import componentMinxins from '../ComponentMinxins';
 
-  export default {
-    mixins: [componentMinxins],
-    name: 'MultipleSelect',
-    components: { Checkbox, CheckboxGroup, Picker, Field, Popup },
-    props: {
-      placeholder: {
-        type: String,
-        default: '请选择选项',
-      },
-      modelValue: {
-        type: Array,
-        default: () => {
-          return [];
-        },
-      },
-      expanding: {
-        type: Boolean,
-        default: false,
-      },
-      options: {
-        type: Array,
-        default: () => {
-          return [];
-        },
-      },
-      isNeedApi: {
-        type: Boolean,
-        default: false,
+export default {
+  mixins: [componentMinxins],
+  name: 'MultipleSelect',
+  components: { Checkbox, CheckboxGroup, Picker, Field, Popup },
+  props: {
+    placeholder: {
+      type: String,
+      default: '请选择选项',
+    },
+    modelValue: {
+      type: Array,
+      default: () => {
+        return [];
       },
     },
-    computed: {},
-    data() {
-      return {
-        showPicker: false,
-        checks: [],
-      };
+    expanding: {
+      type: Boolean,
+      default: false,
     },
-    methods: {
-      formatterText() {
-        if (this.isNeedApi && this.readonly) {
-          let val = '';
-          for (const item of this.options) {
-            if (this._value.includes(item.value)) {
-              val += `${item.label} `;
-            }
+    options: {
+      type: Array,
+      default: () => {
+        return [];
+      },
+    },
+    isNeedApi: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {},
+  data() {
+    return {
+      showPicker: false,
+      checks: [],
+    };
+  },
+  methods: {
+    formatterText() {
+      if (this.isNeedApi && this.readonly) {
+        let val = '';
+        for (const item of this.options) {
+          if (this._value.includes(item.value)) {
+            val += `${item.label} `;
           }
-          return val;
-        } else {
-          return this._value.join(',');
         }
-      },
+        return val;
+      } else {
+        return this._value.join(',');
+      }
     },
-    emits: ['update:modelValue'],
-  };
+  },
+  emits: ['update:modelValue'],
+};
 </script>
 
 <style lang="less" scoped>
-  :deep(.el-checkbox-group) {
-    line-height: 10px;
-  }
+:deep(.el-checkbox-group) {
+  line-height: 10px;
+}
 </style>

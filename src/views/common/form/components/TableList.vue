@@ -1,13 +1,16 @@
 <template>
   <div>
     <div v-if="mode === 'DESIGN'">
-      <draggable class="l-drag-from" item-key="id" v-model="_columns" v-bind="dragProps"
-                 :component-data="{tag: 'div', type: 'transition-group'}"
-                @start="drag = true; selectFormItem = null" @end="drag = false">
-        <template #item="{element, index}">
+      <draggable class="l-drag-from" item-key="id" v-model="_columns" v-bind="dragProps" :component-data="{ tag: 'div', type: 'transition-group' }" @start="
+        drag = true;
+      selectFormItem = null;
+      " @end="drag = false">
+        <template #item="{ element, index }">
           <div class="l-form-item" @click.stop="selectItem(element)" :style="getSelectedClass(element)">
             <div class="l-form-header">
-              <p><span v-if="element.props.required">*</span>{{ element.title }}</p>
+              <p>
+                <span v-if="element.props.required">*</span>{{ element.title }}
+              </p>
               <div class="l-option">
                 <icon name="el-icon-close" @click="delItem(index)"></icon>
               </div>
@@ -33,9 +36,8 @@
             </span>
             <span class="del-row" @click.stop="delRow(i, row)" v-if="!readonly">删除</span>
           </template>
-          <form-item :model="row" :rule="rules[column.id]" :ref="`${column.id}_${i}`"
-            :prop="column.id" :label="column.title" v-for="(column, index) in _columns" :key="'column_' + index">
-            <form-design-render :index="i + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column"/>
+          <form-item :model="row" :rule="rules[column.id]" :ref="`${column.id}_${i}`" :prop="column.id" :label="column.title" v-for="(column, index) in _columns" :key="'column_' + index">
+            <form-design-render :index="i + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column" />
           </form-item>
         </collapse-item>
       </collapse>
@@ -46,8 +48,7 @@
     </div>
     <template v-else>
       <template v-if="rowLayout">
-        <el-table :cell-style="cellStyle" :header-cell-style="tbCellStyle" :border="showBorder"
-          :summary-method="getSummaries" :show-summary="showSummary" :data="_value" style="width: 100%">
+        <el-table :cell-style="cellStyle" :header-cell-style="tbCellStyle" :border="showBorder" :summary-method="getSummaries" :show-summary="showSummary" :data="_value" style="width: 100%">
           <el-table-column fixed type="index" label="序号" width="55"></el-table-column>
           <el-table-column :min-width="getMinWidth(column)" v-for="(column, index) in _columns" :prop="column.id" :label="column.title">
             <template #header>
@@ -55,9 +56,13 @@
               {{ column.title }}
             </template>
             <template v-slot="scope">
-              <form-design-render :index="scope.$index + 1" :formData="formData"
-                :class="{'valid-error': showError(column, _value[scope.$index][column.id]), 'readonly': readonly,}"
-                v-model="_value[scope.$index][column.id]" :readonly="isReadonly(column)" :mode="mode" :config="column"/>
+              <form-design-render :index="scope.$index + 1" :formData="formData" :class="{
+                'valid-error': showError(
+                  column,
+                  _value[scope.$index][column.id]
+                ),
+                readonly: readonly,
+              }" v-model="_value[scope.$index][column.id]" :readonly="isReadonly(column)" :mode="mode" :config="column" />
             </template>
           </el-table-column>
           <el-table-column fixed="right" min-width="95" label="操作" v-if="!readonly">
@@ -76,7 +81,7 @@
             <icon name="el-icon-close" @click="delRow(i, row)" v-if="!readonly"></icon>
           </div>
           <el-form-item v-for="(column, index) in _columns" :key="'column_' + index" :prop="column.id" :label="column.title">
-            <form-design-render :index="index + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column"/>
+            <form-design-render :index="index + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column" />
           </el-form-item>
         </el-form>
         <el-button size="small" icon="el-icon-plus" @click="addRow" v-if="!readonly">{{ placeholder }}</el-button>
@@ -86,12 +91,12 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
-import { ValueType } from '../ComponentsConfigExport'
-import {Collapse, CollapseItem, Dialog, showFailToast} from 'vant'
-import FormItem from '@/components/common/FormItem.vue'
-import FormDesignRender from '@/views/admin/layout/form/FormDesignRender.vue'
-import componentMinxins from '../ComponentMinxins'
+import draggable from 'vuedraggable';
+import { ValueType } from '../ComponentsConfigExport';
+import { Collapse, CollapseItem, Dialog, showFailToast } from 'vant';
+import FormItem from '@/components/common/FormItem.vue';
+import FormDesignRender from '@/views/admin/layout/form/FormDesignRender.vue';
+import componentMinxins from '../ComponentMinxins';
 
 export default {
   mixins: [componentMinxins],
@@ -101,7 +106,7 @@ export default {
     modelValue: {
       type: Array,
       default: () => {
-        return []
+        return [];
       },
     },
     placeholder: {
@@ -111,7 +116,7 @@ export default {
     columns: {
       type: Array,
       default: () => {
-        return []
+        return [];
       },
     },
     showBorder: {
@@ -133,18 +138,18 @@ export default {
     formData: {
       type: Object,
       default: () => {
-        return {}
+        return {};
       },
     },
   },
   created() {
-    if (!Array.isArray(this.modelValue)) {
-      this._value = []
+    if (!Array.isArray(this.modelValue) || this.modelValue.length === 0) {
+      this._value = [{}];
     }
   },
   computed: {
     rules() {
-      const rules = {}
+      const rules = {};
       this.columns.forEach((col) => {
         if (col.props.required) {
           rules[col.id] = [
@@ -154,25 +159,25 @@ export default {
               message: `请完成${col.title}`,
               trigger: 'blur',
             },
-          ]
+          ];
         }
-      })
-      return rules
+      });
+      return rules;
     },
     _columns: {
       get() {
-        return this.columns
+        return this.columns;
       },
       set(val) {
-        this.$emit('update:columns', val)
+        this.$emit('update:columns', val);
       },
     },
     selectFormItem: {
       get() {
-        return this.$store.state.selectFormItem
+        return this.$store.state.selectFormItem;
       },
       set(val) {
-        this.$store.state.selectFormItem = val
+        this.$store.state.selectFormItem = val;
       },
     },
   },
@@ -181,7 +186,7 @@ export default {
       select: null,
       drag: false,
       ValueType,
-      actives: [],
+      actives: ['0'],
       tbCellStyle: {
         background: '#e8e8e8',
         padding: '10px 0',
@@ -189,29 +194,29 @@ export default {
       cellStyle: {
         padding: '0',
       },
-      dragProps:{
+      dragProps: {
         animation: 300,
-        group: "form",
+        group: 'form',
         disabled: false,
         sort: true,
-        ghostClass: "choose",
-      }
-    }
+        ghostClass: 'choose',
+      },
+    };
   },
   methods: {
-    isReadonly(item){
-      return item.perm === 'R'
+    isReadonly(item) {
+      return item.perm === 'R';
     },
     getMinWidth(col) {
       switch (col.name) {
         case 'DateTime':
-          return '250px'
+          return '250px';
         case 'DateTimeRange':
-          return '280px'
+          return '280px';
         case 'MultipleSelect':
-          return '200px'
+          return '200px';
         default:
-          return '150px'
+          return '150px';
       }
     },
     showError(col, val) {
@@ -221,26 +226,26 @@ export default {
           case ValueType.user:
           case ValueType.dateRange:
           case ValueType.array:
-            return !(Array.isArray(val) && val.length > 0)
+            return !(Array.isArray(val) && val.length > 0);
           default:
-            return !this.$isNotEmpty(val)
+            return !this.$isNotEmpty(val);
         }
       }
-      return false
+      return false;
     },
     isError(i) {
       for (let j = 0; j < this._columns.length; j++) {
-        let ref = this.$refs[`${this._columns[j].id}_${i}`]
+        let ref = this.$refs[`${this._columns[j].id}_${i}`];
         if (ref && Array.isArray(ref) && ref.length > 0 && ref[0].isError) {
           if (ref[0].isError()) {
-            return true
+            return true;
           }
         }
       }
-      return false
+      return false;
     },
     copyData(i, row) {
-      this._value.push(this.$deepCopy(row))
+      this._value.push(this.$deepCopy(row));
     },
     delRow(i, row) {
       if (this.mode === 'PC') {
@@ -249,134 +254,133 @@ export default {
           cancelButtonText: '取消',
           type: 'warning',
         }).then(() => {
-          console.log(this._value, this._value.length)
-          this._value.splice(i, 1)
-          console.log(this._value, this._value.length)
-        })
+          console.log(this._value, this._value.length);
+          this._value.splice(i, 1);
+          console.log(this._value, this._value.length);
+        });
       } else {
         Dialog.confirm({
           title: '提示',
           message: '您确定要删除该行数据吗？',
         }).then(() => {
-          this._value.splice(i, 1)
-        })
+          this._value.splice(i, 1);
+        });
       }
     },
     addRow() {
       if (this.maxSize > 0 && this._value.length >= this.maxSize) {
         if (this.mode === 'PC') {
-          this.$message.warning(`最多只能添加${this.maxSize}行`)
+          this.$message.warning(`最多只能添加${this.maxSize}行`);
         } else {
-          showFailToast(`最多加${this.maxSize}行`)
+          showFailToast(`最多加${this.maxSize}行`);
         }
       } else {
-        let row = {}
-        this.columns.forEach((col) => (row[col.id] = undefined))
-        const v = Object.assign([], this._value)
-        v.push(row)
-        this._value = v
+        let row = {};
+        this.columns.forEach((col) => (row[col.id] = undefined));
+        const v = Object.assign([], this._value);
+        v.push(row);
+        this._value = v;
       }
     },
     delItem(id) {
-      this._columns.splice(id, 1)
+      this._columns.splice(id, 1);
     },
     selectItem(cp) {
-      this.selectFormItem = cp
+      this.selectFormItem = cp;
     },
     getSelectedClass(cp) {
       return this.selectFormItem && this.selectFormItem.id === cp.id
         ? 'border-left: 4px solid #f56c6c'
-        : ''
+        : '';
     },
     getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
+      const { columns, data } = param;
+      const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '合计'
-          return
+          sums[index] = '合计';
+          return;
         }
-        const values = data.map((item) => Number(item[column.property]))
+        const values = data.map((item) => Number(item[column.property]));
         if (!values.every((value) => isNaN(value))) {
           sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
+            const value = Number(curr);
             if (!isNaN(value)) {
-              return prev + curr
+              return prev + curr;
             } else {
-              return prev
+              return prev;
             }
-          }, 0)
+          }, 0);
         } else {
-          sums[index] = '...'
+          sums[index] = '...';
         }
-      })
+      });
 
-      return sums
+      return sums;
     },
     validate(call) {
       if (this.mode === 'PC') {
         if (this.rowLayout) {
-          let result = true
+          let result = true;
           for (let i = 0; i < this.columns.length; i++) {
             if (this.columns[i].props.required) {
               for (let j = 0; j < this._value.length; j++) {
                 result = !this.showError(
                   this.columns[i],
                   this._value[j][this.columns[i].id]
-                )
+                );
                 if (!result) {
-                  call(false)
-                  return
+                  call(false);
+                  return;
                 }
               }
             }
           }
-          call(result)
+          call(result);
         } else {
-          let success = 0
+          let success = 0;
           this._value.forEach((v, i) => {
-            let formRef = this.$refs[`table-form-${i}`]
+            let formRef = this.$refs[`table-form-${i}`];
             if (formRef && Array.isArray(formRef) && formRef.length > 0) {
               formRef[0].validate((valid) => {
                 if (valid) {
-                  success++
+                  success++;
                 }
-              })
+              });
             }
-          })
-          setTimeout(() => call(success === this._value.length),500)
+          });
+          setTimeout(() => call(success === this._value.length), 500);
         }
       } else {
-        let success = true
+        let success = true;
         this._value.forEach((row, i) => {
           this._columns.forEach((col) => {
-            let tbColRef = this.$refs[`${col.id}_${i}`]
+            let tbColRef = this.$refs[`${col.id}_${i}`];
             if (tbColRef && Array.isArray(tbColRef) && tbColRef.length > 0) {
               tbColRef[0].validate((valid) => {
                 if (!valid) {
-                  success = false
+                  success = false;
                 }
-              })
+              });
             }
-          })
-        })
-        call(success)
+          });
+        });
+        call(success);
       }
     },
   },
   emits: ['update:modelValue'],
-}
+};
 </script>
 
 <style lang="less" scoped>
-
 .m-valid-error {
   margin-left: 10px;
   font-size: 1rem;
   color: @theme-danger;
 }
 
-.readonly{
+.readonly {
   padding: 5px 0;
 }
 
@@ -385,7 +389,7 @@ export default {
 }
 
 .del-row {
-  float:right;
+  float: right;
   margin-right: 10px;
   font-size: 1rem;
   color: #8c8c8c;
@@ -403,19 +407,23 @@ export default {
   .el-input.is-focus .el-input__wrapper {
     box-shadow: none;
   }
-  .cell{
-    .el-input__wrapper, .el-input__inner, .el-textarea__inner{
+
+  .cell {
+
+    .el-input__wrapper,
+    .el-input__inner,
+    .el-textarea__inner {
       border-radius: 0;
       border: none;
       padding-left: 0;
       box-shadow: none;
     }
-    .el-input__prefix{
+
+    .el-input__prefix {
       display: none;
     }
   }
 }
-
 
 .table-column {
   padding: 5px;
@@ -458,7 +466,8 @@ export default {
   min-height: 50px;
   background-color: rgb(245, 246, 246);
 
-  .l-form-item, li {
+  .l-form-item,
+  li {
     cursor: grab;
     background: #ffffff;
     padding: 10px;
@@ -478,7 +487,6 @@ export default {
   padding: 0;
   background: #f7f8fa;
 }
-
 
 .m-tb-empty {
   padding: 20px;
@@ -523,5 +531,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -1,11 +1,19 @@
 <template>
   <el-container>
-    <el-aside :class="{ 'aside-menu': true }" v-show="showMenu">
+    <el-aside
+      :class="{ 'aside-menu': true }"
+      v-show="showMenu"
+    >
       <div class="logo">
         <img src="../../assets/image/logo.png" />
         <span v-show="!isCollapse">wflow-pro</span>
       </div>
-      <el-menu router class="el-menu-vertical" :default-active="active" :collapse="isCollapse">
+      <el-menu
+        router
+        class="el-menu-vertical"
+        :default-active="active"
+        :collapse="isCollapse"
+      >
         <el-menu-item index="/workspace/forms">
           <icon name="el-icon-list"></icon>
           <template #title>审批列表</template>
@@ -50,56 +58,132 @@
             <icon name="el-icon-setting"></icon>
             <template #title>表单管理</template>
           </el-menu-item>
+          <el-menu-item index="/admin/operationWebView">
+            <icon name="el-icon-setting"></icon>
+            <template #title>作业表单管理</template>
+          </el-menu-item>
         </div>
       </el-menu>
     </el-aside>
     <el-container class="container">
       <el-header height="80px">
         <div class="action">
-          <icon :name="isCollapse ? 'el-icon-arrowright' : 'el-icon-arrowleft'" @click="isCollapse = !isCollapse"></icon>
+          <icon
+            :name="isCollapse ? 'el-icon-arrowright' : 'el-icon-arrowleft'"
+            @click="isCollapse = !isCollapse"
+          ></icon>
         </div>
-        <div class="message" v-show="!showMenu || !isMobile">
-          <el-popover placement="bottom-end" width="300" trigger="click">
+        <div
+          class="message"
+          v-show="!showMenu || !isMobile"
+        >
+          <el-popover
+            placement="bottom-end"
+            width="300"
+            trigger="click"
+          >
             <div class="notify">
-              <el-empty :image-size="50" description="暂无消息 😁" v-if="notify.total === 0"></el-empty>
-              <div v-for="msg in notify.records" :key="msg.id" class="notify-item">
+              <el-empty
+                :image-size="50"
+                description="暂无消息 😁"
+                v-if="notify.total === 0"
+              ></el-empty>
+              <div
+                v-for="msg in notify.records"
+                :key="msg.id"
+                class="notify-item"
+              >
                 <el-row>
                   <el-col :span="2">
                     <div class="notify-item-type-icon">
-                      <icon name="el-icon-successfilled" v-if="msg.type === 'SUCCESS'" style="color: #02b068"></icon>
-                      <icon name="el-icon-warningfilled" v-else-if="msg.type === 'WARNING'" style="color: #f78f5f"></icon>
-                      <icon name="el-icon-circleclosefilled" v-else-if="msg.type === 'ERROR'" style="color: #f25643"></icon>
-                      <icon name="el-icon-infofilled" v-else style="color: #8c8c8c"></icon>
+                      <icon
+                        name="el-icon-successfilled"
+                        v-if="msg.type === 'SUCCESS'"
+                        style="color: #02b068"
+                      ></icon>
+                      <icon
+                        name="el-icon-warningfilled"
+                        v-else-if="msg.type === 'WARNING'"
+                        style="color: #f78f5f"
+                      ></icon>
+                      <icon
+                        name="el-icon-circleclosefilled"
+                        v-else-if="msg.type === 'ERROR'"
+                        style="color: #f25643"
+                      ></icon>
+                      <icon
+                        name="el-icon-infofilled"
+                        v-else
+                        style="color: #8c8c8c"
+                      ></icon>
                     </div>
                   </el-col>
                   <el-col :span="22">
-                    <div class="notify-item-title" @click="toNotify(msg)">
+                    <div
+                      class="notify-item-title"
+                      @click="toNotify(msg)"
+                    >
                       {{ msg.title }}
                     </div>
-                    <ellipsis hoverTip class="notify-item-content" :content="msg.content" />
+                    <ellipsis
+                      hoverTip
+                      class="notify-item-content"
+                      :content="msg.content"
+                    />
                   </el-col>
                 </el-row>
                 <span class="notify-item-time">{{
                   msg.createTime.substring(5, 16)
                 }}</span>
-                <el-button type="primary" link class="notify-btn" @click="readNotify(msg.id)">已读</el-button>
+                <el-button
+                  type="primary"
+                  link
+                  class="notify-btn"
+                  @click="readNotify(msg.id)"
+                  >已读</el-button
+                >
               </div>
             </div>
-            <div class="notify-action" v-show="notify.total > 0">
-              <el-button type="primary" link @click="--params.pageNo" :disabled="params.pageNo <= 1">上一页</el-button>
-              <el-button type="primary" link @click="readNotify(null)">本页已读</el-button>
-              <el-button type="primary" link @click="++params.pageNo" :disabled="notify.total <= params.pageSize * notify.current">下一页
+            <div
+              class="notify-action"
+              v-show="notify.total > 0"
+            >
+              <el-button
+                type="primary"
+                link
+                @click="--params.pageNo"
+                :disabled="params.pageNo <= 1"
+                >上一页</el-button
+              >
+              <el-button
+                type="primary"
+                link
+                @click="readNotify(null)"
+                >本页已读</el-button
+              >
+              <el-button
+                type="primary"
+                link
+                @click="++params.pageNo"
+                :disabled="notify.total <= params.pageSize * notify.current"
+                >下一页
               </el-button>
             </div>
             <template #reference>
-              <el-badge :hidden="notify.total === 0" :value="notify.total">
+              <el-badge
+                :hidden="notify.total === 0"
+                :value="notify.total"
+              >
                 <icon name="el-icon-bell"></icon>
               </el-badge>
             </template>
           </el-popover>
         </div>
         <el-dropdown class="user-avatar">
-          <avatar :src="user.avatar" :name="user.name"></avatar>
+          <avatar
+            :src="user.avatar"
+            :name="user.name"
+          ></avatar>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="switchUser">
@@ -122,19 +206,55 @@
         <router-view></router-view>
       </el-main>
     </el-container>
-    <el-drawer :size="isMobile ? '100%' : '500px'" direction="rtl" title="审批详情" v-model="processVisible">
-      <instance-preview v-if="processVisible" :instance-id="selectInstance" @handler-after="processVisible = false" />
+    <el-drawer
+      :size="isMobile ? '100%' : '500px'"
+      direction="rtl"
+      title="审批详情"
+      v-model="processVisible"
+    >
+      <instance-preview
+        v-if="processVisible"
+        :instance-id="selectInstance"
+        @handler-after="processVisible = false"
+      />
     </el-drawer>
-    <org-picker title="请选择要切换的用户" :pc-mode="!isMobile" type="user" ref="orgPicker" :selected="nowSelected" @ok="selected" />
-    <w-dialog title="个人中心" v-model="userCenterVisible" @ok="userCenterOk">
-      <el-tabs defaultActive="userInfo" v-if="userCenterVisible" v-model="activeTab" tab-position="left" style="height: 220px">
-        <el-tab-pane name="userInfo" label="个人信息">
+    <org-picker
+      title="请选择要切换的用户"
+      :pc-mode="!isMobile"
+      type="user"
+      ref="orgPicker"
+      :selected="nowSelected"
+      @ok="selected"
+    />
+    <w-dialog
+      title="个人中心"
+      v-model="userCenterVisible"
+      @ok="userCenterOk"
+    >
+      <el-tabs
+        defaultActive="userInfo"
+        v-if="userCenterVisible"
+        v-model="activeTab"
+        tab-position="left"
+        style="height: 220px"
+      >
+        <el-tab-pane
+          name="userInfo"
+          label="个人信息"
+        >
           <user-info />
         </el-tab-pane>
-        <el-tab-pane name="approvalAgent" label="审批代理">
+        <el-tab-pane
+          name="approvalAgent"
+          label="审批代理"
+        >
           <approval-agent ref="agent" />
         </el-tab-pane>
-        <el-tab-pane name="other" label="其他设置">暂无</el-tab-pane>
+        <el-tab-pane
+          name="other"
+          label="其他设置"
+          >暂无</el-tab-pane
+        >
       </el-tabs>
     </w-dialog>
   </el-container>

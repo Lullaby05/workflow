@@ -8,7 +8,10 @@
         disabled
         :placeholder="placeholder"
       />
-      <el-radio-group v-model="_value" v-else>
+      <el-radio-group
+        v-model="_value"
+        v-else
+      >
         <el-radio
           class="w-row-text"
           style="margin: 5px"
@@ -51,7 +54,10 @@
           ></el-option>
         </el-select>
       </div>
-      <el-radio-group v-model="_value" v-else>
+      <el-radio-group
+        v-model="_value"
+        v-else
+      >
         <el-radio
           class="w-row-text"
           style="margin: 5px"
@@ -69,13 +75,16 @@
             <picker :title="placeholder" show-toolbar :columns="options" @confirm="onConfirm" @cancel="showPicker = false"></picker>
           </popup>
         </div>-->
-      <radio-group v-model="_value" direction="horizontal">
+      <radio-group
+        v-model="_value"
+        direction="horizontal"
+      >
         <radio
           style="margin: 5px"
           v-for="(op, index) in options"
           :key="index"
-          :name="op"
-          >{{ op }}</radio
+          :name="op.value"
+          >{{ op.label }}</radio
         >
       </radio-group>
     </div>
@@ -86,62 +95,62 @@
 </template>
 
 <script>
-  import { Field, Popup, Picker, Radio, RadioGroup } from 'vant';
-  import componentMinxins from '../ComponentMinxins';
+import { Field, Popup, Picker, Radio, RadioGroup } from 'vant';
+import componentMinxins from '../ComponentMinxins';
 
-  export default {
-    mixins: [componentMinxins],
-    name: 'SelectInput',
-    components: { Radio, RadioGroup, Picker, Field, Popup },
-    props: {
-      modelValue: {
-        type: String,
-        default: null,
-      },
-      placeholder: {
-        type: String,
-        default: '请选择选项',
-      },
-      expanding: {
-        type: Boolean,
-        default: false,
-      },
-      options: {
-        type: Array,
-        default: () => {
-          return [];
-        },
-      },
-      isNeedApi: {
-        type: Boolean,
-        default: false,
+export default {
+  mixins: [componentMinxins],
+  name: 'SelectInput',
+  components: { Radio, RadioGroup, Picker, Field, Popup },
+  props: {
+    modelValue: {
+      type: String,
+      default: null,
+    },
+    placeholder: {
+      type: String,
+      default: '请选择选项',
+    },
+    expanding: {
+      type: Boolean,
+      default: false,
+    },
+    options: {
+      type: Array,
+      default: () => {
+        return [];
       },
     },
-    data() {
-      return {
-        showPicker: false,
-      };
+    isNeedApi: {
+      type: Boolean,
+      default: false,
     },
-    methods: {
-      onConfirm(val) {
-        this.showPicker = false;
-        this._value = val;
-      },
-      formatterText() {
-        if (this.isNeedApi && this.readonly) {
-          let val = '';
-          const tempVal = this.options.find((ele) => ele.value === this._value);
-          if (tempVal) {
-            val = tempVal.label;
-          }
-          return val;
-        } else {
-          return this._value;
+  },
+  data() {
+    return {
+      showPicker: false,
+    };
+  },
+  methods: {
+    onConfirm(val) {
+      this.showPicker = false;
+      this._value = val;
+    },
+    formatterText() {
+      if (this.isNeedApi && this.readonly) {
+        let val = '';
+        const tempVal = this.options.find((ele) => ele.value === this._value);
+        if (tempVal) {
+          val = tempVal.label;
         }
-      },
+        return val;
+      } else {
+        return this._value;
+      }
     },
-    emits: ['update:modelValue'],
-  };
+  },
+  emits: ['update:modelValue'],
+};
 </script>
 
 <style scoped></style>

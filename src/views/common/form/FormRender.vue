@@ -122,7 +122,7 @@ export default {
       );
     },
     isReadonly(item) {
-      console.log("item=",item);
+      console.log("item=", item);
       return item.perm === 'R';
     },
     validate(call) {

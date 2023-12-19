@@ -1,29 +1,14 @@
 <template>
   <div>
-    <div
-      class="check-item"
-      v-for="(ele, index) in Object.keys(checkItemList)"
-    >
+    <div class="check-item" v-for="(ele, index) in Object.keys(checkItemList)">
       <span class="check-item-title">{{
         `排查项目${index + 1}：${ele}`
       }}</span>
-      <div
-        class="item-slot"
-        v-for="item in checkItemList[ele]"
-        :key="item.id"
-      >
+      <div class="item-slot" v-for="item in checkItemList[ele]" :key="item.id">
         <div class="form-render-title">
           {{ item.checkStandard }}
         </div>
-        <form-render
-          :disabled="false"
-          ref="form"
-          v-model="item.formRenderData"
-          :forms="item.formsTemp"
-          mode="MOBILE"
-          :config="item.formConfigTemp"
-          @click="handleClick"
-        />
+        <form-render :disabled="false" ref="form" v-model="item.formRenderData" :forms="item.formsTemp" mode="MOBILE" :config="item.formConfigTemp" @click="handleClick" />
       </div>
     </div>
     <div class="submit-btn">
@@ -39,7 +24,7 @@ export default {
 </script>
 
 <script setup>
- import FormRender from '@/components/form-design/components/FormRender.vue';
+import FormRender from '@/components/form-design/components/FormRender.vue';
 // import FormRender from '@/views/common/form/FormRender.vue';
 import { ref } from 'vue';
 import { Button } from 'vant';
@@ -51,7 +36,7 @@ import { formatDate } from '@/utils/utils';
 // import { planInfo } from '@/api/webView';
 const route = useRoute();
 
-const wx = inject('wx'); 
+const wx = inject('wx');
 
 // const formRenderData = ref({});
 // const formConfigTemp = ref({});
@@ -74,16 +59,28 @@ const send = () => {
 
 const getFormData = async () => {
   let data;
-  const res = await planInfo("1","1736557216837701641")
+  const res = await planInfo("2", "1736924797125824514")
   data = res.data.data;
-  console.log(data);
   for (let i = 0; i < data.length; i++) {
-      const resFormList = data[i].formList;
-      resFormList.forEach((item) => {
-        const formItem = JSON.parse(item.formItems).design;
-        const formRender = useFormRender(formItem);
-        if (checkItemList.value[item.checkItem]) {
-          checkItemList.value[item.checkItem].push({
+    const resFormList = data[i].formList;
+    resFormList.forEach((item) => {
+      const formItem = JSON.parse(item.formItems).design;
+      const formRender = useFormRender(formItem);
+      if (checkItemList.value[item.checkItem]) {
+        checkItemList.value[item.checkItem].push({
+          id: formItem.formId,
+          checkContentId: item.checkContentId,
+          checkStandard: item.checkStandard,
+          problemSpot: item.problemSpot,
+          checkItem: item.checkItem,
+          design: formItem,
+          formRenderData: formRender.formData,
+          formsTemp: formRender.formsTemp,
+          formConfigTemp: formRender.formConfigTemp,
+        });
+      } else {
+        checkItemList.value[item.checkItem] = [
+          {
             id: formItem.formId,
             checkContentId: item.checkContentId,
             checkStandard: item.checkStandard,
@@ -93,34 +90,21 @@ const getFormData = async () => {
             formRenderData: formRender.formData,
             formsTemp: formRender.formsTemp,
             formConfigTemp: formRender.formConfigTemp,
-          });
-        } else {
-          checkItemList.value[item.checkItem] = [
-            {
-              id: formItem.formId,
-              checkContentId: item.checkContentId,
-              checkStandard: item.checkStandard,
-              problemSpot: item.problemSpot,
-              checkItem: item.checkItem,
-              design: formItem,
-              formRenderData: formRender.formData,
-              formsTemp: formRender.formsTemp,
-              formConfigTemp: formRender.formConfigTemp,
-            },
-          ];
-        }
-      });
-      console.log('@', checkItemList.value);
-    }
+          },
+        ];
+      }
+    });
+    console.log('@', checkItemList.value);
+  }
 
 }
 
 getFormData();
 
 const handleClick = () => {
-    if (!checkStartTime) {
-      checkStartTime = formatDate(new Date());
-    }
+  if (!checkStartTime) {
+    checkStartTime = formatDate(new Date());
+  }
 };
 
 
