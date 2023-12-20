@@ -18,7 +18,7 @@
       </el-upload>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <uploader :disabled = "disabled" v-model="fileList" :multiple="maxNumber > 1" :max-count="maxNumber > 0 ? maxNumber : 99" deletable :before-delete="handleRemove" :before-read="beforeUpload" upload-text="选择图片" :after-read="afterRead" :max-size="maxSize * 1024 * 1024" @oversize="onOversize" />
+      <uploader :disabled = "disabled" v-model="fileList" :multiple="maxNumber > 1" :max-count="maxNumber > 0 ? maxNumber : 99" :deletable="!disabled" :before-delete="handleRemove" :before-read="beforeUpload" upload-text="选择图片" :after-read="afterRead" :max-size="maxSize * 1024 * 1024" @oversize="onOversize" />
       <div style="color: #9b9595">{{ placeholder }} {{ sizeTip }}</div>
     </div>
     <div v-else class="img-preview">
@@ -83,7 +83,6 @@ export default {
   data() {
     return {
       loading: false,
-      disabled: false,
       uploadUrl: `/business/upload/uploadFile`,
       uploadParams: { isImg: true },
       catchList: [],

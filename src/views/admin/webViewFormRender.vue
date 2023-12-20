@@ -71,14 +71,14 @@ const send = () => {
 };
 
 const {
-  checkTableIds = "1732295053751144449,1732295247561543682",
-  type = "detail",
-  taskType = "1",
+  checkTableIds = "1737398702311505921",
+  type = "detail2",
+  taskType = "2",
   taskId,
   taskName,
   checkPerson,
   checkPersonId,
-  id = '1737140985562927106',
+  id = '1737383050846699522',
 } = route.query;
 
 let checkStartTime = undefined;

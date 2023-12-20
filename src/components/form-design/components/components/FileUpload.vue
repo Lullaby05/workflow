@@ -48,7 +48,7 @@
         :accept="String(fileTypes)"
         :multiple="maxNumber > 1"
         :max-count="maxNumber > 0 ? maxNumber : 99"
-        deletable
+        :deletable="!disabled"
         :before-delete="handleRemove"
         upload-text="选择文件"
         :after-read="afterRead"
@@ -164,7 +164,6 @@
     data() {
       return {
         loading: false,
-        disabled: false,
         uploadUrl: `/businessApi/business/upload/uploadFile`,
         uploadParams: { isImg: false },
       };
