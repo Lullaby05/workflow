@@ -26,8 +26,33 @@
             <picker :title="placeholder" show-toolbar :columns="options" @confirm="onConfirm" @cancel="showPicker = false"></picker>
           </popup>
         </div>-->
-      <checkbox-group v-model="_value" direction="horizontal">
-        <checkbox style="margin: 5px" :name="op.value" shape="square" v-for="(op, index) in options" :key="index">{{ op.label }}</checkbox>
+      <checkbox-group
+        v-model="_value"
+        v-if="isNeedApi"
+        direction="horizontal"
+      >
+        <checkbox
+          style="margin: 5px"
+          :name="op.value"
+          shape="square"
+          v-for="(op, index) in options"
+          :key="index"
+          >{{ op.label }}</checkbox
+        >
+      </checkbox-group>
+      <checkbox-group
+        v-model="_value"
+        v-if="!isNeedApi"
+        direction="horizontal"
+      >
+        <checkbox
+          style="margin: 5px"
+          :name="op"
+          shape="square"
+          v-for="(op, index) in options"
+          :key="index"
+          >{{ op }}</checkbox
+        >
       </checkbox-group>
     </div>
     <div v-else>

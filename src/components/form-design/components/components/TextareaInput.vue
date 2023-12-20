@@ -37,6 +37,7 @@
         maxlength="2048"
         :placeholder="placeholder"
         show-word-limit
+        :disabled = "disabled"
       >
         <template #right-icon v-if="enableScan">
           <icon name="el-icon-fullscreen" @click="scanCode"></icon>

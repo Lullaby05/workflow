@@ -86,7 +86,7 @@
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
       <template v-if="expansion">
-        <checkbox-group v-if="multiple" v-model="_value" direction="horizontal">
+        <checkbox-group :disabled = "disabled" v-if="multiple" v-model="_value" direction="horizontal">
           <checkbox
             style="margin: 5px"
             :name="op"
@@ -97,6 +97,7 @@
           >
         </checkbox-group>
         <radio-group
+          :disabled = "disabled"
           v-else
           v-model="_value[0]"
           @input="(ev) => (_value = [ev])"
@@ -113,6 +114,7 @@
       </template>
       <template v-else>
         <field
+          :disabled = "disabled"
           readonly
           clearable
           @clear="_value = []"
@@ -123,6 +125,7 @@
           @click="$refs.orgPicker.show()"
         ></field>
         <org-picker
+          :disabled = "disabled"
           :pc-mode="false"
           type="dept"
           :multiple="multiple"

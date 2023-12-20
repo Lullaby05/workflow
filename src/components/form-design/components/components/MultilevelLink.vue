@@ -87,7 +87,7 @@
       </el-radio-group>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <radio-group v-model="_valuePc" direction="horizontal">
+      <radio-group :disabled = "disabled" v-model="_valuePc" direction="horizontal">
         <radio
           style="margin: 5px"
           v-for="(op, index) in options"

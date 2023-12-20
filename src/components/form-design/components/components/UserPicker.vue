@@ -49,6 +49,7 @@
         v-model="deptDesc"
         :placeholder="placeholder"
         @click="$refs.orgPicker.show()"
+        :disabled = "disabled"
       ></field>
       <org-picker
         :pc-mode="false"
@@ -57,6 +58,7 @@
         ref="orgPicker"
         :selected="_value"
         @ok="selected"
+        :disabled = "disabled"
       />
     </div>
     <div v-else class="preview">

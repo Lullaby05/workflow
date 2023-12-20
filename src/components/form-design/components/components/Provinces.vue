@@ -21,6 +21,7 @@
         v-model="_value"
         :placeholder="placeholder"
         @click="showPicker = true"
+        :disabled = "disabled"
       />
       <popup v-model:show="showPicker" position="bottom">
         <v-area

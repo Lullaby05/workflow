@@ -30,6 +30,7 @@
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
       <field
+        :disabled = "disabled"
         right-icon="arrow"
         readonly
         clickable
@@ -39,6 +40,7 @@
         @click="loadTime(0)"
       />
       <field
+        :disabled = "disabled"
         right-icon="arrow"
         readonly
         clickable

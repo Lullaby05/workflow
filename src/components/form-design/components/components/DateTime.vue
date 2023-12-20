@@ -19,6 +19,7 @@
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
       <field
+        :disabled = "disabled"
         readonly
         right-icon="arrow"
         clickable

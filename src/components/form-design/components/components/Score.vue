@@ -17,7 +17,7 @@
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
       <div>
-        <rate :allow-half="enableHalf" v-model="_value" :count="max" />
+        <rate :disabled = "disabled" :allow-half="enableHalf" v-model="_value" :count="max" />
         <span style="margin-left: 10px" v-show="showScore">{{ _value }}</span>
       </div>
       <span v-if="!$isNotEmpty(_value) && _value === 0" class="score-tip">{{

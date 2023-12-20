@@ -43,6 +43,7 @@
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
       <uploader
+        :disabled = "disabled"
         v-model="fileList"
         :accept="String(fileTypes)"
         :multiple="maxNumber > 1"

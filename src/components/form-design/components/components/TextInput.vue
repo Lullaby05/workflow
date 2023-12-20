@@ -19,7 +19,7 @@
       <scan-code pcMode v-model="visible" @ok="scanOk"></scan-code>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <field v-model="_value" clearable :placeholder="placeholder">
+      <field v-model="_value" clearable :placeholder="placeholder" :disabled = "disabled">
         <template #right-icon v-if="enableScan">
           <icon name="el-icon-fullscreen" @click="scanCode"></icon>
         </template>

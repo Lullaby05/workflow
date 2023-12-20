@@ -12,7 +12,7 @@
       />
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <field v-model="_value" type="number" :placeholder="placeholder" />
+      <field :disabled = "disabled" v-model="_value" type="number" :placeholder="placeholder" />
     </div>
     <div v-else>
       {{ _value }}

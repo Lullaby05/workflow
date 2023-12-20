@@ -72,6 +72,9 @@
         }
       },
     },
+    mounted() { 
+      console.log("config",this.config.props.disabled)
+    },
     emits: ['update:modelValue'],
   };
 </script>

@@ -38,6 +38,7 @@
         :model-value="_value ? _value[0] : ''"
         :placeholder="placeholder[0]"
         @click="loadTime(0)"
+        :disabled = "disabled"
       />
       <field
         right-icon="arrow"
@@ -47,6 +48,7 @@
         :model-value="_value ? _value[1] : ''"
         :placeholder="placeholder[1]"
         @click="loadTime(1)"
+        :disabled = "disabled"
       />
       <div v-if="showLength" class="length">
         <span>时长：</span>

@@ -59,6 +59,7 @@
           :name="i"
           v-for="(row, i) in _value"
           :key="i"
+          :disabled = "disabled"
         >
           <template #title>
             <span>第 {{ i + 1 }} 项 </span>

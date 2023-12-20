@@ -41,6 +41,7 @@
         :readonly="!enableEdit"
         clearable
         :placeholder="placeholder"
+        :disabled = "disabled"
       >
         <template #right-icon>
           <icon name="el-icon-maplocation" @click="selectPosition"></icon>

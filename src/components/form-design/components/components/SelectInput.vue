@@ -76,7 +76,9 @@
           </popup>
         </div>-->
       <radio-group
+        :disabled = "disabled"
         v-model="_value"
+        v-if="isNeedApi"
         direction="horizontal"
       >
         <radio
@@ -85,6 +87,20 @@
           :key="index"
           :name="op.value"
           >{{ op.label }}</radio
+        >
+      </radio-group>
+      <radio-group
+        :disabled = "disabled"
+        v-model="_value"
+        v-if="!isNeedApi"
+        direction="horizontal"
+      >
+        <radio
+          style="margin: 5px"
+          v-for="(op, index) in options"
+          :key="index"
+          :name="op"
+          >{{ op }}</radio
         >
       </radio-group>
     </div>
@@ -148,8 +164,14 @@ export default {
         return this._value;
       }
     },
+    test(){
+      console.log('prpos',this.disabled)
+    }
   },
   emits: ['update:modelValue'],
+  mounted() {
+    this.test();
+  },
 };
 </script>
 

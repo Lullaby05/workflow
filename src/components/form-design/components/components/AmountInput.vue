@@ -23,7 +23,7 @@
       </div>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <field v-model="_value" type="number" :placeholder="placeholder"></field>
+      <field :disabled = "disabled" v-model="_value" type="number" :placeholder="placeholder"></field>
       <div v-show="showChinese">
         <span style="color: #656363">大写：</span>
         <span class="chinese">{{ chinese }}</span>
