@@ -8,34 +8,34 @@
       <slot ref="item"></slot>
     </div>
     <div v-if="showError && rule.length > 0" class="valid-error">
-      {{ rule[0].message || '请完善' }}
+      {{ rule[0].message || "请完善" }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'FormItem',
+  name: "FormItem",
   components: {},
   props: {
     label: {
       type: String,
-      default: '',
+      default: "",
     },
     rule: {
       type: Array,
       default: () => {
-        return []
+        return [];
       },
     },
     prop: {
       type: String,
-      default: '',
+      default: "",
     },
     model: {
       type: Object,
       default: () => {
-        return {}
+        return {};
       },
     },
     required: {
@@ -46,31 +46,49 @@ export default {
   data() {
     return {
       showError: false,
-    }
+    };
   },
   methods: {
     isError() {
-      return this.showError
+      return this.showError;
     },
     validate(call) {
       if (this.rule.length > 0) {
-        if (this.rule[0].type === 'array') {
+        if (this.rule[0].type === "array") {
           this.showError = !(
-              Array.isArray(this.model[this.prop]) &&
-              this.model[this.prop].length > 0
-          )
+            Array.isArray(this.model[this.prop]) &&
+            this.model[this.prop].length > 0
+          );
         } else {
-          this.showError = !this.$isNotEmpty(this.model[this.prop])
+          this.showError = !this.$isNotEmpty(this.model[this.prop]);
         }
       }
       if (!this.showError) {
       }
       if (call) {
-        call(!this.showError)
+        call(!this.showError);
+      }
+    },
+    validate_m(call) {
+      let error = false;
+      if (this.rule.length > 0) {
+        if (this.rule[0].type === "array") {
+          error = !(
+            Array.isArray(this.model[this.prop]) &&
+            this.model[this.prop].length > 0
+          );
+        } else {
+          error = !this.$isNotEmpty(this.model[this.prop]);
+        }
+      }
+      if (!error) {
+      }
+      if (call) {
+        call(!error);
       }
     },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>

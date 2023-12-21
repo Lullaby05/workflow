@@ -30,9 +30,9 @@
 </template>
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import formRenderContent from '../operation/components/formRenderContent.vue';
+import formRenderContent from '../../operation/components/formRenderContent.vue';
 import { onBeforeMount, ref } from 'vue';
-import { useCertificate } from '../operation/composition/useCertificate';
+import { useCertificate } from '../../operation/composition/useCertificate';
 import { cloneDeep } from 'lodash';
 // import { useUserStore } from '@/store';
 import {
@@ -44,7 +44,7 @@ import {
 } from '@/api/operation/operationApi';
 import { ElMessage, ElCard, ElButton } from 'element-plus';
 import { getUserDepts } from '@/api/org';
-import { operationTypeEnum } from '../operation/composition/useCertificateDict';
+import { operationTypeEnum } from '../../operation/composition/useCertificateDict';
 
 const router = useRouter();
 const route = useRoute();

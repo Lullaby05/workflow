@@ -62,6 +62,10 @@
             <icon name="el-icon-setting"></icon>
             <template #title>作业表单管理</template>
           </el-menu-item>
+          <el-menu-item index="/pitfall/check">
+            <icon name="el-icon-setting"></icon>
+            <template #title>排查详情</template>
+          </el-menu-item>
         </div>
       </el-menu>
     </el-aside>

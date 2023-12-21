@@ -108,15 +108,24 @@ const router = createRouter({
     {
       path: '/web-view/formRender',
       name: 'webViewFormRender',
-      component: () => import('@/views/admin/webViewFormRender.vue'),
+      component: () => import('@/views/admin/pitfall/webViewFormRender.vue'),
       meta: { title: 'wflow-pro | 表单展示', viewport: viewport },
     },
     {
       path: '/admin/operationWebView',
       name: 'OperationWebView',
-      component: () => import('@/views/admin/operationFormRender.vue'),
+      component: () => import('@/views/admin/operation/operationFormRender.vue'),
       meta: {
         title: 'wflow-pro | 作业表单展示',
+        viewport: viewport,
+      },
+    },
+    {
+      path: '/pitfall/check',
+      name: 'check',
+      component: () => import('@/views/admin/pitfall/checkDailyTaskDetail.vue'),
+      meta: {
+        title: 'wflow-pro | 详情',
         viewport: viewport,
       },
     },

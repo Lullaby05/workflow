@@ -17,7 +17,7 @@
         />
       </div>
     </div>
-    <div class="submit-btn">
+    <div class="submit-btn" v-if="type !== detail">
       <Button block type="primary" @click="handleSave">提交</Button>
     </div>
   </div>
@@ -53,10 +53,13 @@ const router = useRouter();
 document.title = route.query.title ? route.query.title : "排查计划";
 
 const send = () => {
+  const html = document.getElementsByTagName("html")[0];
+  const height = html.clientHeight;
   ElMessage({
-    message: "Congrats, this is a success message.",
-    type: "success",
+    message: "保存成功",
+    // type: "success",
     duration: 1000,
+    offset: height / 2,
     onClose: () => {
       console.log("closed");
       wx.miniProgram.postMessage({
@@ -71,14 +74,14 @@ const send = () => {
 };
 
 const {
-  checkTableIds = "1737398702311505921",
+  checkTableIds = "1737709252186828801",
   type = "detail2",
   taskType = "2",
   taskId,
   taskName,
   checkPerson,
   checkPersonId,
-  id = '1737383050846699522',
+  id = "1737383050846699522",
 } = route.query;
 
 let checkStartTime = undefined;
@@ -110,8 +113,8 @@ const getContentData = async () => {
     resFormList.forEach((item) => {
       const formItem = JSON.parse(item.formItems).design;
       const formRender = useFormRender(formItem);
-      if(type === "detail"){
-        setDisabled(formRender.formsTemp)
+      if (type === "detail") {
+        setDisabled(formRender.formsTemp);
       }
       if (checkItemList.value[item.checkItem]) {
         checkItemList.value[item.checkItem].push({
@@ -156,12 +159,12 @@ const getContentData = async () => {
   }
 };
 
-const setDisabled = (formsTemp)=>{
+const setDisabled = (formsTemp) => {
   console.log("@formConfigTemp", formsTemp);
-  formsTemp.forEach(e =>{
-    e.props.disabled = true
-  })
-}
+  formsTemp.forEach((e) => {
+    e.props.disabled = true;
+  });
+};
 
 onBeforeMount(() => {
   getContentData();
@@ -173,6 +176,7 @@ const handleSave = async () => {
       // if (!f.modelValue.field_isQualified) {
       //   return;
       // }
+      // if (!f.validate()) {
       return f.validate();
     });
     Promise.all(formList)
@@ -244,9 +248,6 @@ const saveData = async () => {
   if (unchecked.length > 0) {
     await pitfallAdd(unchecked);
   }
-  Message.success({
-    content: "保存成功",
-  });
   send();
 };
 
@@ -265,6 +266,28 @@ const goBack = () => {
 
   button {
     border-radius: 5px;
+  }
+}
+.check-item{
+  font-size: 14px;
+}
+.check-item-title {
+  margin-left: 10px;
+  font-family: "微软雅黑";
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  color: #000000;
+}
+
+.item-slot {
+  margin-top: 20px;
+
+  .form-render-title {
+    line-height: 30px;
+    font-size: 14px;
+    padding: 5px 10px;
+    background-color: #f2f3f5;
   }
 }
 </style>

@@ -93,11 +93,12 @@
   import { ValueType } from './ComponentsConfigExport';
   import { useSafetyCertificationStore } from '../../../storeWX';
   import { operationTypeEnum } from '@/views/operation/composition/useCertificateDict';
+  import { ElMessage } from "element-plus";
 
   const VForm = Form;
   export default {
     name: 'FormRender',
-    components: { FormItem, FormDesignRender, VForm, Field },
+    components: { FormItem, FormDesignRender, VForm, Field, ElMessage },
     props: {
       forms: {
         type: Array,
@@ -229,26 +230,44 @@
             });
           });
         } else {
+          const html = document.getElementsByTagName("html")[0];
+          const height = html.clientHeight;
           this.forms.forEach((form) => {
+            console.log("formItem",form)
             let formRef = this.$refs[form.id];
             if (formRef && Array.isArray(formRef) && formRef.length > 0) {
-              formRef[0].validate((subValid) => {
+              formRef[0].validate_m((subValid) => {
                 console.log('校验' + form.title, form.id, subValid);
-                if (!subValid) {
+                if (!subValid && this.showItem(form)) {
                   success = false;
-                }
+                  ElMessage({
+                    message: form.title + "不能为空",
+                    // type: "success",
+                    duration: 1000,
+                    offset: height / 2,
+                  });
+                  throw new Error('校验失败');
+                } 
               });
               if (form.name === 'TableList') {
                 //扫描明细表项
-                this.$refs[form.id + '_item'][0].validate((subValid) => {
-                  if (!subValid) {
+                this.$refs[form.id + '_item'][0].validate_m((subValid) => {
+                  if (!subValid && this.showItem(form)) {
                     success = false;
+                    ElMessage({
+                      message: form.title + "不能为空",
+                      // type: "success",
+                      duration: 1000,
+                      offset: height / 2,
+                    });
+                    throw new Error('校验失败');
                   }
                 });
               }
             }
           });
-          call(success);
+          // call(success);
+          return success;
         }
       },
       loadFormItemMap(forms, map) {
