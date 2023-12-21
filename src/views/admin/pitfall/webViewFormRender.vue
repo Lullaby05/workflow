@@ -74,7 +74,7 @@ const send = () => {
 };
 
 const {
-  checkTableIds = "1737709252186828801",
+  checkTableIds = "1737744126473949186",
   type = "detail2",
   taskType = "2",
   taskId,
@@ -256,6 +256,12 @@ const goBack = () => {
 };
 </script>
 
+<style>
+:root {
+  font-size: 12px;
+}
+</style>
+
 <style lang="less" scoped>
 .submit-btn {
   padding: 0 10px;
@@ -269,14 +275,13 @@ const goBack = () => {
   }
 }
 .check-item{
-  font-size: 14px;
+  font-size: var(--van-font-size-m);
 }
 .check-item-title {
   margin-left: 10px;
   font-family: "微软雅黑";
   font-weight: 400;
   font-style: normal;
-  font-size: 16px;
   color: #000000;
 }
 
@@ -285,9 +290,8 @@ const goBack = () => {
 
   .form-render-title {
     line-height: 30px;
-    font-size: 14px;
     padding: 5px 10px;
-    background-color: #f2f3f5;
+    background-color: rgba(215, 215, 215, 1);
   }
 }
 </style>

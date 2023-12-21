@@ -94,6 +94,7 @@ const filterItems = items
   });
 </script>
 <style lang="less" scoped>
+
 .card-display-title {
   background: #fff;
   display: flex;

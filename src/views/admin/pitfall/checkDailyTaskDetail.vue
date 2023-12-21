@@ -30,7 +30,7 @@ const route = useRoute();
 const router = useRouter();
 
 const {
-  id = "1737709418281267202",
+  id = "1737744232430456833",
   checkPerson = "肖雨",
   taskStartTime = "2023-12-21 00:00:00",
   taskEndTime = "2023-12-21 23:59:59",
@@ -101,17 +101,24 @@ onBeforeMount(() => {
   getDetailData();
 });
 </script>
+
+<style>
+:root {
+  font-size: 12px;
+}
+</style>
 <style lang="less" scoped>
+.check-box{
+    font-size: 14px;  
+}
 .check-item{
     margin-top:10px;
-    font-size: 14px;
 }
 .check-item-title {
-//   margin-left: 10px;
+  margin-left: 10px;
   font-family: "微软雅黑";
   font-weight: 400;
   font-style: normal;
-  font-size: 16px;
   color: #000000;
 }
 
@@ -119,10 +126,9 @@ onBeforeMount(() => {
   margin-top: 15px;
 
   .form-render-title {
-    line-height: 30px;
-    font-size: 14px;
+    line-height: 20px;
     padding: 5px 10px;
-    background-color: #f2f3f5;
+    background-color: rgba(215, 215, 215, 1);
   }
 }
 </style>
