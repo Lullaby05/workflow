@@ -13,7 +13,7 @@
       <p v-if="!isDraw">若你已确定填写信息无误，请在下方空白处签名</p>
     </div>
     <div class="autographBtn">
-      <div @click="close">返回</div>
+      <div @click="close">取消</div>
       <div @click="overwrite">重签</div>
       <div @click="seaveImages">确定</div>
     </div>

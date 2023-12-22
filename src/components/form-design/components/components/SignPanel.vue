@@ -43,7 +43,7 @@
         lazy-render
         safe-area-inset-bottom
       >
-        <sign :autographConfirm="autographConfirm" :close="close"></sign>
+        <sign @autographConfirm="autographConfirm" @close="close"></sign>
       </popup>
     </div>
     <div v-else>
@@ -165,10 +165,11 @@ export default {
       //this._value = canvas.toDataURL("image/jpeg", 0.5)
     },
     autographConfirm(e){
-      console.log("autographConfirm",e)
+      this.visible = false;
+      this._value = e.baseCode;
     },
     close(e){
-      console.log("close",e)
+      this.visible = false;
     }
   },
   emits: ["update:modelValue"],
