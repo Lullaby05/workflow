@@ -72,12 +72,6 @@ const router = createRouter({
             import('@/views/admin/forOperation/formsPanelForOperation.vue'),
           meta: { title: 'wflow-pro | 表单列表', viewport: viewport },
         },
-        {
-          path: 'webView',
-          name: 'webView',
-          component: () => import('@/views/admin/webViewFormRender.vue'),
-          meta: { title: 'wflow-pro | 表单展示', viewport: viewport },
-        },
       ],
     },
     {
@@ -124,6 +118,15 @@ const router = createRouter({
       path: '/pitfall/check',
       name: 'check',
       component: () => import('@/views/admin/pitfall/checkDailyTaskDetail.vue'),
+      meta: {
+        title: 'wflow-pro | 详情',
+        viewport: viewport,
+      },
+    },
+    {
+      path: '/pitfall/sign',
+      name: 'sign',
+      component: () => import('@/views/admin/pitfall/sign.vue'),
       meta: {
         title: 'wflow-pro | 详情',
         viewport: viewport,

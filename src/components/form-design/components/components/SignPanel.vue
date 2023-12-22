@@ -43,18 +43,7 @@
         lazy-render
         safe-area-inset-bottom
       >
-        <nav-bar
-          placeholder
-          title="请签字"
-          left-text="返回"
-          right-text="确定"
-          left-arrow
-          @click-left="visible = false"
-          @click-right="signOk"
-        />
-        <div class="m-sign-panel">
-          <canvas ref="signPanelRef" id="signPanel" height="200px"></canvas>
-        </div>
+        <sign :autographConfirm="autographConfirm" :close="close"></sign>
       </popup>
     </div>
     <div v-else>
@@ -64,14 +53,15 @@
 </template>
 
 <script>
-import { Field, Popup, NavBar } from "vant";
+import { Field, Popup, NavBar, Button } from "vant";
 import componentMinxins from "../ComponentMinxins";
 import SignaturePad from "signature_pad";
+import sign from "./sign.vue";
 
 export default {
   name: "Location",
   mixins: [componentMinxins],
-  components: { Field, Popup, NavBar },
+  components: { Field, Popup, NavBar, Button, sign },
   props: {
     modelValue: {
       default: null,
@@ -102,9 +92,7 @@ export default {
       },
     };
   },
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
     initSign() {
       this.hasSign = false;
@@ -113,35 +101,36 @@ export default {
       } else {
         let canvas = document.getElementById("signPanel");
         if (this.mode === "MOBILE") {
-          // canvas.setAttribute('height', '200px');
-          // this.$refs.signPanelRef.setAttribute('width', '650px');
-          const html = document.getElementsByTagName("html")[0];
-          const width = html.clientWidth;
-          const height = html.clientHeight;
-          // console.log("width:", width, "height:", height);
-          this.$refs.signPanelRef.setAttribute("height", height);
-          this.$refs.signPanelRef.setAttribute("width", width);
+          // // canvas.setAttribute('height', '200px');
+          // // this.$refs.signPanelRef.setAttribute('width', '650px');
+          // const html = document.getElementsByTagName("html")[0];
+          // const width = html.clientWidth;
+          // const height = html.clientHeight;
+          // // console.log("width:", width, "height:", height);
+          // this.$refs.signPanelRef.setAttribute("height", height);
+          // this.$refs.signPanelRef.setAttribute("width", width);
         } else {
           // canvas.setAttribute('width', '650px');
           // canvas.setAttribute('height', '300px');
           this.$refs.signPanelRef.setAttribute("width", "650px");
           this.$refs.signPanelRef.setAttribute("height", "300px");
-        }
-        console.log(this.$refs);
-        this.signaturePad = new SignaturePad(this.$refs.signPanelRef, {
-          penColor: this.color,
-          minWidth: this.thickness,
-          maxWidth: this.thickness + 2,
-        });
+          console.log(this.$refs);
+          this.signaturePad = new SignaturePad(this.$refs.signPanelRef, {
+            penColor: this.color,
+            minWidth: this.thickness,
+            maxWidth: this.thickness + 2,
+          });
 
-        this.signaturePad.onEnd = () => {
-          this.hasSign = true;
-          //this._value = this.signaturePad.toDataURL()
-        };
-        if (this.mode === "MOBILE") {
-          //canvas.height = 300 ;
-          canvas.width = document.body.clientWidth;
+          this.signaturePad.onEnd = () => {
+            this.hasSign = true;
+            //this._value = this.signaturePad.toDataURL()
+          };
         }
+
+        // if (this.mode === "MOBILE") {
+        //   //canvas.height = 300 ;
+        //   canvas.width = document.body.clientWidth;
+        // }
         //this.resizeCanvas(canvas)
       }
     },
@@ -164,7 +153,7 @@ export default {
       this.$nextTick(() => {
         this.initSign();
       });
-      this.forceLandscapeScreenHandle();
+      // this.forceLandscapeScreenHandle();
     },
     signOk() {
       this.visible = false;
@@ -175,6 +164,12 @@ export default {
     })*/
       //this._value = canvas.toDataURL("image/jpeg", 0.5)
     },
+    autographConfirm(e){
+      console.log("autographConfirm",e)
+    },
+    close(e){
+      console.log("close",e)
+    }
   },
   emits: ["update:modelValue"],
 };
