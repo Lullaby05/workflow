@@ -1,8 +1,15 @@
 <template>
   <div>
-    <div class="check-item" v-for="(ele, index) in Object.keys(checkItemList)">
+    <div
+      class="check-item"
+      v-for="(ele, index) in Object.keys(checkItemList)"
+    >
       <span class="check-item-title">{{ `排查项目${index + 1}：${ele}` }}</span>
-      <div class="item-slot" v-for="item in checkItemList[ele]" :key="item.id">
+      <div
+        class="item-slot"
+        v-for="item in checkItemList[ele]"
+        :key="item.id"
+      >
         <div class="form-render-title">
           {{ item.checkStandard }}
         </div>
@@ -17,54 +24,62 @@
         />
       </div>
     </div>
-    <div class="submit-btn" v-if="type !== detail">
-      <Button block type="primary" @click="handleSave">提交</Button>
+    <div
+      class="submit-btn"
+      v-if="type !== detail"
+    >
+      <Button
+        block
+        type="primary"
+        @click="handleSave"
+        >提交</Button
+      >
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "webViewFormRender",
+  name: 'webViewFormRender',
 };
 </script>
 
 <script setup>
-import FormRender from "@/components/form-design/components/FormRender.vue";
+import FormRender from '@/components/form-design/components/FormRender.vue';
 // import FormRender from '@/views/common/form/FormRender.vue';
-import { inject, onBeforeMount, ref } from "vue";
-import { Button } from "vant";
-import { useRoute, useRouter } from "vue-router";
-import { planInfo } from "@/api/webView";
-import { useFormRender } from "@/views/operation/wxHooks/useFormRender";
-import { formatDate } from "@/utils/utils";
-import { ElMessage } from "element-plus";
+import { inject, onBeforeMount, ref } from 'vue';
+import { Button } from 'vant';
+import { useRoute, useRouter } from 'vue-router';
+import { planInfo } from '@/api/webView';
+import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
+import { formatDate } from '@/utils/utils';
+import { ElMessage } from 'element-plus';
 
 import {
   checkPlanDetailForm,
   dailyCheckExecute,
   getDailyCheckDetail,
   pitfallAdd,
-} from "@/api/webView";
+} from '@/api/webView';
 
-const wx = inject("wx");
+const wx = inject('wx');
 const route = useRoute();
 const router = useRouter();
 
-document.title = route.query.title ? route.query.title : "排查计划";
+document.title = '开始排查';
 
 const send = () => {
-  const html = document.getElementsByTagName("html")[0];
+  const html = document.getElementsByTagName('html')[0];
   const height = html.clientHeight;
   ElMessage({
-    message: "保存成功",
+    message: '保存成功',
     // type: "success",
     duration: 1000,
     offset: height / 2,
     onClose: () => {
-      console.log("closed");
+      console.log('closed');
       wx.miniProgram.postMessage({
         data: {
-          foo: "123",
+          foo: '123',
           route: route,
         },
       });
@@ -74,14 +89,14 @@ const send = () => {
 };
 
 const {
-  checkTableIds = "1737744126473949186",
-  type = "detail2",
-  taskType = "2",
+  checkTableIds = '1737744126473949186',
+  type = 'detail2',
+  taskType = '2',
   taskId,
   taskName,
   checkPerson,
   checkPersonId,
-  id = "1737383050846699522",
+  id = '1737383050846699522',
 } = route.query;
 
 let checkStartTime = undefined;
@@ -100,7 +115,7 @@ const checkItemList = ref({});
 
 const getContentData = async () => {
   let data = {};
-  if (type !== "detail") {
+  if (type !== 'detail') {
     const res = await checkPlanDetailForm(taskType, checkTableIds);
     data = res.data;
   } else {
@@ -113,7 +128,7 @@ const getContentData = async () => {
     resFormList.forEach((item) => {
       const formItem = JSON.parse(item.formItems).design;
       const formRender = useFormRender(formItem);
-      if (type === "detail") {
+      if (type === 'detail') {
         setDisabled(formRender.formsTemp);
       }
       if (checkItemList.value[item.checkItem]) {
@@ -155,12 +170,12 @@ const getContentData = async () => {
       //   formConfigTemp: formRender.formConfigTemp,
       // });
     });
-    console.log("@", checkItemList.value);
+    console.log('@', checkItemList.value);
   }
 };
 
 const setDisabled = (formsTemp) => {
-  console.log("@formConfigTemp", formsTemp);
+  console.log('@formConfigTemp', formsTemp);
   formsTemp.forEach((e) => {
     e.props.disabled = true;
   });
@@ -215,33 +230,33 @@ const saveData = async () => {
         checkContentId: ele.checkContentId,
         checkStartTime: checkStartTime,
         checkStandard: ele.checkStandard,
-        isQualified: ele.formRenderData.field_isQualified === "不合格" ? 0 : 1,
+        isQualified: ele.formRenderData.field_isQualified === '不合格' ? 0 : 1,
         formItems: JSON.stringify({ design }),
       };
     });
   const unchecked = formLists
     // .filter((ele) => ele.formRenderData.field_isQualified)
     .filter((ele) => {
-      return ele.formRenderData.field_isQualified === "不合格";
+      return ele.formRenderData.field_isQualified === '不合格';
     })
     .map((ele) => {
       return {
         taskId,
         taskName,
-        dangerSourceCode: type === "dailyExecute" ? "2" : "3",
+        dangerSourceCode: type === 'dailyExecute' ? '2' : '3',
         hazardDesc: ele.formRenderData.field_hazardDesc,
         hazardAddr: ele.formRenderData.field_hazardAddr,
         sceneImages: ele.formRenderData.field_sceneImages
           ? ele.formRenderData.field_sceneImages.map((item) => item.url)
           : [],
-        dangerStateCode: "1",
+        dangerStateCode: '1',
         inspectorName: checkPerson,
         inspectorId: checkPersonId,
         inspectTime: checkStartTime,
         checkItem: ele.checkItem,
         problemSpot: ele.problemSpot,
         checkStandard: ele.checkStandard,
-        tenantId: "1",
+        tenantId: '1',
       };
     });
   await dailyCheckExecute(params);
@@ -274,12 +289,12 @@ const goBack = () => {
     border-radius: 5px;
   }
 }
-.check-item{
+.check-item {
   font-size: var(--van-font-size-m);
 }
 .check-item-title {
   margin-left: 10px;
-  font-family: "微软雅黑";
+  font-family: '微软雅黑';
   font-weight: 400;
   font-style: normal;
   color: #000000;
