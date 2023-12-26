@@ -45,7 +45,7 @@ import FormRender from '@/components/form-design/components/FormRender.vue';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
 import { onBeforeMount, ref } from 'vue';
 import { getDailyCheckDetail } from '@/api/webView';
-import cardDisplay from './cardDisplay.vue';
+import cardDisplay from './carddisplay.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -136,6 +136,8 @@ onBeforeMount(() => {
 </style>
 <style lang="less" scoped>
 .check-box {
+  min-height: 100vh;
+  background-color: #f2f2f2;
   font-size: 12px;
 }
 .check-item {
@@ -164,7 +166,8 @@ onBeforeMount(() => {
   .form-render-title {
     line-height: 20px;
     padding: 5px 10px;
-    background-color: rgba(215, 215, 215, 1);
+    background-color: #d7d7d7;
+    color: #7f7f7f;
   }
 }
 </style>

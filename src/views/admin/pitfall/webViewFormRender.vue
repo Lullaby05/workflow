@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="check-box">
     <div
       class="check-item"
       v-for="(ele, index) in Object.keys(checkItemList)"
@@ -53,6 +53,7 @@ import { planInfo } from '@/api/webView';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
 import { formatDate } from '@/utils/utils';
 import { ElMessage } from 'element-plus';
+import Success from './success.vue';
 
 import {
   checkPlanDetailForm,
@@ -72,9 +73,11 @@ const send = () => {
   const height = html.clientHeight;
   ElMessage({
     message: '保存成功',
-    // type: "success",
-    duration: 1000,
-    offset: height / 2,
+    icon: Success,
+    center: true,
+    // type: 'success',
+    duration: 1500,
+    offset: height / 2 - 120,
     onClose: () => {
       console.log('closed');
       wx.miniProgram.postMessage({
@@ -89,14 +92,14 @@ const send = () => {
 };
 
 const {
-  checkTableIds = '1737744126473949186',
-  type = 'detail2',
-  taskType = '2',
+  checkTableIds,
+  type = 'detail',
+  taskType,
   taskId,
   taskName,
   checkPerson,
   checkPersonId,
-  id = '1737383050846699522',
+  id,
 } = route.query;
 
 let checkStartTime = undefined;
@@ -271,13 +274,34 @@ const goBack = () => {
 };
 </script>
 
-<style>
+<style lang="less">
 :root {
   font-size: 12px;
+}
+.el-message {
+  width: 120px;
+  height: 120px;
+  border-radius: 5px;
+  background-color: #4c4c4c;
+  color: #dbdbdb;
+  flex-direction: column;
+  .el-message__content {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  .el-message__icon {
+    font-size: 50px;
+    margin-right: 0;
+  }
 }
 </style>
 
 <style lang="less" scoped>
+.check-box {
+  min-height: 100vh;
+  padding-bottom: 44px;
+  background-color: #f2f2f2;
+}
 .submit-btn {
   padding: 0 10px;
   position: fixed;
@@ -298,15 +322,17 @@ const goBack = () => {
   font-weight: 400;
   font-style: normal;
   color: #000000;
+  line-height: 40px;
 }
 
 .item-slot {
-  margin-top: 20px;
+  // margin-top: 20px;
 
   .form-render-title {
     line-height: 30px;
     padding: 5px 10px;
-    background-color: rgba(215, 215, 215, 1);
+    background-color: #d7d7d7;
+    color: #7f7f7f;
   }
 }
 </style>
