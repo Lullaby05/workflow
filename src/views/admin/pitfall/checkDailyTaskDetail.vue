@@ -45,7 +45,7 @@ import FormRender from '@/components/form-design/components/FormRender.vue';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
 import { onBeforeMount, ref } from 'vue';
 import { getDailyCheckDetail } from '@/api/webView';
-import cardDisplay from './carddisplay.vue';
+import cardDisplay from './cardDisplay.vue';
 
 const route = useRoute();
 const router = useRouter();
