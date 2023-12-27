@@ -98,7 +98,7 @@
 <script>
 import draggable from 'vuedraggable';
 import { ValueType } from '../ComponentsConfigExport';
-import { Collapse, CollapseItem, Dialog, showFailToast } from 'vant';
+import { Collapse, CollapseItem, Dialog, showFailToast, showDialog, showConfirmDialog, } from 'vant';
 import FormItem from '@/components/common/FormItem.vue';
 import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
 import componentMinxins from '../ComponentMinxins';
@@ -270,7 +270,7 @@ export default {
           this._value.splice(i, 1);
         });
       } else {
-        Dialog.confirm({
+        showConfirmDialog({
           title: '提示',
           message: '您确定要删除该行数据吗？',
         }).then(() => {

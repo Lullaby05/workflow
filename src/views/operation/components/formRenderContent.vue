@@ -130,7 +130,6 @@ defineExpose({
 
 .form-render-content {
   flex-basis: 90%;
-  padding-right: 20px;
 }
 
 .operation-btns {

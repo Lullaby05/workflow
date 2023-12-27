@@ -11,7 +11,7 @@ import requestOpeartion from './requestForOperation.js';
 function getMultilevelLink(url: string, param?: string | number) {
   return requestOpeartion({
     url: url + param,
-    method: 'get',
+    method: 'post',
   });
 }
 

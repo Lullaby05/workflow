@@ -13,7 +13,6 @@
       <formRenderContent
         ref="addFormRender"
         v-if="design"
-        class="form-render-content"
         :design="design"
         status="edit"
       />
@@ -35,6 +34,7 @@ import { onBeforeMount, ref } from 'vue';
 import { useCertificate } from '../../operation/composition/useCertificate';
 import { cloneDeep } from 'lodash';
 // import { useUserStore } from '@/store';
+import { useSafetyCertificationStore } from '../../../storeWX';
 import {
   addCertificate,
   getCertificateDetail,
@@ -46,6 +46,7 @@ import { ElMessage, ElCard, ElButton } from 'element-plus';
 import { getUserDepts } from '@/api/org';
 import { operationTypeEnum } from '../../operation/composition/useCertificateDict';
 
+const store = useSafetyCertificationStore();
 const router = useRouter();
 const route = useRoute();
 const { id = '', type = 'add' } = route.query;
@@ -63,6 +64,7 @@ const addFormRender = ref();
 let defaultData = {}; // 保存默认数据，新增的时候只需要发formData
 let valueKeyMap = {}; // valueKey对应的真实formItemId
 let saveType = '';
+store.setCurrentOperationType(operationTypeEnum.BLINDPLATE);
 
 onBeforeMount(async () => {
   if (type === 'edit') {
@@ -173,7 +175,6 @@ const handleAddCertification = () => {
 }
 
 .add-form-render-container {
-  padding: 0px 20px 20px 20px;
   display: flex;
   flex-direction: column;
 

@@ -73,7 +73,8 @@
       },
     },
     mounted() { 
-      console.log("config",this.config.props.disabled)
+      // console.log("config",this.config.name)
+      // console.log("config",this.config.props)
     },
     emits: ['update:modelValue'],
   };
