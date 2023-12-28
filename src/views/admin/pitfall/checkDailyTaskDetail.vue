@@ -7,12 +7,12 @@
     >
       <div>
         <div class="row">
-          <span>危险源数：{{ 2 }}</span
-          ><span>排查项数：{{ 4 }}</span>
+          <span>危险源数：{{ detailData.dangerNum || 0 }}</span>
+          <span>排查项数：{{ detailData.checkItemNum || 0 }}</span>
         </div>
         <div class="row">
-          <span>合格项数：{{ 2 }}</span
-          ><span>不合格项数：{{ 4 }}</span>
+          <span>合格项数：{{ detailData.checkedItem || 0 }}</span
+          ><span>不合格项数：{{ detailData.unCheckedItem || 0 }}</span>
         </div>
       </div>
     </cardDisplay>
@@ -60,9 +60,12 @@ document.title = '排查详情';
 // const formLists = ref();
 const checkItemList = ref({});
 const cardItems = ref();
+const detailData = ref();
 
 const getDetailData = async () => {
   const { data } = await getDailyCheckDetail(id);
+
+  detailData.value = data;
 
   cardItems.value = {
     items: [
@@ -85,6 +88,7 @@ const getDetailData = async () => {
         id: 4,
         field: '排查完成时间',
         value: `${data.checkStartTime} 至 ${data.checkEndTime}`,
+        visible: data.checkEndTime,
       },
     ],
     title: data.taskName,
