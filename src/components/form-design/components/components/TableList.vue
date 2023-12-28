@@ -24,7 +24,10 @@
                 <span v-if="element.props.required">*</span>{{ element.title }}
               </p>
               <div class="l-option">
-                <icon name="el-icon-close" @click="delItem(index)"></icon>
+                <icon
+                  name="el-icon-close"
+                  @click="delItem(index)"
+                ></icon>
               </div>
               <form-design-render :config="element" />
             </div>
@@ -37,7 +40,10 @@
     </div>
     <div v-else-if="mode === 'MOBILE'">
       <collapse v-model="actives">
-        <div class="m-tb-empty" v-if="_value.length === 0">
+        <div
+          class="m-tb-empty"
+          v-if="_value.length === 0"
+        >
           点击下方 + 添加数据
         </div>
         <collapse-item
@@ -49,10 +55,16 @@
         >
           <template #title>
             <span>第 {{ i + 1 }} 项 </span>
-            <span class="m-valid-error" v-show="isError(i)">
+            <span
+              class="m-valid-error"
+              v-show="isError(i)"
+            >
               <icon name="el-icon-warning"></icon>
             </span>
-            <span class="del-row" @click.stop="delRow(i, row)" v-if="!readonly"
+            <span
+              class="del-row"
+              @click.stop="delRow(i, row)"
+              v-if="!readonly"
               >删除</span
             >
           </template>
@@ -75,7 +87,11 @@
           </form-item>
         </collapse-item>
       </collapse>
-      <div class="m-add-row" @click="addRow" v-if="!readonly">
+      <div
+        class="m-add-row"
+        @click="addRow"
+        v-if="!readonly"
+      >
         <icon name="el-icon-plus"></icon>
         <span> {{ placeholder }}</span>
       </div>
@@ -104,7 +120,9 @@
             :label="column.title"
           >
             <template #header>
-              <span style="color: #da4b2b" v-show="column.props.required"
+              <span
+                style="color: #da4b2b"
+                v-show="column.props.required"
                 >*</span
               >
               {{ column.title }}
@@ -203,8 +221,8 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import { ValueType } from "../ComponentsConfigExport";
+import draggable from 'vuedraggable';
+import { ValueType } from '../ComponentsConfigExport';
 import {
   Collapse,
   CollapseItem,
@@ -212,15 +230,15 @@ import {
   showFailToast,
   showDialog,
   showConfirmDialog,
-} from "vant";
-import FormItem from "@/components/common/FormItem.vue";
-import FormDesignRender from "@/components/form-design/design/FormDesignRender.vue";
-import componentMinxins from "../ComponentMinxins";
-import { ElMessage } from "element-plus";
+} from 'vant';
+import FormItem from '@/components/common/FormItem.vue';
+import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
+import componentMinxins from '../ComponentMinxins';
+import { ElMessage } from 'element-plus';
 
 export default {
   mixins: [componentMinxins],
-  name: "TableList",
+  name: 'TableList',
   components: {
     draggable,
     FormItem,
@@ -237,7 +255,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "添加数据",
+      default: '添加数据',
     },
     columns: {
       type: Array,
@@ -283,7 +301,7 @@ export default {
               type: ValueType.getValidType(col.valueType),
               required: true,
               message: `请完成${col.title}`,
-              trigger: "blur",
+              trigger: 'blur',
             },
           ];
         }
@@ -295,7 +313,7 @@ export default {
         return this.columns;
       },
       set(val) {
-        this.$emit("update:columns", val);
+        this.$emit('update:columns', val);
       },
     },
     selectFormItem: {
@@ -316,35 +334,35 @@ export default {
       drag: false,
       ValueType,
       tbCellStyle: {
-        background: "#e8e8e8",
-        padding: "10px 0",
+        background: '#e8e8e8',
+        padding: '10px 0',
       },
       cellStyle: {
-        padding: "0",
+        padding: '0',
       },
       dragProps: {
         animation: 300,
-        group: "form",
+        group: 'form',
         disabled: false,
         sort: true,
-        ghostClass: "choose",
+        ghostClass: 'choose',
       },
     };
   },
   methods: {
     isReadonly(item) {
-      return item.perm === "R";
+      return item.perm === 'R';
     },
     getMinWidth(col) {
       switch (col.name) {
-        case "DateTime":
-          return "250px";
-        case "DateTimeRange":
-          return "280px";
-        case "MultipleSelect":
-          return "200px";
+        case 'DateTime':
+          return '250px';
+        case 'DateTimeRange':
+          return '280px';
+        case 'MultipleSelect':
+          return '200px';
         default:
-          return "150px";
+          return '150px';
       }
     },
     showError(col, val) {
@@ -376,18 +394,18 @@ export default {
       this._value.push(this.$deepCopy(row));
     },
     delRow(i, row) {
-      if (this.mode === "PC") {
-        this.$confirm("您确定要删除该行数据吗？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+      if (this.mode === 'PC') {
+        this.$confirm('您确定要删除该行数据吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         }).then(() => {
           this._value.splice(i, 1);
         });
       } else {
         showConfirmDialog({
-          title: "提示",
-          message: "您确定要删除该行数据吗？",
+          title: '提示',
+          message: '您确定要删除该行数据吗？',
         }).then(() => {
           this._value.splice(i, 1);
         });
@@ -395,7 +413,7 @@ export default {
     },
     addRow() {
       if (this.maxSize > 0 && this._value.length >= this.maxSize) {
-        if (this.mode === "PC") {
+        if (this.mode === 'PC') {
           this.$message.warning(`最多只能添加${this.maxSize}行`);
         } else {
           showFailToast(`最多加${this.maxSize}行`);
@@ -416,15 +434,15 @@ export default {
     },
     getSelectedClass(cp) {
       return this.selectFormItem && this.selectFormItem.id === cp.id
-        ? "border-left: 4px solid #f56c6c"
-        : "";
+        ? 'border-left: 4px solid #f56c6c'
+        : '';
     },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = "合计";
+          sums[index] = '合计';
           return;
         }
         const values = data.map((item) => Number(item[column.property]));
@@ -438,14 +456,14 @@ export default {
             }
           }, 0);
         } else {
-          sums[index] = "...";
+          sums[index] = '...';
         }
       });
 
       return sums;
     },
     validate(call) {
-      if (this.mode === "PC") {
+      if (this.mode === 'PC') {
         if (this.rowLayout) {
           let result = true;
           for (let i = 0; i < this.columns.length; i++) {
@@ -456,7 +474,7 @@ export default {
                   this._value[j][this.columns[i].id]
                 );
                 if (!result) {
-                  Message.warning(this.columns[i].title + "不能为空");
+                  Message.warning(this.columns[i].title + '不能为空');
                   call(false);
                   return;
                 }
@@ -485,15 +503,16 @@ export default {
           for (let i = 0; i < this.columns.length; i++) {
             for (let j = 0; j < this._value.length; j++) {
               if (!this._value[j][this.columns[i].id]) {
-                const html = document.getElementsByTagName("html")[0];
+                const html = document.getElementsByTagName('html')[0];
                 const height = html.clientHeight;
                 ElMessage({
-                  message: this.columns[i].title + "不能为空",
-                  // type: "success",
-                  duration: 1000,
-                  offset: height / 2,
+                  message: this.columns[i].title + '不能为空',
+                  icon: 'none',
+                  duration: 1500,
+                  customClass: 'm-valid-error-message',
+                  offset: height / 2 - 120,
                 });
-                throw new Error("校验失败");
+                throw new Error('校验失败');
               }
             }
           }
@@ -502,10 +521,31 @@ export default {
       }
     },
   },
-  emits: ["update:modelValue"],
+  emits: ['update:modelValue'],
 };
 </script>
 
+<style lang="less">
+.m-valid-error-message {
+  min-width: 120px;
+  // height: 120px;
+  border-radius: 5px;
+  background-color: #4c4c4c;
+  color: #dbdbdb;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  .el-message__content {
+    font-size: 16px;
+    margin-top: 0px;
+  }
+  .el-message__icon {
+    font-size: 0px;
+    margin-right: 0;
+  }
+}
+</style>
 <style lang="less" scoped>
 .m-valid-error {
   margin-left: 10px;
