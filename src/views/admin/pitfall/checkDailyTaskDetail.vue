@@ -122,9 +122,12 @@ const getDetailData = async () => {
 };
 
 const setDisabled = (formsTemp) => {
-  console.log('@formConfigTemp', formsTemp);
+  // console.log('@formConfigTemp', formsTemp);
   formsTemp.forEach((e) => {
     e.props.disabled = true;
+    if(e.name === "TableList"){
+      setDisabled(e.props.columns)
+    }
   });
 };
 

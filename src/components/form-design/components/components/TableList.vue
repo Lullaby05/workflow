@@ -1,12 +1,24 @@
 <template>
   <div>
     <div v-if="mode === 'DESIGN'">
-      <draggable class="l-drag-from" item-key="id" v-model="_columns" v-bind="dragProps" :component-data="{ tag: 'div', type: 'transition-group' }" @start="
-        drag = true;
-      selectFormItem = null;
-      " @end="drag = false">
+      <draggable
+        class="l-drag-from"
+        item-key="id"
+        v-model="_columns"
+        v-bind="dragProps"
+        :component-data="{ tag: 'div', type: 'transition-group' }"
+        @start="
+          drag = true;
+          selectFormItem = null;
+        "
+        @end="drag = false"
+      >
         <template #item="{ element, index }">
-          <div class="l-form-item" @click.stop="selectItem(element)" :style="getSelectedClass(element)">
+          <div
+            class="l-form-item"
+            @click.stop="selectItem(element)"
+            :style="getSelectedClass(element)"
+          >
             <div class="l-form-header">
               <p>
                 <span v-if="element.props.required">*</span>{{ element.title }}
@@ -28,16 +40,38 @@
         <div class="m-tb-empty" v-if="_value.length === 0">
           点击下方 + 添加数据
         </div>
-        <collapse-item :lazy-render="false" style="background: #f7f8fa" :name="i" v-for="(row, i) in _value" :key="i">
+        <collapse-item
+          :lazy-render="false"
+          style="background: #f7f8fa"
+          :name="i"
+          v-for="(row, i) in _value"
+          :key="i"
+        >
           <template #title>
             <span>第 {{ i + 1 }} 项 </span>
             <span class="m-valid-error" v-show="isError(i)">
               <icon name="el-icon-warning"></icon>
             </span>
-            <span class="del-row" @click.stop="delRow(i, row)" v-if="!readonly">删除</span>
+            <span class="del-row" @click.stop="delRow(i, row)" v-if="!readonly"
+              >删除</span
+            >
           </template>
-          <form-item :model="row" :rule="rules[column.id]" :ref="`${column.id}_${i}`" :prop="column.id" :label="column.title" v-for="(column, index) in _columns" :key="'column_' + index">
-            <form-design-render :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column" />
+          <form-item
+            :model="row"
+            :rule="rules[column.id]"
+            :ref="`${column.id}_${i}`"
+            :prop="column.id"
+            :label="column.title"
+            v-for="(column, index) in _columns"
+            :key="'column_' + index"
+          >
+            <form-design-render
+              :formData="formData"
+              :readonly="isReadonly(column)"
+              v-model="row[column.id]"
+              :mode="mode"
+              :config="column"
+            />
           </form-item>
         </collapse-item>
       </collapse>
@@ -48,24 +82,57 @@
     </div>
     <template v-else>
       <template v-if="rowLayout">
-        <el-table :cell-style="cellStyle" :header-cell-style="tbCellStyle" :border="showBorder" :summary-method="getSummaries" :show-summary="showSummary" :data="_value" style="width: 100%">
-          <el-table-column fixed type="index" label="序号" width="55"></el-table-column>
-          <el-table-column :min-width="getMinWidth(column)" v-for="(column, index) in _columns" :prop="column.id" :label="column.title">
+        <el-table
+          :cell-style="cellStyle"
+          :header-cell-style="tbCellStyle"
+          :border="showBorder"
+          :summary-method="getSummaries"
+          :show-summary="showSummary"
+          :data="_value"
+          style="width: 100%"
+        >
+          <el-table-column
+            fixed
+            type="index"
+            label="序号"
+            width="55"
+          ></el-table-column>
+          <el-table-column
+            :min-width="getMinWidth(column)"
+            v-for="(column, index) in _columns"
+            :prop="column.id"
+            :label="column.title"
+          >
             <template #header>
-              <span style="color: #da4b2b" v-show="column.props.required">*</span>
+              <span style="color: #da4b2b" v-show="column.props.required"
+                >*</span
+              >
               {{ column.title }}
             </template>
             <template v-slot="scope">
-              <form-design-render :index="scope.$index + 1" :formData="formData" :class="{
-                'valid-error': showError(
-                  column,
-                  _value[scope.$index][column.id]
-                ),
-                readonly: readonly,
-              }" v-model="_value[scope.$index][column.id]" :readonly="readonly" :mode="mode" :config="column" />
+              <form-design-render
+                :index="scope.$index + 1"
+                :formData="formData"
+                :class="{
+                  'valid-error': showError(
+                    column,
+                    _value[scope.$index][column.id]
+                  ),
+                  readonly: readonly,
+                }"
+                v-model="_value[scope.$index][column.id]"
+                :readonly="readonly"
+                :mode="mode"
+                :config="column"
+              />
             </template>
           </el-table-column>
-          <el-table-column fixed="right" min-width="95" label="操作" v-if="!readonly">
+          <el-table-column
+            fixed="right"
+            min-width="95"
+            label="操作"
+            v-if="!readonly"
+          >
             <template v-slot="scope">
               <!-- <el-button
                 type="primary"
@@ -73,39 +140,87 @@
                 @click="copyData(scope.$index, scope.row)"
                 >复制</el-button
               > -->
-              <el-button type="danger" link @click="delRow(scope.$index, scope.row)">删除</el-button>
+              <el-button
+                type="danger"
+                link
+                @click="delRow(scope.$index, scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
-        <el-button size="default" icon="el-icon-plus" @click="addRow" v-if="!readonly">{{ placeholder }}</el-button>
+        <el-button
+          size="default"
+          icon="el-icon-plus"
+          @click="addRow"
+          v-if="!readonly"
+          >{{ placeholder }}</el-button
+        >
       </template>
       <template v-else>
-        <el-form :rules="rules" :model="row" :ref="`table-form-${i}`" class="table-column" v-for="(row, i) in _value" :key="i">
+        <el-form
+          :rules="rules"
+          :model="row"
+          :ref="`table-form-${i}`"
+          class="table-column"
+          v-for="(row, i) in _value"
+          :key="i"
+        >
           <div class="table-column-action">
             <span>第 {{ i + 1 }} 项</span>
-            <icon name="el-icon-close" @click="delRow(i, row)" v-if="!readonly"></icon>
+            <icon
+              name="el-icon-close"
+              @click="delRow(i, row)"
+              v-if="!readonly"
+            ></icon>
           </div>
-          <el-form-item v-for="(column, index) in _columns" :key="'column_' + index" :prop="column.id" :label="column.title">
-            <form-design-render :index="index + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column" />
+          <el-form-item
+            v-for="(column, index) in _columns"
+            :key="'column_' + index"
+            :prop="column.id"
+            :label="column.title"
+          >
+            <form-design-render
+              :index="index + 1"
+              :formData="formData"
+              :readonly="isReadonly(column)"
+              v-model="row[column.id]"
+              :mode="mode"
+              :config="column"
+            />
           </el-form-item>
         </el-form>
-        <el-button size="small" icon="el-icon-plus" @click="addRow" v-if="!readonly">{{ placeholder }}</el-button>
+        <el-button
+          size="small"
+          icon="el-icon-plus"
+          @click="addRow"
+          v-if="!readonly"
+          >{{ placeholder }}</el-button
+        >
       </template>
     </template>
   </div>
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import { ValueType } from '../ComponentsConfigExport';
-import { Collapse, CollapseItem, Dialog, showFailToast, showDialog, showConfirmDialog, } from 'vant';
-import FormItem from '@/components/common/FormItem.vue';
-import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
-import componentMinxins from '../ComponentMinxins';
+import draggable from "vuedraggable";
+import { ValueType } from "../ComponentsConfigExport";
+import {
+  Collapse,
+  CollapseItem,
+  Dialog,
+  showFailToast,
+  showDialog,
+  showConfirmDialog,
+} from "vant";
+import FormItem from "@/components/common/FormItem.vue";
+import FormDesignRender from "@/components/form-design/design/FormDesignRender.vue";
+import componentMinxins from "../ComponentMinxins";
+import { ElMessage } from "element-plus";
 
 export default {
   mixins: [componentMinxins],
-  name: 'TableList',
+  name: "TableList",
   components: {
     draggable,
     FormItem,
@@ -122,7 +237,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '添加数据',
+      default: "添加数据",
     },
     columns: {
       type: Array,
@@ -168,7 +283,7 @@ export default {
               type: ValueType.getValidType(col.valueType),
               required: true,
               message: `请完成${col.title}`,
-              trigger: 'blur',
+              trigger: "blur",
             },
           ];
         }
@@ -180,7 +295,7 @@ export default {
         return this.columns;
       },
       set(val) {
-        this.$emit('update:columns', val);
+        this.$emit("update:columns", val);
       },
     },
     selectFormItem: {
@@ -192,8 +307,8 @@ export default {
       },
     },
     actives() {
-      return this.modelValue.map((item, index) => index)
-    }
+      return this.modelValue.map((item, index) => index);
+    },
   },
   data() {
     return {
@@ -201,35 +316,35 @@ export default {
       drag: false,
       ValueType,
       tbCellStyle: {
-        background: '#e8e8e8',
-        padding: '10px 0',
+        background: "#e8e8e8",
+        padding: "10px 0",
       },
       cellStyle: {
-        padding: '0',
+        padding: "0",
       },
       dragProps: {
         animation: 300,
-        group: 'form',
+        group: "form",
         disabled: false,
         sort: true,
-        ghostClass: 'choose',
+        ghostClass: "choose",
       },
     };
   },
   methods: {
     isReadonly(item) {
-      return item.perm === 'R';
+      return item.perm === "R";
     },
     getMinWidth(col) {
       switch (col.name) {
-        case 'DateTime':
-          return '250px';
-        case 'DateTimeRange':
-          return '280px';
-        case 'MultipleSelect':
-          return '200px';
+        case "DateTime":
+          return "250px";
+        case "DateTimeRange":
+          return "280px";
+        case "MultipleSelect":
+          return "200px";
         default:
-          return '150px';
+          return "150px";
       }
     },
     showError(col, val) {
@@ -261,18 +376,18 @@ export default {
       this._value.push(this.$deepCopy(row));
     },
     delRow(i, row) {
-      if (this.mode === 'PC') {
-        this.$confirm('您确定要删除该行数据吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
+      if (this.mode === "PC") {
+        this.$confirm("您确定要删除该行数据吗？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         }).then(() => {
           this._value.splice(i, 1);
         });
       } else {
         showConfirmDialog({
-          title: '提示',
-          message: '您确定要删除该行数据吗？',
+          title: "提示",
+          message: "您确定要删除该行数据吗？",
         }).then(() => {
           this._value.splice(i, 1);
         });
@@ -280,7 +395,7 @@ export default {
     },
     addRow() {
       if (this.maxSize > 0 && this._value.length >= this.maxSize) {
-        if (this.mode === 'PC') {
+        if (this.mode === "PC") {
           this.$message.warning(`最多只能添加${this.maxSize}行`);
         } else {
           showFailToast(`最多加${this.maxSize}行`);
@@ -301,15 +416,15 @@ export default {
     },
     getSelectedClass(cp) {
       return this.selectFormItem && this.selectFormItem.id === cp.id
-        ? 'border-left: 4px solid #f56c6c'
-        : '';
+        ? "border-left: 4px solid #f56c6c"
+        : "";
     },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '合计';
+          sums[index] = "合计";
           return;
         }
         const values = data.map((item) => Number(item[column.property]));
@@ -323,14 +438,14 @@ export default {
             }
           }, 0);
         } else {
-          sums[index] = '...';
+          sums[index] = "...";
         }
       });
 
       return sums;
     },
     validate(call) {
-      if (this.mode === 'PC') {
+      if (this.mode === "PC") {
         if (this.rowLayout) {
           let result = true;
           for (let i = 0; i < this.columns.length; i++) {
@@ -341,7 +456,7 @@ export default {
                   this._value[j][this.columns[i].id]
                 );
                 if (!result) {
-                  Message.warning(this.columns[i].title + '不能为空');
+                  Message.warning(this.columns[i].title + "不能为空");
                   call(false);
                   return;
                 }
@@ -364,24 +479,30 @@ export default {
           setTimeout(() => call(success === this._value.length), 500);
         }
       } else {
-        let success = true;
-        this._value.forEach((row, i) => {
-          this._columns.forEach((col) => {
-            let tbColRef = this.$refs[`${col.id}_${i}`];
-            if (tbColRef && Array.isArray(tbColRef) && tbColRef.length > 0) {
-              tbColRef[0].validate((valid) => {
-                if (!valid) {
-                  success = false;
-                }
-              });
+        // console.log("移动端验证", this.required, this.disabled);
+        if (this.required && !this.disabled) {
+          let result = true;
+          for (let i = 0; i < this.columns.length; i++) {
+            for (let j = 0; j < this._value.length; j++) {
+              if (!this._value[j][this.columns[i].id]) {
+                const html = document.getElementsByTagName("html")[0];
+                const height = html.clientHeight;
+                ElMessage({
+                  message: this.columns[i].title + "不能为空",
+                  // type: "success",
+                  duration: 1000,
+                  offset: height / 2,
+                });
+                throw new Error("校验失败");
+              }
             }
-          });
-        });
-        call(success);
+          }
+          call(result);
+        }
       }
     },
   },
-  emits: ['update:modelValue'],
+  emits: ["update:modelValue"],
 };
 </script>
 
@@ -421,7 +542,6 @@ export default {
   }
 
   .cell {
-
     .el-input__wrapper,
     .el-input__inner,
     .el-textarea__inner {

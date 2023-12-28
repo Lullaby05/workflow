@@ -251,7 +251,7 @@
               });
               if (form.name === 'TableList') {
                 //扫描明细表项
-                this.$refs[form.id + '_item'][0].validate_m((subValid) => {
+                this.$refs[form.id + '_item'][0].validate((subValid) => {
                   if (!subValid && this.showItem(form)) {
                     success = false;
                     ElMessage({
