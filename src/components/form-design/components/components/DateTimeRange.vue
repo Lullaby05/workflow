@@ -70,6 +70,7 @@
           :title="desc"
           :tabs="['选择日期', '选择时间']"
           @confirm="onConfirm"
+          @cancel="showPicker = false"
         >
           <date-picker
             :formatter="formatter"
