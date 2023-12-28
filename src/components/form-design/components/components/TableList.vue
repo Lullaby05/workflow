@@ -64,7 +64,7 @@
             <span
               class="del-row"
               @click.stop="delRow(i, row)"
-              v-if="!readonly"
+              v-if="!disabled"
               >删除</span
             >
           </template>
@@ -90,7 +90,7 @@
       <div
         class="m-add-row"
         @click="addRow"
-        v-if="!readonly"
+        v-if="!disabled"
       >
         <icon name="el-icon-plus"></icon>
         <span> {{ placeholder }}</span>
@@ -289,7 +289,12 @@ export default {
   created() {
     if (!Array.isArray(this.modelValue) || this.modelValue.length === 0) {
       this._value = [{}];
+      this.actives = [0]
+    }else{
+      this.actives = this._value.map((item, index) => index)
     }
+    
+    console.log('actives',this.actives)
   },
   computed: {
     rules() {
@@ -324,12 +329,10 @@ export default {
         this.$store.state.selectFormItem = val;
       },
     },
-    actives() {
-      return this.modelValue.map((item, index) => index);
-    },
   },
   data() {
     return {
+      actives: [],
       select: null,
       drag: false,
       ValueType,
@@ -424,10 +427,12 @@ export default {
         const v = Object.assign([], this._value);
         v.push(row);
         this._value = v;
+        this.actives = this._value.map((item, index) => index)
       }
     },
     delItem(id) {
       this._columns.splice(id, 1);
+      this.actives = this._value.map((item, index) => index)
     },
     selectItem(cp) {
       this.selectFormItem = cp;
