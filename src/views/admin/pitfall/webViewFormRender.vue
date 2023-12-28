@@ -204,7 +204,7 @@ const handleSave = async () => {
 
     Promise.all(formList)
       .then(() => {
-        // saveData();
+        saveData();
       })
       .catch(() => {});
   }
