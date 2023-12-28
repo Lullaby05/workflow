@@ -2,7 +2,11 @@
   <div>
     <div v-if="mode === 'DESIGN'">
       <template v-if="expansion">
-        <el-checkbox-group disabled v-if="multiple" v-model="_value">
+        <el-checkbox-group
+          disabled
+          v-if="multiple"
+          v-model="_value"
+        >
           <el-checkbox
             class="w-row-text"
             disabled
@@ -12,7 +16,11 @@
             >{{ op.name }}</el-checkbox
           >
         </el-checkbox-group>
-        <el-radio-group disabled v-model="_value" v-else>
+        <el-radio-group
+          disabled
+          v-model="_value"
+          v-else
+        >
           <el-radio
             class="w-row-text"
             style="margin: 5px"
@@ -24,7 +32,11 @@
         </el-radio-group>
       </template>
       <template v-else>
-        <el-button disabled type="primary" size="default" round
+        <el-button
+          disabled
+          type="primary"
+          size="default"
+          round
           ><icon name="iconfont icon-map-site" /> 选择部门</el-button
         >
         <span class="placeholder"> {{ placeholder }}</span>
@@ -32,7 +44,10 @@
     </div>
     <div v-else-if="mode === 'PC' && !readonly">
       <template v-if="expansion">
-        <el-checkbox-group v-if="multiple" v-model="_value">
+        <el-checkbox-group
+          v-if="multiple"
+          v-model="_value"
+        >
           <el-checkbox
             class="w-row-text"
             v-for="(op, index) in options"
@@ -86,7 +101,12 @@
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
       <template v-if="expansion">
-        <checkbox-group :disabled = "disabled" v-if="multiple" v-model="_value" direction="horizontal">
+        <checkbox-group
+          :disabled="disabled"
+          v-if="multiple"
+          v-model="_value"
+          direction="horizontal"
+        >
           <checkbox
             style="margin: 5px"
             :name="op"
@@ -97,7 +117,7 @@
           >
         </checkbox-group>
         <radio-group
-          :disabled = "disabled"
+          :disabled="disabled"
           v-else
           v-model="_value[0]"
           @input="(ev) => (_value = [ev])"
@@ -114,7 +134,7 @@
       </template>
       <template v-else>
         <field
-          :disabled = "disabled"
+          :disabled="disabled"
           readonly
           clearable
           @clear="_value = []"
@@ -122,10 +142,10 @@
           clickable
           v-model="deptDesc"
           :placeholder="placeholder"
-          @click="$refs.orgPicker.show()"
+          @click="openOrgPicker"
         ></field>
         <org-picker
-          :disabled = "disabled"
+          :disabled="disabled"
           :pc-mode="false"
           type="dept"
           :multiple="multiple"
@@ -142,88 +162,93 @@
 </template>
 
 <script>
-  import { Field, Radio, RadioGroup, Checkbox, CheckboxGroup } from 'vant';
-  import componentMinxins from '../ComponentMinxins';
-  import OrgPicker from '@/components/common/OrgPicker.vue';
+import { Field, Radio, RadioGroup, Checkbox, CheckboxGroup } from 'vant';
+import componentMinxins from '../ComponentMinxins';
+import OrgPicker from '@/components/common/OrgPicker.vue';
 
-  export default {
-    mixins: [componentMinxins],
-    name: 'DeptPicker',
-    components: {
-      OrgPicker,
-      Field,
-      Radio,
-      RadioGroup,
-      Checkbox,
-      CheckboxGroup,
-    },
-    props: {
-      modelValue: {
-        type: Array,
-        default: () => {
-          return [];
-        },
-      },
-      placeholder: {
-        type: String,
-        default: '请选择部门',
-      },
-      multiple: {
-        type: Boolean,
-        default: false,
-      },
-      expansion: {
-        type: Boolean,
-        default: false,
-      },
-      options: {
-        type: Array,
-        default: () => {
-          return [];
-        },
+export default {
+  mixins: [componentMinxins],
+  name: 'DeptPicker',
+  components: {
+    OrgPicker,
+    Field,
+    Radio,
+    RadioGroup,
+    Checkbox,
+    CheckboxGroup,
+  },
+  props: {
+    modelValue: {
+      type: Array,
+      default: () => {
+        return [];
       },
     },
-    data() {
-      return {
-        showOrgSelect: false,
-      };
+    placeholder: {
+      type: String,
+      default: '请选择部门',
     },
-    computed: {
-      deptDesc: {
-        get() {
-          if (this._value && this._value.length > 3) {
-            return `${String(
-              this._value.slice(0, 3).map((v) => v.name)
-            )}... 等${this._value.length}个部门`;
-          } else if (this._value && this._value.length > 0) {
-            return String(this._value.map((v) => v.name));
-          } else {
-            return null;
-          }
-        },
-        set(val) {},
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
+    expansion: {
+      type: Boolean,
+      default: false,
+    },
+    options: {
+      type: Array,
+      default: () => {
+        return [];
       },
     },
-    methods: {
-      selected(values) {
-        this.showOrgSelect = false;
-        this._value = values;
+  },
+  data() {
+    return {
+      showOrgSelect: false,
+    };
+  },
+  computed: {
+    deptDesc: {
+      get() {
+        if (this._value && this._value.length > 3) {
+          return `${String(this._value.slice(0, 3).map((v) => v.name))}... 等${
+            this._value.length
+          }个部门`;
+        } else if (this._value && this._value.length > 0) {
+          return String(this._value.map((v) => v.name));
+        } else {
+          return null;
+        }
       },
-      delDept(i) {
-        this._value.splice(i, 1);
-      },
+      set(val) {},
     },
-    emits: ['update:modelValue'],
-  };
+  },
+  methods: {
+    openOrgPicker() {
+      if (!this.disabled) {
+        this.$refs.orgPicker.show();
+      }
+    },
+    selected(values) {
+      this.showOrgSelect = false;
+      this._value = values;
+    },
+    delDept(i) {
+      this._value.splice(i, 1);
+    },
+  },
+  emits: ['update:modelValue'],
+};
 </script>
 
 <style lang="less" scoped>
-  .placeholder {
-    margin-left: 10px;
-    color: #adabab;
-    font-size: smaller;
-  }
-  :deep(.el-checkbox-group) {
-    line-height: 10px;
-  }
+.placeholder {
+  margin-left: 10px;
+  color: #adabab;
+  font-size: smaller;
+}
+:deep(.el-checkbox-group) {
+  line-height: 10px;
+}
 </style>
