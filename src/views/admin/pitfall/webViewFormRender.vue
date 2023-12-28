@@ -252,6 +252,9 @@ const saveData = async () => {
         sceneImages: ele.formRenderData.field_sceneImages
           ? ele.formRenderData.field_sceneImages.map((item) => item.url)
           : [],
+        hidRiskLevelCode:
+          ele.formRenderData.field_hidRiskLevelCode === '一般隐患' ? '2' : '1',
+        rectifyAdvise: ele.formRenderData.field_rectifyAdvise,
         dangerStateCode: '1',
         inspectorName: checkPerson,
         inspectorId: checkPersonId,
