@@ -7,8 +7,24 @@
       <p>{{ placeholder }} {{ sizeTip }}</p>
     </div>
     <div v-else-if="mode === 'PC' && !readonly">
-      <el-upload :file-list="fileList" action="#" :limit="maxNumber" with-credentials :multiple="maxNumber > 1" :data="uploadParams" :on-success="uploadSuccess" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-exceed="overLimit" :on-error="uploadFail" list-type="picture-card"
-        auto-upload :before-upload="beforeUpload" :http-request="uploadFile">
+      <el-upload
+        :file-list="fileList"
+        action="#"
+        :limit="maxNumber"
+        accept="image/*,video/*"
+        :data="uploadParams"
+        with-credentials
+        :multiple="maxNumber > 1"
+        :on-success="uploadSuccess"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove"
+        :on-exceed="overLimit"
+        :on-error="uploadFail"
+        list-type="picture-card"
+        auto-upload
+        :before-upload="beforeUpload"
+        :http-request="uploadFile"
+      >
         <template #default>
           <icon name="el-icon-plus"></icon>
         </template>
@@ -18,12 +34,33 @@
       </el-upload>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <uploader :disabled = "disabled" v-model="fileList" :multiple="maxNumber > 1" :max-count="maxNumber > 0 ? maxNumber : 99" :deletable="!disabled" :before-delete="handleRemove" :before-read="beforeUpload" upload-text="选择图片" :after-read="afterRead" :max-size="maxSize * 1024 * 1024" @oversize="onOversize" />
+      <uploader
+        :disabled="disabled"
+        v-model="fileList"
+        accept="image/*,video/*"
+        :multiple="maxNumber > 1"
+        :max-count="maxNumber > 0 ? maxNumber : 99"
+        :deletable="!disabled"
+        :before-delete="handleRemove"
+        :before-read="beforeUpload"
+        upload-text="选择图片"
+        :after-read="afterRead"
+        :max-size="maxSize * 1024 * 1024"
+        @oversize="onOversize"
+      />
       <div style="color: #9b9595">{{ placeholder }} {{ sizeTip }}</div>
     </div>
-    <div v-else class="img-preview">
+    <div
+      v-else
+      class="img-preview"
+    >
       <div class="img-preview-pc">
-        <el-image :alt="img.name" :src="$getRes(img.url)" v-for="img in _value" :preview-src-list="pcImgList" />
+        <el-image
+          :alt="img.name"
+          :src="$getRes(img.url)"
+          v-for="img in _value"
+          :preview-src-list="pcImgList"
+        />
       </div>
     </div>
   </div>
@@ -54,9 +91,13 @@ export default {
       type: Number,
       default: 5,
     },
+    videoMaxSize: {
+      type: Number,
+      default: 20,
+    },
     maxNumber: {
       type: Number,
-      default: 10,
+      default: 9,
     },
     enableZip: {
       type: Boolean,
@@ -75,6 +116,7 @@ export default {
         return {
           name: f.name,
           url: f.url,
+          isImage: true,
           status: 'success',
         };
       });
@@ -83,10 +125,10 @@ export default {
   data() {
     return {
       loading: false,
-      uploadUrl: `/business/upload/uploadFile`,
+      uploadUrl: `/business/upload/upload-video`,
       uploadParams: { isImg: true },
       catchList: [],
-      alows: ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'],
+      alows: ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'video/mp4'],
     };
   },
   methods: {
@@ -104,10 +146,21 @@ export default {
       }
     },
     validImage(img) {
+      const imageType = img.type.includes('image') ? 'image' : 'video';
       if (this.alows.indexOf(img.type) === -1) {
-        this.$message.warning('存在不支持的图片格式');
-      } else if (this.maxSize > 0 && img.size / 1024 / 1024 > this.maxSize) {
-        this.$message.warning(`单张图片最大不超过 ${this.maxSize}MB`);
+        showFailToast('存在不支持的格式');
+      } else if (
+        imageType === 'image' &&
+        this.maxSize > 0 &&
+        img.size / 1024 / 1024 > this.maxSize
+      ) {
+        showFailToast(`单张图片最大不超过 ${this.maxSize}MB`);
+      } else if (
+        imageType === 'video' &&
+        this.videoMaxSize > 0 &&
+        img.size / 1024 / 1024 > this.videoMaxSize
+      ) {
+        showFailToast(`单个视频最大不超过 ${this.videoMaxSize}MB`);
       } else {
         this.loading = true;
         return true;
@@ -119,13 +172,8 @@ export default {
         url: `/business/upload/remove?fileName=${fileName}`,
         method: 'post',
       }).then((rsp) => {
-        this.$message.success('移除文件成功');
+        // this.$message.success('移除文件成功');
       });
-      // Axios.post(
-      //   `/businessApi/business/upload/remove?fileName=${fileName}`
-      // ).then((rsp) => {
-      //   this.$message.success('移除文件成功');
-      // });
     },
     uploadSuccess(response, file, fileList) {
       this.loading = false;
@@ -135,11 +183,11 @@ export default {
         this._value.push(...this.catchList);
         this.$emit('update:modelValue', this._value);
       }
-      this.$message.success(response.name + '上传成功');
+      // this.$message.success(response.name + '上传成功');
     },
     uploadFail(err) {
       this.loading = false;
-      this.$message.error('图片上传失败 ' + err);
+      // this.$message.error('图片上传失败 ' + err);
     },
     afterRead(file) {
       if (Array.isArray(file)) {
@@ -152,20 +200,32 @@ export default {
     },
     uploadFile(file) {
       //上传文件
+      const imageType = file.file.type.includes('image') ? 'image' : 'video';
       const formData = new FormData();
       formData.append('file', file.file);
-      formData.append('isImg', true);
+      formData.append('isImg', imageType === 'image');
       requestOpeartion({
         url: this.uploadUrl,
         data: formData,
         method: 'post',
-        headers: { 'Content-type': 'multipart/form-data', }
+        headers: { 'Content-type': 'multipart/form-data' },
       }).then(
         (res) => {
-          this._value.push({
-            name: res.data.data[0].fileName,
-            url: res.data.data[0].filePath,
-          });
+          if (imageType === 'video') {
+            this._value.push({
+              name: res.data.data[0].fileName,
+              url: res.data.data[0].coverUrl,
+              sourceUrl: res.data.data[0].filePath,
+              fileType: 'video',
+            });
+          } else {
+            this._value.push({
+              name: res.data.data[0].fileName,
+              url: res.data.data[0].filePath,
+              sourceUrl: res.data.data[0].filePath,
+              fileType: 'image',
+            });
+          }
           this.$emit('update:modelValue', this._value);
           showSuccessToast('上传成功');
         },
@@ -214,29 +274,24 @@ export default {
     border: 1px dashed #8c8c8c;
   }
 }
-
 :deep(.el-upload--picture-card) {
   width: 80px;
   height: 80px;
   line-height: 87px;
 }
-
 :deep(.el-upload-list__item) {
   width: 80px;
   height: 80px;
   transition: none;
-
   .el-upload-list__item-actions {
-    &>span+span {
+    & > span + span {
       margin: 1px;
     }
   }
 }
-
 :deep(.el-upload-list__item-preview) {
   display: none !important;
 }
-
 .img-preview {
   :deep(.img-preview-pc) {
     .el-image {

@@ -255,7 +255,13 @@ const saveData = async () => {
         hazardDesc: ele.formRenderData.field_hazardDesc,
         hazardAddr: ele.formRenderData.field_hazardAddr,
         sceneImages: ele.formRenderData.field_sceneImages
-          ? ele.formRenderData.field_sceneImages.map((item) => item.url)
+          ? ele.formRenderData.field_sceneImages.map((item) => {
+              return {
+                fileUrl: item.sourceUrl,
+                postUrl: item.url,
+                fileType: item.fileType,
+              };
+            })
           : [],
         hidRiskLevelCode:
           ele.formRenderData.field_hidRiskLevelCode === '一般隐患' ? '2' : '1',
