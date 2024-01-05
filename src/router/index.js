@@ -132,6 +132,15 @@ const router = createRouter({
         viewport: viewport,
       },
     },
+    {
+      path: '/operation/add',
+      name: 'fireadd',
+      component: () => import('@/views/admin/operation/fireCertificate/add.vue'),
+      meta: {
+        title: 'wflow-pro | 新增',
+        viewport: viewport,
+      },
+    },
   ],
 });
 

@@ -30,7 +30,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import formRenderContent from '../../operation/components/formRenderContent.vue';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref,onRenderTracked } from 'vue';
 import { useCertificate } from '../../operation/composition/useCertificate';
 import { cloneDeep } from 'lodash';
 // import { useUserStore } from '@/store';
@@ -163,6 +163,7 @@ const handleAddCertification = () => {
     }
   });
 };
+
 </script>
 <style lang="less" scoped>
 .header {

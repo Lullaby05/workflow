@@ -70,6 +70,10 @@
             <icon name="el-icon-setting"></icon>
             <template #title>签名测试</template>
           </el-menu-item>
+          <el-menu-item index="/operation/add">
+            <icon name="el-icon-setting"></icon>
+            <template #title>动火新增</template>
+          </el-menu-item>
         </div>
       </el-menu>
     </el-aside>
