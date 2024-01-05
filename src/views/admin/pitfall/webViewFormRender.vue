@@ -1,5 +1,6 @@
 <template>
   <div class="check-box">
+    {{ cache }}
     <div
       class="check-item"
       v-for="(ele, index) in Object.keys(checkItemList)"
@@ -80,7 +81,6 @@ const send = () => {
     duration: 1500,
     offset: height / 2 - 120,
     onClose: () => {
-      console.log('closed');
       wx.miniProgram.postMessage({
         data: {
           foo: '123',

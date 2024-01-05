@@ -140,3 +140,11 @@ export const getCertificatePrint = (id: string) => {
     method: 'post',
   }).then(res => res.data);
 };
+
+// 刷新token
+export const refreshToken = (refreshToken: string) => {
+  return Axios({
+    url: `/business/login/refresh?refreshToken=${refreshToken}`,
+    method: "POST",
+  }).then(res => res.data);
+};

@@ -108,7 +108,8 @@ const router = createRouter({
     {
       path: '/admin/operationWebView',
       name: 'OperationWebView',
-      component: () => import('@/views/admin/operation/operationFormRender.vue'),
+      component: () =>
+        import('@/views/admin/operation/operationFormRender.vue'),
       meta: {
         title: 'wflow-pro | 作业表单展示',
         viewport: viewport,
@@ -129,6 +130,16 @@ const router = createRouter({
       component: () => import('@/views/admin/pitfall/sign.vue'),
       meta: {
         title: 'wflow-pro | 详情',
+        viewport: viewport,
+      },
+    },
+    {
+      path: '/operation/operationDetailRender',
+      name: 'operationDetailRender',
+      component: () =>
+        import('@/views/admin/operation/operationDetailRender.vue'),
+      meta: {
+        title: 'wflow-pro | 作业详情',
         viewport: viewport,
       },
     },

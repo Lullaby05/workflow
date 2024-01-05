@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import wx from 'weixin-js-sdk';
+import { refreshToken } from './operation/operationApi';
 
 const globalProps = window.$vueApp.config.globalProperties;
 globalProps.$axios = axios;
@@ -15,12 +17,17 @@ const service = axios.create({
   baseURL: '/outer',
   timeout: 50000,
 });
+let lastOptions = null;
 
 service.defaults.withCredentials = true; // 让ajax携带cookie
 service.interceptors.request.use(
   // 每次请求都自动携带Cookie
   (config) => {
     config.headers.wflowToken = localStorage.getItem('wflow-token');
+    config.headers = Object.assign(config.headers, {
+      Authorization: `Bearer ${localStorage.getItem('wflow-token')}`,
+    });
+    lastOptions = config;
     return config;
   },
   // eslint-disable-next-line handle-callback-err
@@ -31,7 +38,17 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (rsp) => {
-    return rsp;
+    return new Promise((resolve) => {
+      if (rsp.data.code === 401) {
+        wx.miniProgram.getEnv(function (res) {
+          if (res.miniprogram) {
+            refreshTokenFn(lastOptions, resolve);
+          }
+        });
+      }
+      resolve(rsp);
+      // return rsp;
+    });
   },
   // 拦截异常的响应
   (err) => {
@@ -47,6 +64,46 @@ service.interceptors.response.use(
     return Promise.reject(err);
   }
 );
+
+let requestArr = []; //请求队列，是否正在刷新token
+let isRefreshing = false;
+async function refreshTokenFn(options, resolve) {
+  requestArr.push(() => {
+    resolve(service(options));
+  }); //缓存请求到队列中
+  if (!isRefreshing) {
+    isRefreshing = true;
+    const token = localStorage.getItem('refreshToken');
+    refreshToken(token)
+      .then((res) => {
+        switch (res.data.code) {
+          case 0:
+            localStorage.setItem('wflow-token', res.data.data.accessToken);
+            localStorage.setItem('refreshToken', res.data.data.refreshToken);
+            // 重新请求队列
+            requestArr.map((MT) => {
+              MT();
+            });
+            requestArr = []; //清空队列
+            break;
+          default:
+            ElMessage({
+              message: '登录过期，请重新登录',
+              duration: 1500,
+              onClose: () => {
+                wx.miniProgram.redirectTo({
+                  url: '/pages/login/index',
+                });
+              },
+            });
+        }
+      })
+      .finally(() => {
+        //解除正在刷新
+        isRefreshing = false;
+      });
+  }
+}
 
 export function syncRequest(config) {
   let ajax = new XMLHttpRequest();

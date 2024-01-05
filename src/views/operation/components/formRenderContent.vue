@@ -85,7 +85,7 @@ const handleFormStatus = (formItems: any[], status: string) => {
 
 //获取所有部门列表的下拉
 if (props.status === 'detail') {
-  getDeptsList().then((res) => {
+  getDeptsList().then((res: any) => {
     deptList.value = res.data;
     handleValueKey(design.formItems);
   });
@@ -114,7 +114,7 @@ defineExpose({
 
   .process-form {
     & > div {
-      padding: 0 10px;
+      padding: 0;
     }
     .el-row {
       flex-wrap: nowrap;
@@ -129,15 +129,8 @@ defineExpose({
 }
 
 .form-render-content {
-  flex-basis: 90%;
-}
-
-.operation-btns {
   flex: 1;
-
-  button + button {
-    margin-left: 12px;
-  }
+  // flex-basis: 90%;
 }
 
 .align-center {

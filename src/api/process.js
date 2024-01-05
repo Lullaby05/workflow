@@ -1,5 +1,5 @@
-import request from './request.js'
-import { syncRequest } from './request.js'
+import request from './request.js';
+import { syncRequest } from './request.js';
 
 /**
  *
@@ -13,8 +13,8 @@ export function getUserLeader(level, deptId, skipEmpty) {
   return request({
     url: `wflow/process/step/leader/level`,
     method: 'get',
-    params: { level: level, deptId: deptId, skipEmpty: skipEmpty }
-  })
+    params: { level: level, deptId: deptId, skipEmpty: skipEmpty },
+  });
 }
 
 /**
@@ -27,8 +27,8 @@ export function getUserLeaders(maxLevel, deptId, skipEmpty) {
   return request({
     url: `wflow/process/step/leader/to/level`,
     method: 'get',
-    params: { maxLevel: maxLevel, deptId: deptId, skipEmpty: skipEmpty }
-  })
+    params: { maxLevel: maxLevel, deptId: deptId, skipEmpty: skipEmpty },
+  });
 }
 
 /**
@@ -39,8 +39,8 @@ export function getUsersByRoles(roles) {
   return request({
     url: `wflow/process/step/userByRoles`,
     method: 'post',
-    data: roles
-  })
+    data: roles,
+  });
 }
 
 /**
@@ -51,8 +51,8 @@ export function getLeaderByDepts(deptIds) {
   return request({
     url: `wflow/process/step/deptLeader`,
     method: 'post',
-    data: deptIds
-  })
+    data: deptIds,
+  });
 }
 
 /**
@@ -61,17 +61,17 @@ export function getLeaderByDepts(deptIds) {
  * @param depts 部门 List
  */
 export function userInDepts(userId, depts) {
-  let result = false
+  let result = false;
   syncRequest({
     url: `/wflow/process/step/user/${userId}/belong/depts`,
     method: 'POST',
     data: depts,
     type: 'json',
-    success: res => {
-      result = res
-    }
-  })
-  return result
+    success: (res) => {
+      result = res;
+    },
+  });
+  return result;
 }
 
 /**
@@ -80,20 +80,20 @@ export function userInDepts(userId, depts) {
  * @param depts 部门 List
  */
 export function usersInDepts(userIds, depts) {
-  let result = false
+  let result = false;
   syncRequest({
     url: `/wflow/process/step/users/belong/depts`,
     method: 'POST',
     data: {
       sourceIds: userIds,
-      targetIds: depts
+      targetIds: depts,
     },
     type: 'json',
-    success: res => {
-      result = res
-    }
-  })
-  return result
+    success: (res) => {
+      result = res;
+    },
+  });
+  return result;
 }
 
 /**
@@ -102,68 +102,86 @@ export function usersInDepts(userIds, depts) {
  * @param parents 父部门 List
  */
 export function deptsInDepts(depts, parents) {
-  let result = false
+  let result = false;
   syncRequest({
     url: `/wflow/process/step/depts/belong/depts`,
     method: 'POST',
     data: {
       sourceIds: depts,
-      targetIds: parents
+      targetIds: parents,
     },
     type: 'json',
-    success: res => {
-      result = res
-    }
-  })
-  return result
+    success: (res) => {
+      result = res;
+    },
+  });
+  return result;
 }
 
 export function getNewVerProcess(code) {
   return request({
     url: `wflow/process/model/${code}`,
-    method: 'get'
-  })
+    method: 'get',
+  });
 }
 
 export function saveProcess(params) {
   return request({
     url: `wflow/process/model/save/`,
     method: 'post',
-    data: params
-  })
+    data: params,
+  });
 }
 
 export function deployProcess(code) {
   return request({
     url: `wflow/process/model/deploy/${code}`,
-    method: 'post'
-  })
+    method: 'post',
+  });
 }
 
 export function getCustomPrintConfig(instanceId) {
   return request({
     url: `wflow/process/model/customPrint/${instanceId}`,
-    method: 'get'
-  })
+    method: 'get',
+  });
 }
 
 export function delProcessInst(instanceId) {
   return request({
     url: `wflow/process/instance/${instanceId}`,
-    method: 'delete'
-  })
+    method: 'delete',
+  });
 }
 
 export function startProcess(code, params) {
   return request({
     url: `wflow/process/start/${code}`,
     method: 'post',
-    data: params
-  })
+    data: params,
+  });
+}
+
+// 根据taskId获取节点是否需要签名
+export function getNeedSignByTaskId(taskId) {
+  return request({
+    url: `/businessApi/wflow/process/task/settings/${taskId}`,
+    method: 'get',
+  });
 }
 
 export default {
-  getUserLeader, getUserLeaders, getUsersByRoles, userInDepts,
-  deployProcess, saveProcess, getNewVerProcess, getCustomPrintConfig,
-  getLeaderByDepts, delProcessInst, usersInDepts, deptsInDepts
-}
+  getUserLeader,
+  getUserLeaders,
+  getUsersByRoles,
+  userInDepts,
+  deployProcess,
+  saveProcess,
+  getNewVerProcess,
+  getCustomPrintConfig,
+  getLeaderByDepts,
+  delProcessInst,
+  usersInDepts,
+  deptsInDepts,
+  getNeedSignByTaskId,
+};
