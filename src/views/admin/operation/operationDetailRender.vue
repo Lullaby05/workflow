@@ -14,11 +14,11 @@ import { formatDate } from '@/utils/utils';
 
 const route = useRoute();
 const {
-  title = '安全交底',
-  activeKey = 'safeDisclosure',
+  title = '作业实施信息',
+  activeKey = 'operationStart',
   id = '1743577122653380609',
-  token = '6975473e6a6c4d1386d4fb706e8564f0',
-  refreshToken = 'dc2bad67555c4a148a204f5d823e6bd4',
+  token = '00906d70742f40e7b4f2d998a24fa28e',
+  refreshToken = '31dbcd5f82aa4c799cd51a9f98823b77',
   userId = 1,
   type = 'edit',
 } = route.query;
@@ -36,9 +36,6 @@ localStorage.setItem('refreshToken', refreshToken as string);
 document.title = title as string;
 
 const components = {
-  apply: defineAsyncComponent(
-    () => import('../../operation/components/basicInfo.vue')
-  ),
   analyse: defineAsyncComponent(
     () => import('../../operation/components/analysisInfo.vue')
   ),
@@ -56,9 +53,6 @@ const components = {
   ),
   operationStart: defineAsyncComponent(
     () => import('../../operation/components/operationStartInfo.vue')
-  ),
-  acceptance: defineAsyncComponent(
-    () => import('../../operation/components/closeInfo.vue')
   ),
 };
 
@@ -81,6 +75,7 @@ const getDetailData = () => {
       activeKey,
       certificateStatus: res.data.status,
       applyUserId: res.data.detail.applyUserId,
+      detail: res.data.detail,
       id,
       type,
       certType: res.data.detail.certType,
