@@ -525,6 +525,32 @@ export default {
         }
       }
     },
+    validate_m(call) {
+      const html = document.getElementsByTagName("html")[0];
+      const height = html.clientHeight;
+      let success = true;
+      this.items.forEach((form) => {
+        let formRef = this.$refs[form.id];
+        if (formRef && Array.isArray(formRef) && formRef.length > 0) {
+          console.log("ModuleBlock校验", this.$refs, form.id);
+          formRef[0].validate_m((subValid) => {
+            if (!subValid) {
+              success = false;
+              ElMessage({
+                message: form.title + "不能为空",
+                icon: "none",
+                // type: "success",
+                customClass: "message-error",
+                duration: 1500,
+                offset: height / 2 - 120,
+              });
+              throw new Error("校验失败");
+            }
+          });
+        }
+      });
+      call(success);
+    },
   },
   emits: ['update:modelValue'],
 };

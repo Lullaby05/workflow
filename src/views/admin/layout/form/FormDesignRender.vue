@@ -52,6 +52,7 @@ export default {
   },
   methods: {
     validate(call) {
+      debugger;
       if (this.$refs.form.validate) {
         this.$refs.form.validate(call)
       } else {

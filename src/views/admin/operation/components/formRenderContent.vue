@@ -97,11 +97,10 @@ const { formData, formConfigTemp, formsTemp } = useFormRender(design);
 
 // 父组件使用
 const handleSave = (callback: (formData: any) => void) => {
-  formRender.value!.validate((valid: boolean) => {
-    if (valid) {
-      callback(formData);
-    }
-  });
+  const valid = formRender.value!.validate();
+  if (valid) {
+    callback(formData);
+  }
 };
 
 defineExpose({

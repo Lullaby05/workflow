@@ -74,7 +74,7 @@ const {
 } = useCertificate();
 const design = ref<any>();
 const addFormRender = ref<any>();
-const flag = ref<any>(1); // 0:基础信息， 1：相关人员， 2：安全措施附件， 3：预览提交
+const flag = ref<any>(0); // 0:基础信息， 1：相关人员， 2：安全措施附件， 3：预览提交
 let defaultData: any = {}; // 保存默认数据，新增的时候只需要发formData
 let valueKeyMap: any = {}; // valueKey对应的真实formItemId
 let saveType = "";
@@ -84,13 +84,13 @@ onBeforeMount(async () => {
     // 编辑，获取所有数据
     saveType = "edit";
     const res = await getCertificateDetail(id);
-    const data = res.data.processProgress;
+    const data = res.data.data.processProgress;
     dept.value = await getUserDepts(userStore.id);
     design.value = searchFormItem(data, "apply");
     valueKeyMap = generateValueKeyMap(design.value.formItems);
     design.value.formData = {
       ...design.value.formData,
-      [valueKeyMap["applyDeptId"]]: dept.value[0].name,
+      [valueKeyMap["applyDeptId"]]:dept.value[0].name,
     };
   } else if (type === "reApply") {
     // 重新生成
@@ -121,12 +121,11 @@ onBeforeMount(async () => {
     defaultData = cloneDeep(data);
     const newestCode = (await getNewCertificateCode(operationTypeEnum.FIRE))
       .data;
-    dept.value = await getUserDepts(userStore.id);
+    dept.value = (await getUserDepts(userStore.id)).data;
     data.progress = flatObject(data.process);
     design.value = searchFormItemForAdd(data, "apply");
     formItemsAll.value = design.value.formItems;
     design.value.formItems = formItemStep(formItemsAll.value, flag.value);
-    console.log("表单数据", design.value);
     if (!design.value) {
       Message.warning("暂无数据");
       return;
@@ -134,8 +133,9 @@ onBeforeMount(async () => {
     valueKeyMap = generateValueKeyMap(design.value.formItems);
     design.value.formData = {
       [valueKeyMap["certNum"]]: newestCode,
-      [valueKeyMap["applyDeptId"]]: dept.value[0].name,
+      [valueKeyMap["applyDeptId"]]: dept.value[0].name ,
     };
+    console.log("表单数据", newestCode,dept.value[0].name);
   }
 });
 
@@ -182,11 +182,12 @@ const handleAddCertification = () => {
 
 const next = () => {
   addFormRender!.value.handleSave(async (formData: any) => {
-    console.log("表单数据", formData);
-  })
-  flag.value = flag.value + 1;
-  design.value.formItems = formItemStep(formItemsAll.value, flag.value);
-  console.log("表单数据", design.value);
+    console.log("表单校验",formData);
+    flag.value = flag.value + 1;
+    design.value.formItems = formItemStep(formItemsAll.value, flag.value);
+    console.log("表单数据", design.value);
+  });
+  
  
 };
 const back = () => {

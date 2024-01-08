@@ -234,42 +234,27 @@ export default {
         this.forms.forEach((form) => {
           console.log('formItem', form);
           let formRef = this.$refs[form.id];
+
           if (formRef && Array.isArray(formRef) && formRef.length > 0) {
-            if(form.name == 'ModuleBlock'){
-              formRef[0].validate((subValid) => {
-              console.log('校验' + form.title, form.id, subValid);
-              if (!subValid && this.showItem(form)) {
-                success = false;
-                ElMessage({
-                  message: form.title + '不能为空',
-                  icon: 'none',
-                  // type: "success",
-                  customClass: 'message-error',
-                  duration: 1500,
-                  offset: height / 2 - 120,
-                });
-                throw new Error('校验失败');
-              }
-            });
-            }
-            formRef[0].validate_m((subValid) => {
-              console.log('校验' + form.title, form.id, subValid);
-              if (!subValid && this.showItem(form)) {
-                success = false;
-                ElMessage({
-                  message: form.title + '不能为空',
-                  icon: 'none',
-                  // type: "success",
-                  customClass: 'message-error',
-                  duration: 1500,
-                  offset: height / 2 - 120,
-                });
-                throw new Error('校验失败');
-              }
-            });
+              formRef[0].validate_m((subValid) => {
+                console.log('校验' + form.title, form.id, subValid);
+                if (!subValid && this.showItem(form)) {
+                  success = false;
+                  ElMessage({
+                    message: form.title + '不能为空',
+                    icon: 'none',
+                    // type: "success",
+                    customClass: 'message-error',
+                    duration: 1500,
+                    offset: height / 2 - 120,
+                  });
+                  throw new Error('校验失败');
+                }
+              });
+
             if (form.name === 'TableList') {
               //扫描明细表项
-              this.$refs[form.id + '_item'][0].validate((subValid) => {
+              this.$refs[form.id + '_item'][0].validate_m((subValid) => {
                 if (!subValid && this.showItem(form)) {
                   success = false;
                   ElMessage({
@@ -284,6 +269,7 @@ export default {
                 }
               });
             }
+
           }
         });
         // call(success);

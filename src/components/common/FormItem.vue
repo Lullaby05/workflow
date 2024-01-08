@@ -70,7 +70,6 @@ export default {
       }
     },
     validate_m(call) {
-      debugger;
       let error = false;
       if (this.rule.length > 0) {
         if (this.rule[0].type === "array") {

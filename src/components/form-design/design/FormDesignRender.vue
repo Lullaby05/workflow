@@ -65,8 +65,17 @@
     },
     methods: {
       validate(call) {
+        debugger;
         if (this.$refs.form.validate) {
           this.$refs.form.validate(call);
+        } else {
+          call(true);
+        }
+      },
+      validate_m(call) {
+        // debugger;
+        if (this.$refs.form.validate_m) {
+          this.$refs.form.validate_m(call);
         } else {
           call(true);
         }
