@@ -40,11 +40,12 @@ service.interceptors.response.use(
   (rsp) => {
     return new Promise((resolve) => {
       if (rsp.data.code === 401) {
-        wx.miniProgram.getEnv(function (res) {
-          if (res.miniprogram) {
-            refreshTokenFn(lastOptions, resolve);
-          }
-        });
+        // wx.miniProgram.getEnv(function (res) {
+        // if (res.miniprogram) {
+        refreshTokenFn(lastOptions, resolve);
+        return;
+        // }
+        // });
       }
       resolve(rsp);
       // return rsp;

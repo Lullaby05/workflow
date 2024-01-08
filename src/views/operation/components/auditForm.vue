@@ -1,131 +1,75 @@
 <template>
   <div class="auditContainer">
-    <div
-      class="audit-part"
-      v-if="props.status === 'edit'"
-    >
-      <a-form
-        :model="formData"
-        ref="auditForm"
+    <Form required="auto">
+      <Field
+        :rules="[{ required: true }]"
+        :label="text"
+        input-align="right"
       >
-        <a-form-item
-          :label="props.text + '结果'"
-          field="result"
-          v-if="props.needResult"
-          :rules="auditRules.result"
-        >
-          <a-radio-group v-model="formData.result">
-            <a-radio value="1">{{ props.resultText.pass }}</a-radio>
-            <a-radio value="2">{{ props.resultText.fail }}</a-radio>
-          </a-radio-group>
-        </a-form-item>
-        <a-form-item
-          v-if="needSign"
-          :label="props.text + '人签名'"
-          field="signature"
-          :rules="auditRules.signature"
-        >
-          <div class="sign-container">
-            <a-button
-              type="primary"
-              @click="openSignModal"
-              >{{ formData.signature ? '重签' : '签名' }}</a-button
-            >
-            <img
-              class="sign-img"
-              v-if="formData.signature"
-              :src="formData.signature"
-            />
-          </div>
-        </a-form-item>
-        <a-form-item
-          label="备注"
-          field="remark"
-        >
-          <a-textarea
-            v-model="formData.remark"
-            :max-length="300"
-            :auto-size="{
-              minRows: 6,
-              maxRows: 6,
-            }"
-            show-word-limit
-            :placeholder="formData.result === '1' ? '备注' : '请输入驳回意见'"
+        <template #input>
+          <RadioGroup
+            v-model="auditFormData.result"
+            direction="horizontal"
+            @change="changeResult"
           >
-          </a-textarea>
-        </a-form-item>
-      </a-form>
-    </div>
-    <div
-      class="audit-part"
-      v-if="props.status === 'detail' && !props.needTable"
-    >
-      <cardDisplay
-        v-if="cardItems?.items.length"
-        :card-items="cardItems"
-      />
-    </div>
-    <div
-      class="audit-part"
-      v-if="
-        props.status === 'detail' && Array.isArray(formData) && props.needTable
-      "
-    >
-      <a-table
-        :columns="columns"
-        :data="formData"
-        :pagination="false"
-        :bordered="{ cell: true }"
-      >
-        <template #signature="{ record }">
-          <img
-            v-if="record.signature"
-            class="sign-img"
-            :src="record.signature"
-          />
+            <Radio name="1">{{ resultText.pass }}</Radio>
+            <Radio name="2">{{ resultText.fail }}</Radio>
+          </RadioGroup>
         </template>
-      </a-table>
-    </div>
-    <a-modal
-      :visible="signModalVisible"
-      title="请工整书写您的名字"
-      :footer="false"
-      @cancel="closeSignModal"
+      </Field>
+      <Field
+        v-model="auditFormData.remark"
+        label-align="top"
+        label="备注"
+        placeholder="请输入备注"
+      />
+      <Field
+        v-if="auditFormData.result === '1' && needSign"
+        v-model="auditFormData.signature"
+        readonly
+        :rules="[{ required: true }]"
+        label-align="top"
+        label="签名"
+        placeholder="请完成签名"
+        input-align="left"
+        @click-input="openSignModal"
+      >
+        <template
+          v-if="auditFormData.signature"
+          #input
+        >
+          <img
+            v-if="auditFormData.signature"
+            class="sign-img"
+            :src="auditFormData.signature"
+          />
+          <!-- <span
+            style="color: #409eff"
+            @click="openSignModal"
+            >重新签名</span
+          > -->
+        </template>
+      </Field>
+    </Form>
+    <Transition
+      name="slide-fade"
+      mode="out-in"
+      appear
     >
-      <div class="sign-modal-content">
-        <canvas
-          ref="signRef"
-          width="480"
-          style="border: 1px dashed #999999"
-        ></canvas>
-      </div>
-      <div class="sign-modal-footer">
-        <a-button
-          type="primary"
-          @click="clearSign()"
-          >重写</a-button
-        >
-        <a-button
-          type="primary"
-          @click="closeSignModal"
-          >取消</a-button
-        >
-        <a-button
-          type="primary"
-          @click="handleConfirm"
-          >确定</a-button
-        >
-      </div>
-    </a-modal>
+      <signModal
+        v-if="signModalVisible"
+        @autographConfirm="signConfirm"
+        @close="signModalVisible = false"
+      />
+    </Transition>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useSign } from '@/views/pitfall/snapshot/composition/useSign';
-import cardDisplay from '@/views/pitfall/snapshot/components/cardDisplay.vue';
-import { ref } from 'vue';
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
+import { Field, Form, RadioGroup, Radio, showToast } from 'vant';
 import { getNeedSignByTaskId } from '@/api/process';
+import signModal from '@/views/admin/pitfall/sign.vue';
 
 const props = defineProps({
   auditFormData: {
@@ -138,7 +82,7 @@ const props = defineProps({
   },
   text: {
     type: String,
-    default: '',
+    default: '分析结果',
   },
   needTable: {
     type: Boolean,
@@ -147,10 +91,6 @@ const props = defineProps({
   taskId: {
     type: String,
     default: '',
-  },
-  needCheckSign: {
-    type: Boolean,
-    default: false,
   },
   needResult: {
     type: Boolean,
@@ -166,16 +106,6 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['update:auditFormData']);
-const auditForm = ref<HTMLFormElement | null>(null);
-
-const signRef = ref<HTMLCanvasElement | null>(null); // 签名画布Ref
-const {
-  signModalVisible,
-  openSignModal,
-  closeSignModal,
-  clearSign,
-  confirmSign,
-} = useSign(signRef);
 
 const formData: any = computed({
   get() {
@@ -186,76 +116,48 @@ const formData: any = computed({
   },
 });
 
-const auditRules = {
-  result: [{ required: true, message: `请选择${props.text}结果 ` }],
-  signature: [{ required: true, message: '请完成签名' }],
-};
-
-const cardItems = ref<any>({
-  items: [],
-});
-
-if (!props.needTable && props.status === 'detail') {
-  cardItems.value = {
-    items: [
-      {
-        id: 1,
-        field: '关闭原因',
-        value: formData.value.closeReason,
-      },
-      {
-        id: 2,
-        field: '验收签名',
-        value: formData.value.signature || '',
-        visible: !!formData.value.signature,
-        type: 'sign',
-      },
-      {
-        id: 3,
-        field: '关闭人',
-        value: formData.value.closePerson,
-        visible: !formData.value.signature && formData.value.closePerson,
-      },
-      {
-        id: 4,
-        field: '关闭时间',
-        value: formData.value.closeTime,
-      },
-    ],
-  };
-}
-
 const needSign = ref<boolean>(false);
-if (props.status === 'edit' && props.needCheckSign) {
+if (props.status === 'edit') {
   getNeedSignByTaskId(props.taskId).then((res: any) => {
-    needSign.value = res.enableSign;
+    needSign.value = res.data.enableSign;
   });
 }
 
-const columns: TableData[] = [
-  { title: `${props.text}环节`, dataIndex: 'round', width: 100 },
-  { title: `${props.text}结果`, dataIndex: 'result', width: 90 },
-  {
-    title: `${props.text}人签字`,
-    dataIndex: 'signature',
-    slotName: 'signature',
-    width: 160,
-  },
-  { title: `${props.text}时间`, dataIndex: 'createTime', width: 170 },
-  { title: `备注`, dataIndex: 'remark' },
-];
-
-const handleConfirm = () => {
-  auditForm.value!.clearValidate(['signature']);
-  emits('update:auditFormData', {
-    ...formData.value,
-    signature: confirmSign(),
+// 父组件调用
+const validate = () => {
+  return new Promise((resolve) => {
+    if (formData.value.result === '') {
+      showToast({
+        message: `请选择${props.text}`,
+      });
+      resolve(true);
+    } else if (
+      formData.value.result === '1' &&
+      needSign &&
+      formData.value.signature === ''
+    ) {
+      showToast({
+        message: `请完成签名`,
+      });
+      resolve(true);
+    }
+    resolve(false);
   });
 };
 
-// 父组件使用
-const validate = async () => {
-  return await auditForm.value?.validate();
+const changeResult = () => {
+  if (formData.value.result === '2') {
+    formData.value.signature = '';
+  }
+};
+
+const signModalVisible = ref(false);
+const openSignModal = () => {
+  signModalVisible.value = true;
+};
+const signConfirm = (signature: { baseCode: string }) => {
+  formData.value.signature = signature.baseCode;
+  signModalVisible.value = false;
 };
 
 defineExpose({
@@ -263,29 +165,22 @@ defineExpose({
 });
 </script>
 <style lang="less" scoped>
-.sign-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  img {
-    width: 200px;
-    height: 100px;
-  }
+.auditContainer {
+  --van-cell-group-inset-padding: 0;
 }
-
-.sign-modal-footer {
-  text-align: right;
-
-  button {
-    margin-left: 20px;
-  }
-}
-
 .sign-img {
-  border: 1px solid #999999;
-  width: 200px;
-  height: 100px;
-  object-fit: fill;
+  width: 300px;
+  height: 150px;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

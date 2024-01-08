@@ -97,18 +97,17 @@ const { formData, formConfigTemp, formsTemp } = useFormRender(design);
 
 // 父组件使用
 const handleSave = (callback: (formData: any) => void) => {
-  formRender.value!.validate((valid: boolean) => {
-    if (valid) {
-      callback(formData);
-    }
-  });
+  const valid = formRender.value!.validate();
+  if (valid) {
+    callback(formData);
+  }
 };
 
 defineExpose({
   handleSave,
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .form-render-container {
   display: flex;
 
@@ -124,6 +123,10 @@ defineExpose({
     .el-form-item__label {
       min-width: 120px;
       justify-content: flex-end;
+    }
+    :deep(.readonly),
+    :deep(.m-form-item_title) {
+      font-size: 14px;
     }
   }
 }

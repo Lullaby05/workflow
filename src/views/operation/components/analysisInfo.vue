@@ -18,53 +18,65 @@
       />
     </div>
 
-    <div class="audit-form">
-      <auditForm
-        v-if="currentProcess"
-        :taskId="currentProcess.taskId"
-        :needCheckSign="true"
-        ref="audtiForm"
-        v-model:auditFormData="auditFormData"
-        status="edit"
-        :text="props.text"
-      />
-    </div>
-    <div class="audit-form-container">
-      <div
-        class="audit-form-container-item"
-        v-if="formProcessData.length"
-        v-for="(item, index) in formProcessData"
-        :key="index"
-      >
-        <div class="audit-item-title">
-          <a-divider
-            direction="vertical"
-            :size="6"
-          />
-          <span class="audit-item-title-text">{{
-            '第' + (formProcessData.length - index) + '次分析结果'
-          }}</span>
-        </div>
-        <div class="audit-content">
-          <!-- <auditForm
-            v-model:auditFormData="item.auditFormData"
-            status="detail"
-            :text="props.text"
-            :needTable="true"
-          /> -->
+    <div
+      class="audit-form"
+      v-if="currentProcess && type === 'edit'"
+    >
+      <div class="audit-form-title">{{ '分析结果' }}</div>
+      <div class="audit-form-content">
+        <auditForm
+          :taskId="currentProcess.taskId"
+          ref="auditFormRef"
+          v-model:auditFormData="auditFormData"
+          status="edit"
+          :text="props.text"
+        />
+        <div class="operation-apply-form-btn">
+          <Button
+            v-for="item in buttonList"
+            :key="item.key"
+            :type="item.type || 'primary'"
+            :status="item.status || ''"
+            @click="handleButtonClick(item.key)"
+          >
+            {{ item.text }}
+          </Button>
         </div>
       </div>
     </div>
-    <div class="operation-apply-form-btn">
-      <Button
-        v-for="item in buttonList"
-        :key="item.key"
-        :type="item.type || 'primary'"
-        :status="item.status || ''"
-        @click="handleButtonClick(item.key)"
-      >
-        {{ item.text }}
-      </Button>
+    <div
+      class="audit-form-container"
+      v-if="formProcessData.length"
+    >
+      <div class="audit-form-container-title">{{ '作业分析意见' }}</div>
+      <div class="audit-content">
+        <detailInfo
+          :tableData="currentData[0].tableData"
+          :text="props.text"
+          @jumpToEditApply="jumpToEditApply"
+        />
+      </div>
+    </div>
+    <div
+      class="audit-form-container-item"
+      v-for="(item, index) in historyData"
+      :key="index"
+    >
+      <div class="audit-item-title">
+        <a-divider
+          direction="vertical"
+          :size="6"
+        />
+        <span class="audit-item-title-text">{{
+          '第' + (historyData.length - index) + '次分析结果'
+        }}</span>
+      </div>
+      <div class="audit-content">
+        <detailInfo
+          :tableData="item.tableData"
+          :text="props.text"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -72,12 +84,13 @@
 import { computed, ref } from 'vue';
 import formRenderContent from './formRenderContent.vue';
 import { useCertificate } from '../composition/useCertificate';
-import { useRouter } from 'vue-router';
 import { normalOperation } from '@/api/operation/operationApi';
-// import auditForm from '../components/auditForm.vue';
+import auditForm from './auditForm.vue';
 import { fireStatusEnum } from '../composition/useCertificateDict';
-import { ElMessage as Message } from 'element-plus';
+import { showToast } from 'vant';
 import { Button } from 'vant';
+import detailInfo from './detailInfo.vue';
+import { inject } from 'vue';
 
 const props = defineProps({
   formProcessData: {
@@ -94,7 +107,7 @@ const props = defineProps({
   },
   text: {
     type: String,
-    default: '分析',
+    default: '分析结果',
   },
   id: {
     type: String,
@@ -104,13 +117,16 @@ const props = defineProps({
     type: String,
     default: 'detail',
   },
+  applyUserId: {
+    type: String,
+    required: true,
+  },
 });
-const router = useRouter();
 const userStore = { userId: localStorage.getItem('userId') };
+const wx: any = inject('wx');
 
-const emits = defineEmits(['initData']);
 const { searchFormItem } = useCertificate();
-const audtiForm = ref<any>(null);
+const auditFormRef = ref<any>(null);
 const formRender = ref<any>(null);
 const formProcessData = ref<any[]>([]);
 
@@ -151,8 +167,6 @@ const formContentVisible = computed(() => {
 const auditFormData = ref<any>({
   result: '',
   signature: '',
-  imageFile: [],
-  uploadFile: [],
   remark: '',
 });
 
@@ -160,7 +174,7 @@ const auditFormData = ref<any>({
 const tempProgress = props.formProcessData.progress;
 let processData: any[] = [];
 for (let i = 0; i < tempProgress.length; i++) {
-  if (tempProgress[i].processKey === 'analyse' && tempProgress[i].result) {
+  if (tempProgress[i].processKey === 'analyse') {
     processData.push(tempProgress[i]);
   }
 }
@@ -180,25 +194,32 @@ const status = computed<string>(() => {
 const delIndex: number[] = [];
 formProcessData.value = processData.map((item: any, index: number) => {
   // 正常情况
-  const auditFormData: any[] = [
+  const tableData: any[] = [
     {
-      result: item.result === 'agree' ? '同意' : '不同意',
+      result: item.result ? (item.result === 'agree' ? '合格' : '不合格') : '',
+      resultCode: item.result ? (item.result === 'agree' ? 1 : 0) : '',
       signature: item.signature,
       remark: item.comment.length ? item.comment[0].text : '',
       createTime: item.finishTime,
       round: item.user.name,
     },
   ];
-  // 特殊情况会有一个两个人同时签字才能走到下一步，这时候流程节点的nodeId和startTime相同
+  // 特殊情况会有两个人同时签字才能走到下一步，这时候流程节点的nodeId和startTime相同
   const otherData: any[] = [];
   for (let i = index + 1; i < processData.length; i++) {
     if (
       processData[i].nodeId === item.nodeId &&
       processData[i].startTime === item.startTime
     ) {
+      const item = processData[i];
       delIndex.push(i);
       otherData.push({
-        result: processData[i].result === 'agree' ? '同意' : '不同意',
+        result: item.result
+          ? item.result === 'agree'
+            ? '合格'
+            : '不合格'
+          : '',
+        resultCode: item.result ? (item.result === 'agree' ? 1 : 0) : '',
         signature: processData[i].signature,
         remark: processData[i].comment.length
           ? processData[i].comment[0].text
@@ -209,7 +230,7 @@ formProcessData.value = processData.map((item: any, index: number) => {
     }
   }
   return {
-    auditFormData: [...auditFormData, ...otherData],
+    tableData: [...tableData, ...otherData],
   };
 });
 if (delIndex.length) {
@@ -218,6 +239,23 @@ if (delIndex.length) {
   );
 }
 formProcessData.value.reverse();
+
+//历史数据
+const historyData = computed<any[]>(() => {
+  return formProcessData.value.filter((item: any, index: number) => index > 0);
+});
+// 当前数据
+const currentData = computed<any[]>(() => {
+  const data = [formProcessData.value[0]];
+  data[0].tableData = data[0].tableData.map((item: any) => {
+    return {
+      ...item,
+      needEditApply:
+        item.resultCode === 0 && props.applyUserId === userStore.userId,
+    };
+  });
+  return data;
+});
 
 // 根据当前的作业证状态判断显示什么按钮
 const buttonList = computed<any>(() => {
@@ -237,21 +275,10 @@ const buttonList = computed<any>(() => {
 });
 
 const submitForm = async (formData: any) => {
-  const imgAttach = auditFormData.value.imageFile.map((ele: any) => ({
-    name: ele.name,
-    url: ele.url,
-    isImage: true,
-  }));
-  const fileAttach = auditFormData.value.uploadFile.map((ele: any) => ({
-    name: ele.name,
-    url: ele.url,
-    isImage: false,
-  }));
   const params = {
     action: auditFormData.value.result === '1' ? 'agree' : 'refuse',
     comment: {
       text: auditFormData.value.remark,
-      attachments: [...imgAttach, ...fileAttach],
     },
     signature: auditFormData.value.signature,
     formData,
@@ -263,14 +290,19 @@ const submitForm = async (formData: any) => {
     updateSign: true,
   };
   await normalOperation(props.id, params);
-  Message.success('操作成功');
-  emits('initData');
+  showToast({
+    type: 'success',
+    message: '操作成功',
+    onClose: () => {
+      wx.miniProgram.navigateBack();
+    },
+  });
 };
 
 // 点击按钮处理
 const handleButtonClick = async (key: string) => {
   if (key === 'operationAnalyze') {
-    const result = await audtiForm.value.validate();
+    const result = await auditFormRef.value.validate();
     if (!result) {
       if (formDesign.value) {
         formRender.value.handleSave(async (formData: any) => {
@@ -286,11 +318,21 @@ const handleButtonClick = async (key: string) => {
     }
   }
 };
+// 跳转到编辑页面
+const jumpToEditApply = () => {};
 </script>
+<style lang="less">
+body {
+  background-color: #f2f2f2;
+}
+</style>
 <style lang="less" scoped>
 .form-render-container {
   display: flex;
   flex-direction: column;
+  font-size: 14px;
+  color: #545456;
+
   .process-form {
     & > div {
       padding: 0 !important;
@@ -306,17 +348,25 @@ const handleButtonClick = async (key: string) => {
   }
 }
 
-.operation-apply-form-btn {
-  text-align: center;
-  position: fixed;
-  bottom: 10px;
-  width: 100%;
-  button {
-    width: 90%;
-    border-radius: 8px;
+.audit-form {
+  .audit-form-title {
+    padding: 10px 5px 8px 5px;
   }
-  button + button {
-    margin-left: 12px;
+  .audit-form-content {
+    background-color: #ffffff;
+    .operation-apply-form-btn {
+      text-align: center;
+      margin-top: 10px;
+      padding-bottom: 20px;
+      width: 100%;
+      button {
+        width: 90%;
+        border-radius: 8px;
+      }
+      button + button {
+        margin-left: 12px;
+      }
+    }
   }
 }
 
@@ -325,19 +375,13 @@ const handleButtonClick = async (key: string) => {
 }
 
 .audit-form-container-item {
-  padding-bottom: 20px;
   .audit-item-title {
-    padding-bottom: 20px;
-    line-height: 28px;
+    padding: 10px 5px 8px 5px;
     display: flex;
     align-items: center;
     .arco-divider-vertical {
       margin-right: 4px;
       border-left: 1px solid #409eff;
-    }
-    .audit-item-title-text {
-      font-weight: bold;
-      color: #999999;
     }
   }
 }
@@ -348,12 +392,12 @@ const handleButtonClick = async (key: string) => {
   }
 }
 
-.audit-form-container {
-  padding: 0 50px 0 30px;
-  .audit-content {
-    width: calc(100% - 125px);
-    display: block;
-    margin-left: auto;
-  }
+.audit-form-container-title {
+  padding: 10px 5px 8px 5px;
+}
+.audit-content {
+  background-color: #ffffff;
+  display: block;
+  margin-left: auto;
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <div class="signName" :style="{ top: 0, left: differ + 'px' }">
+  <div
+    class="signName"
+    :style="{ top: 0, left: differ + 'px' }"
+  >
     <!-- <div class="close" @click="close"><img src="../assets/images/close.png" alt=""></div> -->
     <div class="autographBox">
       <div ref="canvasHW">
@@ -13,17 +16,17 @@
       <p v-if="!isDraw">若你已确定填写信息无误，请在下方空白处签名</p>
     </div>
     <div class="autographBtn">
-      <div @click="blcak">返回</div>
+      <div @click="close">返回</div>
       <div @click="overwrite">重签</div>
       <div @click="seaveImages">确定</div>
     </div>
   </div>
 </template>
 <script>
-import { ref, onMounted } from "vue";
-import { Toast } from "vant";
+import { ref, onMounted } from 'vue';
+import { Toast } from 'vant';
 export default {
-  name: "index",
+  name: 'index',
   setup(props, cxt) {
     var differ = ref(document.documentElement.clientWidth);
     var canvasF = ref(null);
@@ -35,14 +38,14 @@ export default {
     var startY = 0; //开始坐标y
     var moveY = 0;
     var moveX = 0;
-    var strDataURI = ""; // 保存的canvas图像
+    var strDataURI = ''; // 保存的canvas图像
     onMounted(() => {
       let canvas = canvasF.value;
       canvas.height = canvasHW.value.offsetHeight - 10;
       canvas.width = canvasHW.value.offsetWidth - 10;
-      canvasTxt = canvas.getContext("2d");
-      canvasTxt.strokeStyle = "#333";
-      canvasTxt.lineWidth = "3";
+      canvasTxt = canvas.getContext('2d');
+      canvasTxt.strokeStyle = '#333';
+      canvasTxt.lineWidth = '3';
     });
     const touchStart = (ev) => {
       ev = ev || event;
@@ -98,18 +101,19 @@ export default {
     };
     function seaveImages() {
       if (isDraw.value) {
-        strDataURI = canvasF.value.toDataURL("image/png");
+        strDataURI = canvasF.value.toDataURL('image/png');
         console.log(strDataURI);
-        cxt.emit("autographConfirm", {
+        cxt.emit('autographConfirm', {
           baseCode: strDataURI,
         });
       } else {
         console.log(Toast);
-        Toast("您还没有签名");
+        // Toast('您还没有签名');
+        close();
       }
     }
     function close() {
-      cxt.emit("close", {
+      cxt.emit('close', {
         closeFlag: false,
       });
     }

@@ -1,396 +1,456 @@
 <template>
   <div class="form-render-container">
-    <div class="disclosure-form" v-if="status === 'edit'">
-      <a-form ref="form" :model="formData" :rules="rules">
-        <a-form-item label="安全交底人签名" field="signature">
-          <div class="sign-container">
-            <a-button type="primary" @click="openSignModal">{{
-              formData.signature ? '重签' : '签名'
-            }}</a-button>
+    <div
+      class="disclosure-form"
+      v-if="status === 'edit'"
+    >
+      <Form required="auto">
+        <Field
+          label-width="120"
+          v-model="formData.signature"
+          readonly
+          :rules="[{ required: true }]"
+          label="安全交底人签名"
+          placeholder="点击签名"
+          input-align="right"
+          @click-input="openSignModal(false)"
+        >
+          <template
+            v-if="formData.signature"
+            #input
+          >
             <img
-              class="sign-img"
-              style="margin-top: 10px"
               v-if="formData.signature"
+              class="sign-img"
               :src="formData.signature"
-              alt=""
             />
-          </div>
-        </a-form-item>
-        <a-form-item label="接受交底人签名" field="otherSignature">
-          <div class="sign-container">
-            <a-button type="primary" @click="openOtherSignModal">{{
-              formData.otherSignature.length ? '加签' : '签名'
-            }}</a-button>
-            <div class="sign-list">
+          </template>
+        </Field>
+        <Field
+          readonly
+          :rules="[{ required: true }]"
+          label-align="top"
+          label="接受交底人签名"
+          placeholder="点击签名"
+          input-align="left"
+          @click-input.self="openSignModal(true)"
+        >
+          <template
+            v-if="formData.otherSignature.length > 0"
+            #input
+          >
+            <div class="sign-input-list">
               <div
-                class="sign-img"
-                v-if="formData.otherSignature"
+                class="sign-input-item"
                 v-for="(item, index) in formData.otherSignature"
                 :key="index"
               >
-                <icon-close
-                  v-if="status === 'edit'"
-                  class="sign-del"
-                  @click="handleDelSign('otherSignature', index)"
+                <img
+                  class="sign-img"
+                  :src="item"
                 />
-                <img :src="item" />
+                <span
+                  style="color: #d9001b; font-size: 12px"
+                  @click.self="deleteSignature(index)"
+                  >删除</span
+                >
               </div>
             </div>
-          </div>
-        </a-form-item>
-      </a-form>
+          </template>
+          <template #label>
+            <div class="sign-label">
+              <div>接受交底人签名</div>
+              <Button
+                v-if="formData.otherSignature.length > 0"
+                type="primary"
+                size="mini"
+                @click.self="openSignModal(true)"
+                >添加签名</Button
+              >
+            </div>
+          </template>
+        </Field>
+      </Form>
+      <div
+        class="operation-apply-form-btn"
+        v-if="status === 'edit'"
+      >
+        <Button
+          v-for="item in buttonList"
+          :key="item.key"
+          :type="item.type || 'primary'"
+          @click="handleButtonClick(item.key)"
+        >
+          {{ item.text }}
+        </Button>
+      </div>
     </div>
     <div
       class="disclosure-form-detail"
-      v-if="lastDisclosure.finishTime && status === 'detail'"
+      v-if="status === 'detail'"
     >
-      <cardDisplay :card-items="cardItems" />
-    </div>
-    <div class="operation-apply-form-btn" v-if="status === 'edit'">
-      <a-button
-        v-for="item in buttonList"
-        :key="item.key"
-        :type="item.type || 'primary'"
-        :status="item.status || ''"
-        @click="handleButtonClick(item.key)"
+      <!-- 有数据的情况 -->
+      <div
+        class="disclosure-form-card"
+        v-if="lastDisclosure.result"
       >
-        {{ item.text }}
-      </a-button>
+        <div class="disclosure-content">
+          <div class="disclosure-content-data">
+            <div class="content-label">安全交底人签名</div>
+            <div class="content-sign">
+              <span class="sign-person-name">{{
+                lastDisclosure.user.name
+              }}</span>
+              <img
+                class="sign-img"
+                :src="lastDisclosure.signature"
+              />
+            </div>
+          </div>
+          <div class="disclosure-content-data-accept">
+            <div class="content-label">接受交底人签名</div>
+            <div class="content-sign-list">
+              <div
+                class="sign-item"
+                v-for="(item, index) in acceptDisclosure"
+                :key="index"
+              >
+                <img
+                  class="sign-img"
+                  :src="item"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 没有数据的情况 -->
+      <div
+        class="disclosure-form-card"
+        v-else
+      >
+        <div class="disclosure-person">
+          <span class="person-text">{{ lastDisclosure.user.name }}</span>
+        </div>
+        <div class="no-data">
+          <div class="no-data-text">待签署</div>
+        </div>
+      </div>
     </div>
+    <Transition
+      name="slide-fade"
+      mode="out-in"
+      appear
+    >
+      <signModal
+        v-if="signModalVisible"
+        @autographConfirm="signConfirm"
+        @close="signModalVisible = false"
+      />
+    </Transition>
   </div>
-  <!-- 安全交底人签名 -->
-  <a-modal
-    :visible="signModalVisible"
-    title="请工整书写您的名字"
-    :footer="false"
-    @cancel="closeSignModal"
-  >
-    <div class="sign-modal-content">
-      <canvas
-        ref="signRef"
-        width="480"
-        style="border: 1px dashed #999999"
-      ></canvas>
-    </div>
-    <div class="sign-modal-footer">
-      <a-button type="primary" @click="clearSign()">重写</a-button>
-      <a-button type="primary" @click="closeSignModal">取消</a-button>
-      <a-button type="primary" @click="handleConfirm">确定</a-button>
-    </div>
-  </a-modal>
-  <!-- 接受安全交底人签名 -->
-  <a-modal
-    :visible="otherSignModalVisible"
-    title="请工整书写您的名字"
-    :footer="false"
-    @cancel="closeOtherSignModal"
-  >
-    <div class="sign-modal-content">
-      <canvas
-        ref="otherSignRef"
-        width="480"
-        style="border: 1px dashed #999999"
-      ></canvas>
-    </div>
-    <div class="sign-modal-footer">
-      <a-button type="primary" @click="clearOtherSign()">重写</a-button>
-      <a-button type="primary" @click="closeOtherSignModal">取消</a-button>
-      <a-button type="primary" @click="handleOtherConfirm">确定</a-button>
-    </div>
-  </a-modal>
 </template>
 <script lang="ts" setup>
-  import { computed, ref } from 'vue';
-  import { useCertificate } from '../composition/useCertificate';
-  import { useRouter } from 'vue-router';
-  import { useSafetyCertificationStore, useUserStore } from '@/store';
-  import { normalOperation } from '@/api/operation/operationApi';
-  import {
-    blindPlateStatusEnum,
-    fireStatusEnum,
-    operationTypeEnum,
-  } from '../composition/useCertificateDict';
-  import { Message } from '@arco-design/web-vue';
-  import { useSign } from '@/views/pitfall/snapshot/composition/useSign';
-  import cardDisplay from '@/views/pitfall/snapshot/components/cardDisplay.vue';
+import { computed, inject, ref } from 'vue';
+import { useCertificate } from '../composition/useCertificate';
+import { normalOperation } from '@/api/operation/operationApi';
+import {
+  blindPlateStatusEnum,
+  fireStatusEnum,
+  operationTypeEnum,
+} from '../composition/useCertificateDict';
+import { Field, Form, showToast, Button } from 'vant';
+import signModal from '@/views/admin/pitfall/sign.vue';
 
-  const props = defineProps({
-    formProcessData: {
-      type: Object,
-      required: true,
-    },
-    activeKey: {
-      type: String,
-      required: true,
-    },
-    certificateStatus: {
-      type: String,
-      default: '',
-    },
-    text: {
-      type: String,
-      default: '分析',
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-  });
-  const router = useRouter();
-  const userStore = useUserStore();
-  const { searchFormItem } = useCertificate();
-  const store = useSafetyCertificationStore();
-  // 获取processKey为安全交底的，并且处理人为登陆人，并且未评审的，如果为空则说明登陆人不是操作人，显示detail页面
-  const currentProcess = computed<any>(() => {
-    // 只找最近的一个processKey为safeDisclosure的
-    for (let i = props.formProcessData.progress.length - 1; i > 0; i--) {
-      const item = props.formProcessData.progress[i];
-      if (item.processKey === 'safeDisclosure') {
-        if (item.user.id == userStore.userId && !item.result) {
-          return item;
-        }
-        if (
-          props.formProcessData.progress[i - 1] &&
-          props.formProcessData.progress[i - 1].processKey !== 'safeDisclosure'
-        ) {
-          return false;
-        }
+const props = defineProps({
+  formProcessData: {
+    type: Object,
+    required: true,
+  },
+  activeKey: {
+    type: String,
+    required: true,
+  },
+  certificateStatus: {
+    type: String,
+    default: '',
+  },
+  text: {
+    type: String,
+    default: '分析',
+  },
+  id: {
+    type: String,
+    required: true,
+  },
+  certType: {
+    type: String,
+    required: true,
+  },
+});
+
+const userStore = { userId: localStorage.getItem('userId') };
+const wx: any = inject('wx');
+const { searchFormItem } = useCertificate();
+const formData = ref<any>({
+  signature: '',
+  otherSignature: [],
+});
+
+const needAnalysis = [
+  operationTypeEnum.CONFINEDSPACE,
+  operationTypeEnum.FIRE,
+  operationTypeEnum.TEMPELECTRICITY,
+].includes(props.certType as operationTypeEnum);
+
+// 获取processKey为安全交底的，并且处理人为登陆人，并且未评审的，如果为空则说明登陆人不是操作人，显示detail页面
+const currentProcess = computed<any>(() => {
+  // 只找最近的一个processKey为safeDisclosure的
+  for (let i = props.formProcessData.progress.length - 1; i > 0; i--) {
+    const item = props.formProcessData.progress[i];
+    if (item.processKey === 'safeDisclosure') {
+      if (item.user.id == userStore.userId && !item.result) {
+        return item;
+      }
+      if (
+        props.formProcessData.progress[i - 1] &&
+        props.formProcessData.progress[i - 1].processKey !== 'safeDisclosure'
+      ) {
+        return false;
       }
     }
-    return false;
-  });
+  }
+  return false;
+});
 
-  const signRef = ref<HTMLCanvasElement | null>(null); // 签名画布Ref
-  const {
-    signModalVisible,
-    openSignModal,
-    closeSignModal,
-    clearSign,
-    confirmSign,
-  } = useSign(signRef);
+// 获取节点对应的表单，如果没有的话会是undefined
+const formDesign: any = computed(() => {
+  return searchFormItem(props.formProcessData, props.activeKey);
+});
+const formId: string = formDesign.value ? formDesign.value.formItems[0].id : '';
 
-  const otherSignRef = ref<HTMLCanvasElement | null>(null); // 签名画布Ref
-  const {
-    signModalVisible: otherSignModalVisible,
-    openSignModal: openOtherSignModal,
-    closeSignModal: closeOtherSignModal,
-    clearSign: clearOtherSign,
-    confirmSign: confirmOtherSign,
-  } = useSign(otherSignRef);
+const lastDisclosureIndex: number =
+  props.formProcessData.progress.findLastIndex(
+    (ele: any) => ele.processKey === 'safeDisclosure'
+  );
+const lastDisclosure: any = props.formProcessData.progress[lastDisclosureIndex];
+const condition: boolean = needAnalysis
+  ? props.certificateStatus >= fireStatusEnum.已安全交底
+  : props.certificateStatus >= blindPlateStatusEnum.已安全交底;
 
-  const formData = ref<any>({
-    signature: '',
-    otherSignature: [],
-  });
+const acceptDisclosure = formDesign.value
+  ? formDesign.value.formData[formId]
+  : [];
 
-  // 获取节点对应的表单，如果没有的话会是undefined
-  const formDesign: any = computed(() => {
-    return searchFormItem(props.formProcessData, props.activeKey);
-  });
-  const formId: string = formDesign.value
-    ? formDesign.value.formItems[0].id
-    : '';
+// 只有待安全交底中并且需要他签名的情况才可以编辑
+const status = computed<string>(() => {
+  let condition: boolean = false;
+  if (needAnalysis) {
+    condition = props.certificateStatus === fireStatusEnum.安全交底中;
+  } else {
+    condition = props.certificateStatus === blindPlateStatusEnum.安全交底中;
+  }
+  if (condition && currentProcess.value) {
+    return 'edit';
+  } else {
+    return 'detail';
+  }
+});
 
-  const emits = defineEmits(['initData']);
-  const form = ref<any>(null);
-  const rules = {
-    signature: [
-      {
-        required: true,
-        message: '请填写安全交底人签名',
-      },
-    ],
-    otherSignature: [
-      {
-        required: true,
-        message: '请填写接受交底人签名',
-      },
-    ],
-  };
+const signModalVisible = ref(false);
+const isAcceptSign = ref(false);
+const openSignModal = (isAccept: boolean) => {
+  signModalVisible.value = true;
+  isAcceptSign.value = isAccept;
+};
+const signConfirm = (signature: { baseCode: string }) => {
+  if (!isAcceptSign.value) {
+    formData.value.signature = signature.baseCode;
+  } else {
+    formData.value.otherSignature.push(signature.baseCode);
+  }
+  signModalVisible.value = false;
+};
 
-  const lastDisclosureIndex: number =
-    props.formProcessData.progress.findLastIndex(
-      (ele: any) => ele.processKey === 'safeDisclosure'
-    );
-  const lastDisclosure: any =
-    props.formProcessData.progress[lastDisclosureIndex];
-  const condition: boolean = store.needAnalysis
-    ? props.certificateStatus >= fireStatusEnum.已安全交底
-    : props.certificateStatus >= blindPlateStatusEnum.已安全交底;
-  const cardItems = ref<any>({
-    title: '',
-    items: [
-      {
-        id: 1,
-        field: '安全交底人',
-        value: lastDisclosure.signature,
-        type: 'sign',
-      },
-      {
-        id: 2,
-        field: '接受安全交底人',
-        value: formDesign.value ? formDesign.value.formData[formId] : [],
-        type: 'signArray',
-      },
-      {
-        id: 3,
-        field: '安全交底时间',
-        value: lastDisclosure.finishTime,
-        visible: condition,
-      },
-    ],
-  });
+const deleteSignature = (index: number) => {
+  formData.value.otherSignature.splice(index, 1);
+};
 
-  // 只有待安全交底中并且需要他签名的情况才可以编辑
-  const status = computed<string>(() => {
-    let condition: boolean = false;
-    if (store.needAnalysis) {
-      condition = props.certificateStatus === fireStatusEnum.安全交底中;
-    } else {
-      condition = props.certificateStatus === blindPlateStatusEnum.安全交底中;
-    }
-    if (condition && currentProcess.value) {
-      return 'edit';
-    } else {
-      return 'detail';
-    }
-  });
-
-  const handleConfirm = () => {
-    const result = confirmSign();
-    if (result) {
-      formData.value.signature = result;
-    }
-  };
-
-  const handleOtherConfirm = () => {
-    const result = confirmOtherSign();
-    if (result) {
-      formData.value.otherSignature.push(result);
-    }
-  };
-
-  const handleDelSign = (formKey: string, index: number) => {
-    formData.value[formKey].splice(index, 1);
-  };
-
-  // 根据当前的作业证状态判断显示什么按钮
-  const buttonList = computed<any>(() => {
-    if (store.needAnalysis) {
-      switch (props.certificateStatus as fireStatusEnum) {
-        case fireStatusEnum.安全交底中: {
-          return [
-            {
-              key: 'operationAnalyze',
-              text: '确定',
-              type: 'primary',
-            },
-          ];
-        }
-      }
-    } else {
-      switch (props.certificateStatus as blindPlateStatusEnum) {
-        case blindPlateStatusEnum.安全交底中: {
-          return [
-            {
-              key: 'operationAnalyze',
-              text: '确定',
-              type: 'primary',
-            },
-          ];
-        }
+// 根据当前的作业证状态判断显示什么按钮
+const buttonList = computed<any>(() => {
+  if (needAnalysis) {
+    switch (props.certificateStatus as fireStatusEnum) {
+      case fireStatusEnum.安全交底中: {
+        return [
+          {
+            key: 'operationAnalyze',
+            text: '提交',
+            type: 'primary',
+          },
+        ];
       }
     }
-  });
-
-  // 点击按钮处理
-  const handleButtonClick = async (key: string) => {
-    if (key === 'operationAnalyze') {
-      const result = await form.value.validate();
-      if (!result) {
-        const params = {
-          action: 'agree',
-          signature: formData.value.signature,
-          formData: formId
-            ? {
-                [formId]: formData.value.otherSignature,
-              }
-            : {},
-          instanceId: props.formProcessData.instanceId,
-          // 看当前节点是不是常规节点，需要传过去更新状态
-          processKey: currentProcess.value.processKey || '',
-          taskId: currentProcess.value.taskId,
-          nodeId: currentProcess.value.nodeId,
-          updateSign: true,
-          userId: userStore.userId,
-        };
-        await normalOperation(props.id, params);
-        Message.success('操作成功');
-        emits('initData');
+  } else {
+    switch (props.certificateStatus as blindPlateStatusEnum) {
+      case blindPlateStatusEnum.安全交底中: {
+        return [
+          {
+            key: 'operationAnalyze',
+            text: '提交',
+            type: 'primary',
+          },
+        ];
       }
     }
-  };
+  }
+});
+
+// 点击按钮处理
+const handleButtonClick = async (key: string) => {
+  if (key === 'operationAnalyze') {
+    if (formData.value.signature === '') {
+      showToast({
+        message: '请完成安全交底人签名',
+      });
+      return;
+    } else if (formData.value.otherSignature.length === 0) {
+      showToast({
+        message: '请完成接受交底人签名',
+      });
+      return;
+    }
+    const params = {
+      action: 'agree',
+      signature: formData.value.signature,
+      formData: formId
+        ? {
+            [formId]: formData.value.otherSignature,
+          }
+        : {},
+      instanceId: props.formProcessData.instanceId,
+      // 看当前节点是不是常规节点，需要传过去更新状态
+      processKey: currentProcess.value.processKey || '',
+      taskId: currentProcess.value.taskId,
+      nodeId: currentProcess.value.nodeId,
+      updateSign: true,
+      userId: userStore.userId,
+    };
+    await normalOperation(props.id, params);
+    showToast({
+      type: 'success',
+      message: '操作成功',
+      onClose: () => {
+        wx.miniProgram.navigateBack();
+      },
+    });
+  }
+};
 </script>
+<style lang="less">
+body {
+  background-color: #f2f2f2;
+}
+</style>
 <style lang="less" scoped>
-  .form-render-container {
-    display: flex;
-    flex-direction: column;
-    .process-form {
-      & > div {
-        padding: 0 10px;
-      }
+.auditContainer {
+  --van-cell-group-inset-padding: 0;
+}
+.sign-img {
+  width: 300px;
+  height: 150px;
+}
 
-      .el-form-item__label {
-        min-width: 120px;
-        justify-content: flex-end;
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.form-render-container {
+  padding-top: 5px;
+  font-size: 14px;
+  .disclosure-form {
+    background-color: #ffffff;
+    .sign-input-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 5px;
+    }
+    .sign-label {
+      display: flex;
+      flex: 1;
+      & > button {
+        margin-left: auto;
+      }
+    }
+    .operation-apply-form-btn {
+      text-align: center;
+      margin-top: 30px;
+      padding-bottom: 20px;
+      width: 100%;
+      button {
+        width: 90%;
+        border-radius: 8px;
+      }
+      button + button {
+        margin-left: 12px;
       }
     }
   }
-  .operation-apply-form-btn {
-    text-align: center;
+  .sign-img {
+    width: 100px;
+    height: 50px;
   }
-  .sign-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    img {
-      width: 200px;
-      height: 100px;
+  .disclosure-form-detail {
+    .disclosure-form-card {
+      border-top: 1px solid #d7d7d7;
+      border-bottom: 1px solid #d7d7d7;
+      padding: 10px;
+      background-color: #ffffff;
     }
-    .sign-img {
-      position: relative;
-      border: 1px solid #999999;
+    .disclosure-person {
+      margin-bottom: 10px;
+      .person-text {
+        color: #333333;
+        font-weight: bold;
+      }
     }
-  }
-  .sign-modal-footer {
-    text-align: right;
-    button {
-      margin-left: 20px;
-    }
-  }
-  .sign-list {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    .sign-del {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-    .sign-img {
-      position: relative;
-      border: 1px solid #999999;
-      margin: 0px 10px 10px 0px;
-    }
-  }
 
-  :deep(.card-display-content) {
-    width: auto;
-    .content-items div:first-child {
-      margin-right: 10px;
+    .disclosure-content {
+      .no-data {
+        text-align: center;
+        background-color: #fde8cc;
+        padding: 5px 0;
+        color: #333333;
+      }
+      .disclosure-content-data {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #d7d7d7;
+        padding-bottom: 10px;
+      }
+      .disclosure-content-data-accept {
+        margin-top: 10px;
+        .content-sign-list {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 10px;
+        }
+      }
+      .content-sign {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .sign-img {
+        width: 100px;
+        height: 50px;
+      }
     }
   }
+}
 </style>

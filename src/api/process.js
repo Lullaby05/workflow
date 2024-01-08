@@ -165,7 +165,7 @@ export function startProcess(code, params) {
 // 根据taskId获取节点是否需要签名
 export function getNeedSignByTaskId(taskId) {
   return request({
-    url: `/businessApi/wflow/process/task/settings/${taskId}`,
+    url: `wflow/process/task/settings/${taskId}`,
     method: 'get',
   });
 }

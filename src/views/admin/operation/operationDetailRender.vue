@@ -9,21 +9,29 @@
 import { defineAsyncComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { getCertificateDetail } from '@/api/operation/operationApi';
+import { onUnmounted } from 'vue';
+import { formatDate } from '@/utils/utils';
 
 const route = useRoute();
 const {
-  title = '作业分析',
-  activeKey = 'analyse',
-  id = '1742390554882338818',
-  token = 'f2910a4daf4044c4afa67292d82fb4e7',
-  refreshToken = 'f5c40819799d40bd8bd60b595ff61e71',
+  title = '安全交底',
+  activeKey = 'safeDisclosure',
+  id = '1743577122653380609',
+  token = '6975473e6a6c4d1386d4fb706e8564f0',
+  refreshToken = 'dc2bad67555c4a148a204f5d823e6bd4',
   userId = 1,
-  type = 'detail',
+  type = 'edit',
 } = route.query;
 
 localStorage.setItem('userId', userId as string);
 localStorage.setItem('wflow-token', token as string);
 localStorage.setItem('refreshToken', refreshToken as string);
+
+// onUnmounted(() => {
+//   localStorage.removeItem('userId');
+//   localStorage.removeItem('wflow-token');
+//   localStorage.removeItem('refreshToken');
+// });
 
 document.title = title as string;
 
@@ -58,16 +66,34 @@ const config = ref();
 
 const getDetailData = () => {
   getCertificateDetail(id as string).then((res: any) => {
+    if (res.code !== 0) return;
+    res.data.processProgress.progress = res.data.processProgress.progress.map(
+      (ele: any) => {
+        return {
+          ...ele,
+          finishTime: ele.finishTime && formatDate(ele.finishTime),
+          startTime: ele.startTime && formatDate(ele.startTime),
+        };
+      }
+    );
     config.value = {
       formProcessData: res.data.processProgress,
       activeKey,
-      certificateStatus: res.data.detail.status,
+      certificateStatus: res.data.status,
+      applyUserId: res.data.detail.applyUserId,
       id,
       type,
+      certType: res.data.detail.certType,
+      title,
     };
   });
 };
 
 getDetailData();
 </script>
-<style></style>
+<style>
+:root {
+  font-size: 12px;
+}
+</style>
+<style lang="less" scoped></style>
