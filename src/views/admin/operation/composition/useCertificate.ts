@@ -46,6 +46,13 @@ export const useCertificate = () => {
     };
   };
 
+  const formItemStep = (formItems: any, step: any): any => {
+    if(step >= 3){
+      return new Array();
+    }
+    return new Array(formItems[step]);
+  };
+
   const formItemIds: any[] = [];
   // 收集树形表格里的id
   const generateFormItemIds = (formItems: any) => {
@@ -91,5 +98,6 @@ export const useCertificate = () => {
     searchFormItem,
     flatObject,
     generateValueKeyMap,
+    formItemStep,
   };
 };
