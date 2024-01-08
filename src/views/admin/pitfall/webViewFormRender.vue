@@ -101,7 +101,12 @@ const {
   checkPerson,
   checkPersonId,
   id,
+  token,
+  refreshToken,
 } = route.query;
+
+localStorage.setItem('wflow-token', token);
+localStorage.setItem('refreshToken', refreshToken);
 
 let checkStartTime = undefined;
 

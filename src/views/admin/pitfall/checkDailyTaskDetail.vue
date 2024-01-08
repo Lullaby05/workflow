@@ -50,7 +50,10 @@ import cardDisplay from './cardDisplay.vue';
 const route = useRoute();
 const router = useRouter();
 
-const { id, checkPerson, status } = route.query;
+const { id, checkPerson, status, token, refreshToken } = route.query;
+
+localStorage.setItem('wflow-token', token);
+localStorage.setItem('refreshToken', refreshToken);
 
 const goBack = () => {
   router.back();
@@ -88,7 +91,7 @@ const getDetailData = async () => {
         id: 4,
         field: '排查完成时间',
         value: `${data.checkStartTime} 至 ${data.checkEndTime}`,
-        visible: data.checkEndTime,
+        visible: !!data.checkEndTime,
       },
     ],
     title: data.taskName,
@@ -125,8 +128,8 @@ const setDisabled = (formsTemp) => {
   // console.log('@formConfigTemp', formsTemp);
   formsTemp.forEach((e) => {
     e.props.disabled = true;
-    if(e.name === "TableList"){
-      setDisabled(e.props.columns)
+    if (e.name === 'TableList') {
+      setDisabled(e.props.columns);
     }
   });
 };
