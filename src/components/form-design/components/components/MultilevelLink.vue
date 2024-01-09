@@ -250,10 +250,30 @@ export default {
           0,
           false
         );
-        this.show_v[i] = [];
+        let type = "";
+        let num = "";
+        if(this.currentOptions.options[1]){
+          this.currentOptions.options[0].map((key,value)=>{
+          let v =  this.modelValue[i][this.currentOptions.fields[0]]
+          if(v == value){
+            type = key
+          }
+        })
+        }
+        
+        if(this.currentOptions.options[1]){
+          this.currentOptions.options[1].map((key,value)=>{
+          let v =  this.modelValue[i][this.currentOptions.fields[1]]
+          if(v == value){
+            num = key
+          }
+        })
+        }
+        
+        this.show_v[i] = [type.key,num.key];
       }
     }
-    console.log("modelValue:", this._valuePc);
+    console.log("modelValue:", this.currentOptions.options);
   },
   computed: {
     _valuePc: {
