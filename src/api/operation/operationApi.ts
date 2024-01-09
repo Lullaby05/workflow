@@ -117,6 +117,14 @@ export const normalOperation = (id: string, data: any) => {
   });
 };
 
+// 获取作业详情信息
+export const getCertificateBaseDetail = (id: string) => {
+  return Axios({
+    url: `/business/operation/base-detail/${id}`,
+    method: "POST",
+  });
+};
+
 // 获取作业详情
 export const getCertificateDetail = (id: string) => {
   return Axios({

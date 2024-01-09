@@ -228,6 +228,7 @@ import {
   CollapseItem,
   Dialog,
   showFailToast,
+  showToast,
   showDialog,
   showConfirmDialog,
 } from 'vant';
@@ -289,12 +290,12 @@ export default {
   created() {
     if (!Array.isArray(this.modelValue) || this.modelValue.length === 0) {
       this._value = [{}];
-      this.actives = [0]
-    }else{
-      this.actives = this._value.map((item, index) => index)
+      this.actives = [0];
+    } else {
+      this.actives = this._value.map((item, index) => index);
     }
-    
-    console.log('actives',this.actives)
+
+    console.log('actives', this.actives);
   },
   computed: {
     rules() {
@@ -427,12 +428,12 @@ export default {
         const v = Object.assign([], this._value);
         v.push(row);
         this._value = v;
-        this.actives = this._value.map((item, index) => index)
+        this.actives = this._value.map((item, index) => index);
       }
     },
     delItem(id) {
       this._columns.splice(id, 1);
-      this.actives = this._value.map((item, index) => index)
+      this.actives = this._value.map((item, index) => index);
     },
     selectItem(cp) {
       this.selectFormItem = cp;
@@ -526,30 +527,22 @@ export default {
       }
     },
     validate_m(call) {
-      const html = document.getElementsByTagName("html")[0];
-      const height = html.clientHeight;
-      let success = true;
-      this.items.forEach((form) => {
-        let formRef = this.$refs[form.id];
-        if (formRef && Array.isArray(formRef) && formRef.length > 0) {
-          console.log("ModuleBlock校验", this.$refs, form.id);
-          formRef[0].validate_m((subValid) => {
-            if (!subValid) {
-              success = false;
-              ElMessage({
-                message: form.title + "不能为空",
-                icon: "none",
-                // type: "success",
-                customClass: "message-error",
-                duration: 1500,
-                offset: height / 2 - 120,
+      if (this.required && !this.disabled) {
+        let result = true;
+        for (let i = 0; i < this.columns.length; i++) {
+          for (let j = 0; j < this._value.length; j++) {
+            if (!this._value[j][this.columns[i].id]) {
+              const html = document.getElementsByTagName('html')[0];
+              const height = html.clientHeight;
+              showToast({
+                message: this.columns[i].title + '不能为空',
               });
-              throw new Error("校验失败");
+              throw new Error('校验失败');
             }
-          });
+          }
         }
-      });
-      call(success);
+        call(result);
+      }
     },
   },
   emits: ['update:modelValue'],

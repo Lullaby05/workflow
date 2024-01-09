@@ -8,7 +8,10 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { getCertificateDetail } from '@/api/operation/operationApi';
+import {
+  getCertificateBaseDetail,
+  getCertificateDetail,
+} from '@/api/operation/operationApi';
 import { onUnmounted } from 'vue';
 import { formatDate } from '@/utils/utils';
 
@@ -27,11 +30,11 @@ localStorage.setItem('userId', userId as string);
 localStorage.setItem('wflow-token', token as string);
 localStorage.setItem('refreshToken', refreshToken as string);
 
-// onUnmounted(() => {
-//   localStorage.removeItem('userId');
-//   localStorage.removeItem('wflow-token');
-//   localStorage.removeItem('refreshToken');
-// });
+onUnmounted(() => {
+  localStorage.removeItem('userId');
+  localStorage.removeItem('wflow-token');
+  localStorage.removeItem('refreshToken');
+});
 
 document.title = title as string;
 
@@ -58,7 +61,10 @@ const components = {
 
 const config = ref();
 
-const getDetailData = () => {
+const getDetailData = async () => {
+  const {
+    data: { data: detail },
+  } = await getCertificateBaseDetail(id as string);
   getCertificateDetail(id as string).then((res: any) => {
     if (res.code !== 0) return;
     res.data.processProgress.progress = res.data.processProgress.progress.map(
@@ -74,11 +80,11 @@ const getDetailData = () => {
       formProcessData: res.data.processProgress,
       activeKey,
       certificateStatus: res.data.status,
-      applyUserId: res.data.detail.applyUserId,
-      detail: res.data.detail,
+      applyUserId: detail.applyUserId,
+      detail: detail,
       id,
       type,
-      certType: res.data.detail.certType,
+      certType: detail.certType,
       title,
     };
   });

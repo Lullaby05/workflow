@@ -10,7 +10,10 @@
       </div>
       <div class="detail-content">
         <div class="flex">
-          <div class="audit-person">{{ item.round }}</div>
+          <div class="audit-person">
+            <span> {{ item.round }}</span>
+            <span> {{ item.deptName }}</span>
+          </div>
           <div
             class="audit-result"
             :class="item.resultCode ? 'success-color' : 'fail-color'"
@@ -79,6 +82,7 @@ const tableData: {
   signature?: string;
   resultCode: 1 | 0;
   needEditApply?: boolean;
+  deptName: string;
 }[] = props.tableData as any;
 
 const jumpToEditApply = () => {
@@ -124,9 +128,16 @@ const jumpToEditApply = () => {
       justify-content: space-between;
     }
     .audit-person {
-      font-size: 15px;
-      color: #333333;
-      font-weight: bold;
+      span:nth-child(1) {
+        font-size: 15px;
+        color: #333333;
+        font-weight: bold;
+      }
+      span:nth-child(2) {
+      }
+      span + span {
+        margin-left: 10px;
+      }
     }
     .audit-remark {
       display: flex;

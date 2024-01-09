@@ -207,6 +207,7 @@ formProcessData.value = processData.map((item: any, index: number) => {
       remark: item.comment.length ? item.comment[0].text : '',
       createTime: item.finishTime,
       round: item.user.name,
+      deptName: item.user.deptName,
     },
   ];
   // 特殊情况会有一个两个人同时签字才能走到下一步，这时候流程节点的nodeId和startTime相同
@@ -231,6 +232,7 @@ formProcessData.value = processData.map((item: any, index: number) => {
           : '',
         createTime: processData[i].finishTime,
         round: processData[i].user.name,
+        deptName: processData[i].user.deptName,
       });
     }
   }
