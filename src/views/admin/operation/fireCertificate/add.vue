@@ -60,7 +60,7 @@ import store from "@/store";
 const Message = ElMessage;
 const router = useRouter();
 const route = useRoute();
-const { id = "", type = "add" } = route.query;
+const { id = "1744305865407651841", type = "edit" } = route.query;
 const userStore = store.state.loginUser;
 const dept = ref<any>({});
 const formItemsAll = ref<any>([]);
@@ -84,9 +84,12 @@ onBeforeMount(async () => {
     // 编辑，获取所有数据
     saveType = "edit";
     const res = await getCertificateDetail(id);
-    const data = res.data.data.processProgress;
+    const data = res.data.processProgress;
     dept.value = await getUserDepts(userStore.id);
     design.value = searchFormItem(data, "apply");
+    formItemsAll.value = design.value.formItems;
+    design.value.formItems = formItemStep(formItemsAll.value, flag.value);
+    console.log("design",design.value)
     valueKeyMap = generateValueKeyMap(design.value.formItems);
     design.value.formData = {
       ...design.value.formData,
@@ -108,6 +111,8 @@ onBeforeMount(async () => {
       Message.warning("暂无数据");
       return;
     }
+    formItemsAll.value = design.value.formItems;
+    design.value.formItems = formItemStep(formItemsAll.value, flag.value);
     valueKeyMap = generateValueKeyMap(design.value.formItems);
     design.value.formData = {
       ...design.value.formData,
@@ -135,7 +140,6 @@ onBeforeMount(async () => {
       [valueKeyMap["certNum"]]: newestCode,
       [valueKeyMap["applyDeptId"]]: dept.value[0].name ,
     };
-    console.log("表单数据", newestCode,dept.value[0].name);
   }
 });
 
