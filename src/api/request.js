@@ -23,9 +23,10 @@ service.defaults.withCredentials = true; // 让ajax携带cookie
 service.interceptors.request.use(
   // 每次请求都自动携带Cookie
   (config) => {
-    let token = localStorage.getItem('wflow-token') || 'Bearer testSec_1_1';
+    const baseToken = localStorage.getItem('wflow-token');
+    let token = baseToken ? `Bearer ${baseToken}` : 'Bearer testSec_1_1';
     wx.miniProgram.getEnv(function (res) {
-      if (res.miniprogram && !token) {
+      if (res.miniprogram && !baseToken) {
         token = '';
       }
     });
