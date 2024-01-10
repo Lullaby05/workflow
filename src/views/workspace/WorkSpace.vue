@@ -78,6 +78,10 @@
             <icon name="el-icon-setting"></icon>
             <template #title>作业详情</template>
           </el-menu-item>
+          <el-menu-item index="/operation/print">
+            <icon name="el-icon-setting"></icon>
+            <template #title>作业打印</template>
+          </el-menu-item>
         </div>
       </el-menu>
     </el-aside>

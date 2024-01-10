@@ -153,6 +153,16 @@ const router = createRouter({
         viewport: viewport,
       },
     },
+    {
+      path: '/operation/print',
+      name: 'print',
+      component: () =>
+        import('@/views/admin/operation/print.vue'),
+      meta: {
+        title: 'wflow-pro | 打印',
+        viewport: viewport,
+      },
+    },
   ],
 });
 

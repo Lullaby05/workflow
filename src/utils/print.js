@@ -3,6 +3,7 @@ export function bindVar(printTemplate, variable, domId) {
   const varExp = /\${\w+}/gi;
   //替换基础变量
   const printDom = document.getElementById(domId);
+  console.log("printDom",printDom);
   printDom.innerHTML = printTemplate.replace(varExp, (mc) => {
     return variable[mc.substring(2, mc.length - 1).trim()] || mc;
   });
