@@ -114,7 +114,7 @@ const certObj = {
   [operationTypeEnum.GROUND]: { title: '动土' },
   [operationTypeEnum.HIGHALTITUDE]: { title: '高处' },
   [operationTypeEnum.FIRE]: { title: '动火' },
-  [operationTypeEnum.HOIST]: { title: '高处吊装' },
+  [operationTypeEnum.HOIST]: { title: '吊装' },
   [operationTypeEnum.BROKENROAD]: { title: '断路' },
   [operationTypeEnum.TEMPELECTRICITY]: { title: '临时用电' },
 };

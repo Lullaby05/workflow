@@ -415,7 +415,6 @@ export default {
       this._value = this.modelValue;
     }
     this.showPicker = new Array(this.modelValue.tableData.length).fill(false);
-    this.actives = this.modelValue.tableData.map((item, index) => index);
     // 获取所有人员列表
     getUserList().then((res) => {
       this.userListOptions = res.data;
@@ -581,6 +580,7 @@ export default {
           confirmPerson: [],
         };
       });
+      this.actives = this._value.tableData.map((item, index) => index);
       this._value.otherSafetyMeasure = [];
       if (this._value.otherSafetyMeasure.length > 0) {
         this.otherReadonly = true;
