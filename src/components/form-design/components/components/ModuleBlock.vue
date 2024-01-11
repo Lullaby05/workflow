@@ -25,7 +25,10 @@
               </p>
               <div class="l-option">
                 <!--<icon name="el-icon-copy-document" @click="copy"></icon>-->
-                <icon name="el-icon-close" @click="delItem(index)"></icon>
+                <icon
+                  name="el-icon-close"
+                  @click="delItem(index)"
+                ></icon>
               </div>
               <form-design-render :config="element" />
             </div>
@@ -37,7 +40,11 @@
       </div>
     </div>
     <div v-else-if="mode === 'PC' && !readonly">
-      <el-row :gutter="20" v-for="(rows, rsi) in __items" :key="rsi + '_rows'">
+      <el-row
+        :gutter="20"
+        v-for="(rows, rsi) in __items"
+        :key="rsi + '_rows'"
+      >
         <el-col
           :span="24 / rows.length"
           v-for="(item, ri) in rows"
@@ -146,15 +153,15 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import FormItem from "@/components/common/FormItem.vue";
-import FormDesignRender from "@/components/form-design/design/FormDesignRender.vue";
-import componentMinxins from "../ComponentMinxins";
-import { ValueType } from "../ComponentsConfigExport";
-import { ElMessage } from "element-plus";
+import draggable from 'vuedraggable';
+import FormItem from '@/components/common/FormItem.vue';
+import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
+import componentMinxins from '../ComponentMinxins';
+import { ValueType } from '../ComponentsConfigExport';
+import { ElMessage } from 'element-plus';
 export default {
   mixins: [componentMinxins],
-  name: "ModuleBlock",
+  name: 'ModuleBlock',
   components: { draggable, FormItem, FormDesignRender },
   props: {
     modelValue: {
@@ -186,8 +193,8 @@ export default {
             {
               type: ValueType.getValidType(v.valueType),
               required: true,
-              message: "请完成" + v.title,
-              trigger: "blur",
+              message: '请完成' + v.title,
+              trigger: 'blur',
             },
           ];
         }
@@ -199,7 +206,7 @@ export default {
         return this.items;
       },
       set(val) {
-        this.$emit("update:items", val);
+        this.$emit('update:items', val);
       },
     },
     __items() {
@@ -243,18 +250,18 @@ export default {
       },
       dragProps: {
         animation: 300,
-        group: "form",
+        group: 'form',
         disabled: false,
         sort: true,
-        ghostClass: "choose",
+        ghostClass: 'choose',
       },
       form: {
-        formId: "",
-        formName: "",
+        formId: '',
+        formName: '',
         logo: {},
         formItems: [],
         process: {},
-        remark: "",
+        remark: '',
       },
     };
   },
@@ -262,43 +269,43 @@ export default {
     showItem(item) {
       return (
         (!(this.isReadonly(item) && this.isBlank(this._value[item.id])) ||
-          item.name === "SpanLayout" ||
-          item.name === "ModuleBlock") &&
-        item.perm !== "H"
+          item.name === 'SpanLayout' ||
+          item.name === 'ModuleBlock') &&
+        item.perm !== 'H'
       );
     },
 
     isBlank(val) {
       return (
         !this.$isNotEmpty(val) ||
-        (val instanceof String && val.trim() === "") ||
+        (val instanceof String && val.trim() === '') ||
         (Array.isArray(val) && val.length === 0)
       );
     },
     isReadonly(item) {
-      return item.perm === "R";
+      return item.perm === 'R';
     },
     selectItem(cp) {
       this.selectFormItem = cp;
     },
     getSelectedClass(cp) {
       return this.selectFormItem && this.selectFormItem.id === cp.id
-        ? "border-left: 4px solid #f56c6c"
-        : "";
+        ? 'border-left: 4px solid #f56c6c'
+        : '';
     },
     delItem(index) {
       this.$confirm(
-        "删除组件将会连带删除包含该组件的条件以及相关设置，是否继续?",
-        "提示",
+        '删除组件将会连带删除包含该组件的条件以及相关设置，是否继续?',
+        '提示',
         {
-          confirmButtonText: "确 定",
-          cancelButtonText: "取 消",
-          type: "warning",
+          confirmButtonText: '确 定',
+          cancelButtonText: '取 消',
+          type: 'warning',
         }
       ).then(() => {
         if (
-          this._items[index].name === "SpanLayout" ||
-          this._items[index].name === "ModuleBlock"
+          this._items[index].name === 'SpanLayout' ||
+          this._items[index].name === 'ModuleBlock'
         ) {
           //删除的是分栏则遍历删除分栏内所有子组件
           this._items[index].props.items.forEach((item) => {
@@ -326,25 +333,25 @@ export default {
       call(success);
     },
     validate_m(call) {
-      const html = document.getElementsByTagName("html")[0];
+      const html = document.getElementsByTagName('html')[0];
       const height = html.clientHeight;
       let success = true;
       this.items.forEach((form) => {
         let formRef = this.$refs[form.id];
         if (formRef && Array.isArray(formRef) && formRef.length > 0) {
-          console.log("ModuleBlock校验", this.$refs, form.id);
+          console.log('ModuleBlock校验', this.$refs, form.id);
           formRef[0].validate_m((subValid) => {
             if (!subValid) {
               success = false;
               ElMessage({
-                message: form.title + "不能为空",
-                icon: "none",
+                message: form.title + '不能为空',
+                icon: 'none',
                 // type: "success",
-                customClass: "message-error",
+                customClass: 'message-error',
                 duration: 1500,
                 offset: height / 2 - 120,
               });
-              throw new Error("校验失败");
+              throw new Error('校验失败');
             }
           });
         }
@@ -354,7 +361,7 @@ export default {
     async removeFormItemAbout(item) {
       this.nodeMap.forEach((node) => {
         //搜寻条件，进行移除
-        if (node.type === "CONDITION") {
+        if (node.type === 'CONDITION') {
           node.props.groups.forEach((group) => {
             let i = group.cids.remove(item.id);
             if (i > -1) {
@@ -365,16 +372,16 @@ export default {
         }
         //搜寻权限，进行移除
         if (
-          node.type === "ROOT" ||
-          node.type === "APPROVAL" ||
-          node.type === "CC"
+          node.type === 'ROOT' ||
+          node.type === 'APPROVAL' ||
+          node.type === 'CC'
         ) {
-          node.props.formPerms.removeByKey("id", item.id);
+          node.props.formPerms.removeByKey('id', item.id);
         }
       });
     },
   },
-  emits: ["update:modelValue", "update:items"],
+  emits: ['update:modelValue', 'update:items'],
 };
 </script>
 

@@ -89,6 +89,56 @@ export default {
           error = !this.$isNotEmpty(this.model[this.prop]);
         }
       }
+      // 受限空间开始和结束时间校验
+      if (
+        this.prop === 'field3185314173423' ||
+        this.prop === 'field8567214170140'
+      ) {
+        const startTime = this.model['field3185314173423'];
+        const endTime = this.model['field8567214170140'];
+        if (+new Date(endTime) - +new Date(startTime) > 24 * 60 * 60 * 1000) {
+          showToast({
+            message: `受限空间作业时间不能超过24小时`,
+          });
+          throw new Error('校验失败');
+        }
+        if (+new Date(endTime) - +new Date(startTime) <= 0) {
+          showToast({
+            message: `作业结束时间不能小于等于作业开始时间`,
+          });
+          throw new Error('校验失败');
+        }
+      }
+      // 动火作业开始和结束时间校验
+      if (
+        this.prop === 'field7961019363200' ||
+        this.prop === 'field6888319366698'
+      ) {
+        const fireLevel = this.model['field4514019247425'];
+        const startTime = this.model['field6888319366698'];
+        const endTime = this.model['field7961019363200'];
+        if (['1', '2'].includes(fireLevel)) {
+          if (+new Date(endTime) - +new Date(startTime) > 8 * 60 * 60 * 1000) {
+            showToast({
+              message: `当前作业级别下，作业时间不得超过8小时`,
+            });
+            throw new Error('校验失败');
+          }
+        } else if (fireLevel === '3') {
+          if (+new Date(endTime) - +new Date(startTime) > 72 * 60 * 60 * 1000) {
+            showToast({
+              message: '当前作业级别下，作业时间不得超过72小时',
+            });
+            throw new Error('校验失败');
+          }
+        }
+        if (+new Date(endTime) - +new Date(startTime) <= 0) {
+          showToast({
+            message: '作业结束时间不能小于等于作业开始时间',
+          });
+          throw new Error('校验失败');
+        }
+      }
       if (this.label.includes('安全措施')) {
         for (let i = 0; i < this.model[this.prop].tableData.length; i++) {
           const item = this.model[this.prop].tableData[i];
