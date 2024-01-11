@@ -63,10 +63,7 @@
         </div>
       </div>
     </div>
-    <div
-      class="audit-form-container"
-      v-if="formProcessData.length"
-    >
+    <div class="audit-form-container">
       <div class="audit-form-container-title">{{ `${props.title}情况` }}</div>
       <div class="audit-content">
         <detailInfo
@@ -326,6 +323,7 @@ if (!formProcessData.value.length) {
     };
   });
 }
+console.log('@', formProcessData.value, tempData.value);
 
 //历史数据
 const historyData = computed<any[]>(() => {
