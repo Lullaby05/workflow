@@ -15,6 +15,7 @@
 </template>
 <script lang="ts" setup>
 import { getDeptsList } from '@/api/operation/operationApi';
+// @ts-ignore
 import FormRender from '@/components/form-design/components/FormRender.vue';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
 import { cloneDeep } from 'lodash';
@@ -85,7 +86,7 @@ const handleFormStatus = (formItems: any[], status: string) => {
 
 //获取所有部门列表的下拉
 if (props.status === 'detail') {
-  getDeptsList().then((res) => {
+  getDeptsList().then((res: any) => {
     deptList.value = res.data;
     handleValueKey(design.formItems);
   });
@@ -128,7 +129,7 @@ defineExpose({
 }
 
 .form-render-content {
-  flex-basis: 90%;
+  flex-basis: 100%;
   // padding-right: 20px;
 }
 

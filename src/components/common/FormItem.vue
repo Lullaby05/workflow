@@ -1,26 +1,34 @@
 <template>
   <div class="m-form-item">
     <div class="m-form-item_title">
-      <span class="title-required" v-if="required || rule.length > 0">* </span>
+      <span
+        class="title-required"
+        v-if="required || rule.length > 0"
+        >*
+      </span>
       <span>{{ label }}</span>
     </div>
     <div class="m-form-item_content">
       <slot ref="item"></slot>
     </div>
-    <div v-if="showError && rule.length > 0" class="valid-error">
-      {{ rule[0].message || "请完善" }}
+    <div
+      v-if="showError && rule.length > 0"
+      class="valid-error"
+    >
+      {{ rule[0].message || '请完善' }}
     </div>
   </div>
 </template>
 
 <script>
+import { showToast } from 'vant';
 export default {
-  name: "FormItem",
+  name: 'FormItem',
   components: {},
   props: {
     label: {
       type: String,
-      default: "",
+      default: '',
     },
     rule: {
       type: Array,
@@ -30,7 +38,7 @@ export default {
     },
     prop: {
       type: String,
-      default: "",
+      default: '',
     },
     model: {
       type: Object,
@@ -54,7 +62,7 @@ export default {
     },
     validate(call) {
       if (this.rule.length > 0) {
-        if (this.rule[0].type === "array") {
+        if (this.rule[0].type === 'array') {
           this.showError = !(
             Array.isArray(this.model[this.prop]) &&
             this.model[this.prop].length > 0
@@ -72,13 +80,29 @@ export default {
     validate_m(call) {
       let error = false;
       if (this.rule.length > 0) {
-        if (this.rule[0].type === "array") {
+        if (this.rule[0].type === 'array') {
           error = !(
             Array.isArray(this.model[this.prop]) &&
             this.model[this.prop].length > 0
           );
         } else {
           error = !this.$isNotEmpty(this.model[this.prop]);
+        }
+      }
+      if (this.label.includes('安全措施')) {
+        for (let i = 0; i < this.model[this.prop].tableData.length; i++) {
+          const item = this.model[this.prop].tableData[i];
+          if (!item.isRelated) {
+            showToast({
+              message: '是否涉及不能为空',
+            });
+            throw new Error('校验失败');
+          } else if (!item.confirmPerson) {
+            showToast({
+              message: '确认人不能为空',
+            });
+            throw new Error('校验失败');
+          }
         }
       }
       if (!error) {

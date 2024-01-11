@@ -92,7 +92,7 @@
       <!-- 有数据的情况 -->
       <div
         class="disclosure-form-card"
-        v-if="lastDisclosure.result"
+        v-if="lastDisclosure && lastDisclosure.result"
       >
         <div class="disclosure-content">
           <div class="disclosure-content-data">
@@ -130,7 +130,7 @@
         v-else
       >
         <div class="disclosure-person">
-          <span class="person-text">{{ lastDisclosure.user.name }}</span>
+          <span class="person-text">{{ personArr[0].name }}</span>
         </div>
         <div class="no-data">
           <div class="no-data-text">待签署</div>
@@ -160,11 +160,16 @@ import {
   operationTypeEnum,
 } from '../composition/useCertificateDict';
 import { Field, Form, showToast, Button } from 'vant';
+//@ts-ignore
 import signModal from '@/views/admin/pitfall/sign.vue';
 
 const props = defineProps({
   formProcessData: {
     type: Object,
+    required: true,
+  },
+  originalProgress: {
+    type: Array,
     required: true,
   },
   activeKey: {
@@ -202,6 +207,35 @@ const needAnalysis = [
   operationTypeEnum.FIRE,
   operationTypeEnum.TEMPELECTRICITY,
 ].includes(props.certType as operationTypeEnum);
+
+//@ts-ignore
+const personInfo = (props.originalProgress as any[]).findLast(
+  (item: any) => item.props.processKey === 'safeDisclosure'
+);
+
+const personFieldObj = {
+  ASSIGN_USER: 'assignedUser',
+  FORM_USER: 'formUser',
+  ASSIGN_DEPT: 'assignedDept',
+  FORM_DEPT: 'formDept',
+};
+
+const personField =
+  personFieldObj[personInfo.props.assignedType as keyof typeof personFieldObj];
+let tempArr: any[] = [];
+// 如果是form则需要去formData取数据，否则直接从对应字段取
+const formPersonReg = /form/;
+if (formPersonReg.test(personField)) {
+  // 表单字段
+  personInfo.props[personField].forEach((ele: any) => {
+    tempArr = Array.from(
+      new Set([...tempArr, ...props.formProcessData.formData[ele]])
+    );
+  });
+} else {
+  tempArr = personInfo.props[personField];
+}
+const personArr = ref<any[]>(tempArr);
 
 // 获取processKey为安全交底的，并且处理人为登陆人，并且未评审的，如果为空则说明登陆人不是操作人，显示detail页面
 const currentProcess = computed<any>(() => {
@@ -421,12 +455,6 @@ body {
     }
 
     .disclosure-content {
-      .no-data {
-        text-align: center;
-        background-color: #fde8cc;
-        padding: 5px 0;
-        color: #333333;
-      }
       .disclosure-content-data {
         display: flex;
         justify-content: space-between;
@@ -451,6 +479,12 @@ body {
         height: 50px;
       }
     }
+  }
+  .no-data {
+    text-align: center;
+    background-color: #fde8cc;
+    padding: 5px 0;
+    color: #333333;
   }
 }
 </style>

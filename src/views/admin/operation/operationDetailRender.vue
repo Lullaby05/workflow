@@ -3,6 +3,8 @@
     v-if="config"
     :is="components[activeKey as keyof typeof components]"
     v-bind.sync="config"
+    @jumpToEditApply="jumpToEditApply"
+    @jumpToApplyInfo="jumpToApplyInfo"
   />
 </template>
 <script lang="ts" setup>
@@ -14,6 +16,8 @@ import {
 } from '@/api/operation/operationApi';
 import { onUnmounted } from 'vue';
 import { formatDate } from '@/utils/utils';
+import { inject } from 'vue';
+const wx: any = inject('wx');
 
 const route = useRoute();
 const {
@@ -39,6 +43,9 @@ onUnmounted(() => {
 document.title = title as string;
 
 const components = {
+  apply: defineAsyncComponent(
+    () => import('../../operation/components/basicInfo.vue')
+  ),
   analyse: defineAsyncComponent(
     () => import('../../operation/components/analysisInfo.vue')
   ),
@@ -56,6 +63,9 @@ const components = {
   ),
   operationStart: defineAsyncComponent(
     () => import('../../operation/components/operationStartInfo.vue')
+  ),
+  preview: defineAsyncComponent(
+    () => import('../../operation/components/operationInfoView.vue')
   ),
 };
 
@@ -78,8 +88,9 @@ const getDetailData = async () => {
     );
     config.value = {
       formProcessData: res.data.processProgress,
+      originalProgress: res.data.originalProgress,
       activeKey,
-      certificateStatus: res.data.status,
+      certificateStatus: detail.status,
       applyUserId: detail.applyUserId,
       detail: detail,
       id,
@@ -91,6 +102,18 @@ const getDetailData = async () => {
 };
 
 getDetailData();
+
+const jumpToEditApply = () => {
+  wx.miniProgram.redirectTo({
+    url: `/pages/workplace/operation/components/operationAdd/index?certType=${config.value.certType}&id=${config.value.id}&type=edit`,
+  });
+};
+
+const jumpToApplyInfo = () => {
+  wx.miniProgram.navigateTo({
+    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=preview&id=${config.value.id}&type=detail`,
+  });
+};
 </script>
 <style>
 :root {

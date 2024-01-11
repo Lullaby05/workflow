@@ -19,50 +19,44 @@ export function bindVar(
         (item: any) => item.nodeId === mc.substring(2, mc.length - 1).trim()
       );
       let returnVal = '';
-      returnVal += `<div style="display: block;text-align: center; font-size: 20px; font-weight: bold; height: 30px;">${
-        result && result.result
+      returnVal += `<div style="display: block;text-align: center; font-size: 20px; font-weight: bold; height: 30px;">${result && result.result
           ? result.result === 'agree'
             ? '通过'
             : '不通过'
           : ''
-      }</div>`;
-      returnVal += `<div style="display: flex; align-items: center; justify-content: flex-end;" ><span>签名：</span>${
-        result && result.signature
+        }</div>`;
+      returnVal += `<div style="display: flex; align-items: center; justify-content: flex-end;" ><span>签名：</span>${result && result.signature
           ? `<img style="width: 100px; height: 50px; display: inline-block;padding: 2px;object-fit: cover;" src="${result.signature}"/>`
           : '<span style="margin-left: 40px;"></span>'
-      }`;
-      returnVal += `<span>${
-        result && result.finishTime
+        }`;
+      returnVal += `<span>${result && result.finishTime
           ? formatDate(result.finishTime, 'yyyy年MM月DD日HH时mm分')
           : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日&nbsp;&nbsp;&nbsp;&nbsp;时&nbsp;&nbsp;&nbsp;&nbsp;分'
-      }</span></div>`;
+        }</span></div>`;
 
       return `<div>${returnVal}</div>`;
     }
-    return `<span style="font-weight: 500;">${
-      variable[mc.substring(2, mc.length - 1).trim()] || mc
-    }</span>`;
+    return `<span style="font-weight: 500;">${variable[mc.substring(2, mc.length - 1).trim()] || mc
+      }</span>`;
   });
   const pDoms: any[] = printDom.getElementsByTagName('p');
   var pList = Array.prototype.slice.call(pDoms);
   pList.forEach((p: any) => {
-    console.log("p标签：",p.className);
-    if(p.className === 'title' || p.className === 'certNum'){
+    if (p.className === 'title' || p.className === 'certNum') {
       p.style.display = 'none'
     }
   });
-  
+
   const tableDoms: any[] = printDom.getElementsByTagName('table');
   tableDoms[0].style.fontWeight = 'bold';
   tableDoms[0].style.width = '100%';
   tableDoms[0].style.height = '100%';
   tableDoms[0].style.borderWidth = '1px';
-  
+
   //根据字段搜索所有表格，动态渲染表格
   for (let td of tableDoms) {
     td.style.overflowWrap = 'anywhere'; // 防止输入的内容过多撑开表格
     //判断该表格存在于数据内
-    console.log("表格：",td.className);
     if (Array.isArray(variable[td.className])) {
       const tbody = td.children[0];
       let tr = '';
@@ -90,49 +84,43 @@ export function bindVar(
         tbody.outerHTML = thHtml + tbHtml;
       }
 
-      if(tbody.className === 'safeMeasure'){
+      if (tbody.className === 'safeMeasure') {
         let trDoms = Array.prototype.slice.call(tbody.children)
-        trDoms.forEach(e=>{
-          e.addAttribute('style','height: 70px')
+        trDoms.forEach(e => {
+          e.addAttribute('style', 'height: 70px')
           // e.style.height = '70px'
-          Array.prototype.slice.call(e.children).forEach(td=>{
+          Array.prototype.slice.call(e.children).forEach(td => {
             td.style.width = '25%'
-            console.log('width',td.style.width)
-            if(td.style.width == 'calc(100% - 275px)'){
-              console.log('width2')
+            if (td.style.width == 'calc(100% - 275px)') {
               td.style.width = '65%'
             }
           })
         })
-        
+
       }
     }
   }
   let trDoms = tableDoms[0].children[1].children
-  console.log('trDoms',trDoms)
   let tr = Array.prototype.slice.call(trDoms)
-  tr.forEach(e=>{
-    if(e.className === 'analyze'){
-      e.innerHTML=""
-      e.style.height='0px'
+  tr.forEach(e => {
+    if (e.className === 'analyze') {
+      e.innerHTML = ""
+      e.style.height = '0px'
     }
-    if(e.className === 'safeMeasure'){
+    if (e.className === 'safeMeasure') {
       let trDoms = Array.prototype.slice.call(e.children[0].children[0].children[0].children)
-      trDoms.forEach(e=>{
+      trDoms.forEach(e => {
         // e.style.height = '70px'
-        Array.prototype.slice.call(e.children).forEach(td=>{
-          console.log('width',td.style.width)
-          if(td.style.width == 'calc(100% - 275px)'){
-            console.log('width2')
+        Array.prototype.slice.call(e.children).forEach(td => {
+          if (td.style.width == 'calc(100% - 275px)') {
             td.style.width = '70%'
           }
         })
       })
-      console.log('safeMeasure',trDoms)
     }
-    if(e.className === 'progress'){
-      e.innerHTML=""
-      e.style.height='0px'
+    if (e.className === 'progress') {
+      e.innerHTML = ""
+      e.style.height = '0px'
     }
   })
   // const trDoms =  tableDoms[0].children[0].children[0].outerHTML
@@ -286,9 +274,8 @@ async function decodeFieldVal(formData: any, item: any, val: any) {
     }
     case 'SignPanel':
       if (formData[item.id]) {
-        value = `<img style="width: 150px; height: 100px; padding: 2px;" src="${
-          formData[item.id]
-        }"/>`;
+        value = `<img style="width: 150px; height: 100px; padding: 2px;" src="${formData[item.id]
+          }"/>`;
       }
       break;
     case 'ImageUpload':
@@ -529,15 +516,15 @@ Print.prototype = {
   isDOM:
     typeof HTMLElement === 'object'
       ? function (obj) {
-          return obj instanceof HTMLElement;
-        }
+        return obj instanceof HTMLElement;
+      }
       : function (obj) {
-          return (
-            obj &&
-            typeof obj === 'object' &&
-            obj.nodeType === 1 &&
-            typeof obj.nodeName === 'string'
-          );
-        },
+        return (
+          obj &&
+          typeof obj === 'object' &&
+          obj.nodeType === 1 &&
+          typeof obj.nodeName === 'string'
+        );
+      },
 };
 export default Print;

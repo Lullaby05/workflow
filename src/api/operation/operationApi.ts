@@ -142,9 +142,9 @@ export const getFireWorkLevelEnum = () => {
 };
 
 // 获取作业证打印
-export const getCertificatePrint = (id: string) => {
+export const getCertificatePrint = (id: string, formId?: string) => {
   return Axios({
-    url: `/business/operation/customPrint/${id}`,
+    url: `/business/operation/customPrint/${id}?formId=${formId}`,
     method: 'post',
   }).then(res => res.data);
 };

@@ -3,21 +3,39 @@
     <div class="operation-header">
       <div style="text-align: right">
         <Button
+          v-if="needEditApply"
+          type="primary"
+          size="mini"
+          @click="jumpToEditApply"
+          >点击修改申请</Button
+        >
+        <Button
+          v-if="type === 'edit'"
           class="jump-info-btn"
           type="primary"
           size="mini"
+          @click="jumpToApplyInfo"
           >作业信息查看</Button
         >
       </div>
       <formRenderContent
         ref="formRender"
-        v-if="formDesign && formContentVisible"
+        v-if="
+          formDesign &&
+          ((formContentVisible && type === 'detail') ||
+            (currentProcess && type === 'edit'))
+        "
         class="operation-apply-form"
         :design="formDesign"
         :status="status"
       />
+      <div
+        class="no-form-data"
+        v-if="formDesign && !formContentVisible && type === 'detail'"
+      >
+        书面审查进行中，暂无相关信息
+      </div>
     </div>
-
     <div
       class="audit-form"
       v-if="currentProcess && type === 'edit'"
@@ -45,14 +63,15 @@
         </div>
       </div>
     </div>
-    <div
-      class="audit-form-container"
-      v-if="formProcessData.length"
-    >
+    <div class="audit-form-container">
       <div class="audit-form-container-title">{{ '书面审查情况' }}</div>
       <div class="audit-content">
         <detailInfo
-          :tableData="currentData[0].tableData"
+          :tableData="
+            formProcessData.length
+              ? currentData[0].tableData
+              : tempData[0].tableData
+          "
           :text="props.text"
           @jumpToEditApply="jumpToEditApply"
         />
@@ -102,6 +121,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  originalProgress: {
+    type: Array,
+    required: true,
+  },
   activeKey: {
     type: String,
     required: true,
@@ -138,6 +161,7 @@ const { searchFormItem } = useCertificate();
 const auditFormRef = ref<any>(null);
 const formRender = ref<any>(null);
 const formProcessData = ref<any[]>([]);
+const emits = defineEmits(['jumpToEditApply', 'jumpToApplyInfo']);
 
 const needAnalysis = [
   operationTypeEnum.CONFINEDSPACE,
@@ -247,6 +271,49 @@ if (delIndex.length) {
 }
 formProcessData.value.reverse();
 
+// 没有数据的时候展示的临时数据
+//@ts-ignore
+const personInfoIndex = (props.originalProgress as any[]).findLastIndex(
+  (item: any) => item.props.processKey === 'review'
+);
+const personInfo: any = props.originalProgress[personInfoIndex];
+
+const personFieldObj = {
+  ASSIGN_USER: 'assignedUser',
+  FORM_USER: 'formUser',
+  ASSIGN_DEPT: 'assignedDept',
+  FORM_DEPT: 'formDept',
+};
+
+const personField =
+  personFieldObj[personInfo.props.assignedType as keyof typeof personFieldObj];
+let tempArr: any[] = [];
+// 如果是form则需要去formData取数据，否则直接从对应字段取
+const formPersonReg = /form/;
+if (formPersonReg.test(personField)) {
+  // 表单字段
+  personInfo.props[personField].forEach((ele: any) => {
+    tempArr = Array.from(
+      new Set([...tempArr, ...props.formProcessData.formData[ele]])
+    );
+  });
+} else {
+  tempArr = personInfo.props[personField];
+}
+const personArr = ref<any[]>(tempArr);
+const tempData = ref<any[]>([{}]);
+if (!formProcessData.value.length) {
+  tempData.value[0].tableData = personArr.value.map((item: any) => {
+    return {
+      createTime: '',
+      result: '',
+      round: item.name,
+      resultCode: 0,
+      deptName: '',
+    };
+  });
+}
+
 const formDesign: any = computed(() => {
   return searchFormItem(props.formProcessData, props.activeKey);
 });
@@ -256,7 +323,7 @@ const formItemIds: string[] = formDesign.value
 const formContentVisible = computed(() => {
   return formItemIds.some(
     // 有数据或者当前需要处理才显示
-    (ele: any) => formDesign.value.formData[ele] || currentProcess.value
+    (ele: any) => formDesign.value.formData[ele]
   );
 });
 
@@ -275,6 +342,10 @@ const currentData = computed<any[]>(() => {
     };
   });
   return data;
+});
+const needEditApply = computed<boolean>(() => {
+  if (!formProcessData.value.length) return false;
+  return currentData.value[0].tableData.some((item: any) => item.needEditApply);
 });
 
 // 根据当前的作业证状态判断显示什么按钮
@@ -355,7 +426,13 @@ const handleButtonClick = async (key: string) => {
   }
 };
 // 跳转到编辑页面
-const jumpToEditApply = () => {};
+const jumpToEditApply = () => {
+  emits('jumpToEditApply');
+};
+// 跳转到申请预览
+const jumpToApplyInfo = () => {
+  emits('jumpToApplyInfo');
+};
 </script>
 <style lang="less">
 body {
@@ -381,6 +458,12 @@ body {
   }
   .jump-info-btn {
     margin: 5px 10px 5px 0;
+  }
+  .no-form-data {
+    text-align: center;
+    background-color: #ffffff;
+    line-height: 100px;
+    height: 100px;
   }
 }
 

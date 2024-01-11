@@ -64,7 +64,7 @@
             <span
               class="del-row"
               @click.stop="delRow(i, row)"
-              v-if="!disabled"
+              v-if="!disabled && !readonly"
               >删除</span
             >
           </template>
@@ -90,7 +90,7 @@
       <div
         class="m-add-row"
         @click="addRow"
-        v-if="!disabled"
+        v-if="!disabled && !readonly"
       >
         <icon name="el-icon-plus"></icon>
         <span> {{ placeholder }}</span>
@@ -294,8 +294,6 @@ export default {
     } else {
       this.actives = this._value.map((item, index) => index);
     }
-
-    console.log('actives', this.actives);
   },
   computed: {
     rules() {

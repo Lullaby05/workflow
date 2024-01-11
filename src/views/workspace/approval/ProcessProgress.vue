@@ -1,15 +1,30 @@
 <template>
   <div class="progress">
-    <div v-for="item in progress" :key="item.taskId" class="progress-item">
+    <div
+      v-for="item in progress"
+      :key="item.taskId"
+      class="progress-item"
+    >
       <div>
         <div class="item-user">
           <div class="item-user-avatar">
             <template v-if="item.user">
-              <avatar :show-name="false" :status="getStatus(item)" :name="item.user.name" :src="item.user.avatar"></avatar>
+              <avatar
+                :show-name="false"
+                :status="getStatus(item)"
+                :name="item.user.name"
+                :src="item.user.avatar"
+              ></avatar>
             </template>
             <template v-else>
-              <span v-if="item.nodeType === 'APPROVAL'" class="iconfont icon-huiyi multi-user-avatar"></span>
-              <icon v-else name="el-icon-promotion multi-user-avatar"></icon>
+              <span
+                v-if="item.nodeType === 'APPROVAL'"
+                class="iconfont icon-huiyi multi-user-avatar"
+              ></span>
+              <icon
+                v-else
+                name="el-icon-promotion multi-user-avatar"
+              ></icon>
             </template>
           </div>
           <div class="item-user-desc">
@@ -21,35 +36,86 @@
           {{ getShortTime(item.finishTime) }}
         </div>
       </div>
-      <div v-if="item.users && item.users.length > 0" class="multi-user">
-        <div v-for="subItem in item.users" :key="subItem.taskId" class="">
+      <div
+        v-if="item.users && item.users.length > 0"
+        class="multi-user"
+      >
+        <div
+          v-for="subItem in item.users"
+          :key="subItem.taskId"
+          class=""
+        >
           <div class="item-user-avatar">
-            <avatar showY :size="35" :status="getStatus(subItem)" :name="subItem.user.name" :src="subItem.user.avatar"></avatar>
+            <avatar
+              showY
+              :size="35"
+              :status="getStatus(subItem)"
+              :name="subItem.user.name"
+              :src="subItem.user.avatar"
+            ></avatar>
           </div>
         </div>
       </div>
-      <div v-show="(item.comment && item.comment.length > 0) || item.signature" class="user-comment">
-        <div v-if="item.signature" style="display: flex; align-items: center">
-          <span>
-            <icon name="el-icon-editpen"></icon> 签字：
-          </span>
-          <img :src="item.signature" style="width: 140px; height: 60px">
+      <div
+        v-show="(item.comment && item.comment.length > 0) || item.signature"
+        class="user-comment"
+      >
+        <div
+          v-if="item.signature"
+          style="display: flex; align-items: center"
+        >
+          <span> <icon name="el-icon-editpen"></icon> 签字： </span>
+          <img
+            :src="item.signature"
+            style="width: 140px; height: 60px"
+          />
         </div>
-        <div v-for="cmt in item.comment" :key="cmt.id" style="position: relative">
-          <div class="user-comment-user" v-if="item.users">
-            <avatar :size="30" :name="cmt.user.name" :src="cmt.user.avatar"></avatar>
+        <div
+          v-for="cmt in item.comment"
+          :key="cmt.id"
+          style="position: relative"
+        >
+          <div
+            class="user-comment-user"
+            v-if="item.users"
+          >
+            <avatar
+              :size="30"
+              :name="cmt.user.name"
+              :src="cmt.user.avatar"
+            ></avatar>
             <span>（添加了评论）</span>
           </div>
-          <div class="user-comment-time" v-if="item.users">
+          <div
+            class="user-comment-time"
+            v-if="item.users"
+          >
             {{ getShortTime(cmt.createTime) }}
           </div>
           <div class="user-comment-content">
             <div class="text-comment">{{ cmt.text }}</div>
-            <div class="image-comment" v-show="cmt.attachments.length > 0">
-              <el-image class="image" :src="img" v-for="(img, i) in filterImages(cmt.attachments)" :key="i" :preview-src-list="filterImages(cmt.attachments)"></el-image>
+            <div
+              class="image-comment"
+              v-show="cmt.attachments && cmt.attachments.length > 0"
+            >
+              <el-image
+                class="image"
+                :src="img"
+                v-for="(img, i) in filterImages(cmt.attachments)"
+                :key="i"
+                :preview-src-list="filterImages(cmt.attachments)"
+              ></el-image>
             </div>
             <div class="file-comment">
-              <ellipsis style="display: inline-block" class="file-item" type="primary" @click="download(file)" :content="file.name" v-for="file in filterFiles(cmt.attachments)" :key="file.id">
+              <ellipsis
+                style="display: inline-block"
+                class="file-item"
+                type="primary"
+                @click="download(file)"
+                :content="file.name"
+                v-for="file in filterFiles(cmt.attachments)"
+                :key="file.id"
+              >
                 <template #pre>
                   <icon name="el-icon-document"></icon>
                 </template>
@@ -61,9 +127,15 @@
     </div>
     <div class="progress-item end-process">
       <div class="item-user-avatar node-icon">
-        <icon :key="statusIcon" :name="`${statusIcon} multi-user-avatar`"></icon>
+        <icon
+          :key="statusIcon"
+          :name="`${statusIcon} multi-user-avatar`"
+        ></icon>
       </div>
-      <div class="item-user-desc" style="font-size: 16px; line-height: 34px">
+      <div
+        class="item-user-desc"
+        style="font-size: 16px; line-height: 34px"
+      >
         {{ status }}
       </div>
     </div>
@@ -71,7 +143,7 @@
 </template>
 
 <script>
-import { getTaskResult } from "@/utils/ProcessUtil.js";
+import { getTaskResult } from '@/utils/ProcessUtil.js';
 
 export default {
   name: 'ProcessProgress',
@@ -81,119 +153,119 @@ export default {
       type: Array,
       required: true,
       default: () => {
-        return []
+        return [];
       },
     },
     result: {
       required: true,
-      default: null
+      default: null,
     },
     status: {
       required: true,
-      default: '未知'
-    }
+      default: '未知',
+    },
   },
   computed: {
     statusIcon() {
       switch (this.result) {
         case 'RUNNING':
-          return 'el-icon-morefilled icon-morefilled'
+          return 'el-icon-morefilled icon-morefilled';
         case 'COMPLETE':
-          return 'el-icon-morefilled icon-morefilled'
+          return 'el-icon-morefilled icon-morefilled';
         case 'PASS':
-          return 'el-icon-successfilled icon-success'
+          return 'el-icon-successfilled icon-success';
         case 'CANCEL':
-          return 'el-icon-circleclose icon-circleclose'
+          return 'el-icon-circleclose icon-circleclose';
         case 'REFUSE':
-          return 'el-icon-circleclosefilled icon-error'
+          return 'el-icon-circleclosefilled icon-error';
       }
     },
   },
   data() {
-    return {}
+    return {};
   },
   methods: {
     filterImages(attachments) {
       return (attachments || [])
         .filter((f) => f.isImage)
         .map((f) => {
-          return this.$getRes(f.url)
-        })
+          return this.$getRes(f.url);
+        });
     },
     filterFiles(attachments) {
       return (attachments || [])
         .filter((f) => !f.isImage)
         .map((f) => {
-          f.url = this.$getRes(f.url)
-          return f
-        })
+          f.url = this.$getRes(f.url);
+          return f;
+        });
     },
     download(file) {
-      window.open(`${this.$getRes(file.url)}?name=${file.name}`, '_blank')
+      window.open(`${this.$getRes(file.url)}?name=${file.name}`, '_blank');
     },
     getSize(size) {
       if (size > 1048576) {
-        return (size / 1048576).toFixed(1) + 'MB'
+        return (size / 1048576).toFixed(1) + 'MB';
       } else if (size > 1024) {
-        return (size / 1024).toFixed(1) + 'KB'
+        return (size / 1024).toFixed(1) + 'KB';
       } else {
-        return size + 'B'
+        return size + 'B';
       }
     },
     getShortTime(time) {
       if (time) {
-        return time.substring(5, 16)
+        return time.substring(5, 16);
       }
-      return '处理中'
+      return '处理中';
     },
     getStatus(item) {
       if (item.finishTime === null) {
-        return 'pending'
+        return 'pending';
       } else if (item.nodeType === 'CC') {
-        return 'cc'
+        return 'cc';
       } else if (item.result === 'agree') {
-        return 'success'
+        return 'success';
       } else if (item.result === 'refuse') {
-        return 'error'
+        return 'error';
       } else if (item.result === 'comment') {
-        return 'comment'
+        return 'comment';
       } else if (item.result === 'transfer') {
-        return 'transfer'
+        return 'transfer';
       } else if (item.result === 'recall') {
-        return 'recall'
+        return 'recall';
       } else if (item.nodeType === 'cancel') {
-        return 'cancel'
+        return 'cancel';
       } else {
-        return undefined
+        return undefined;
       }
     },
     getDesc(item) {
       if (item.nodeType === 'ROOT') {
-        return item.user.name
+        return item.user.name;
       } else if (item.nodeType === 'APPROVAL') {
         if (item.user) {
-          return `${item.user.name}（${getTaskResult(item).text}）`
+          return `${item.user.name}（${getTaskResult(item).text}）`;
         }
-        let desc = (item.users || []).length + '人（'
+        let desc = (item.users || []).length + '人（';
         switch (item.approvalMode) {
           case 'AND':
-            return desc + '会签）'
+            return desc + '会签）';
           case 'OR':
-            return desc + '或签）'
+            return desc + '或签）';
           case 'NEXT':
-            return desc + '顺序会签）'
+            return desc + '顺序会签）';
         }
       } else if (item.nodeType === 'CC') {
         if (item.user) {
-          return `抄送 ${item.user.name}`
+          return `抄送 ${item.user.name}`;
         }
-        return `抄送 ${item.users.length}人`
+        return `抄送 ${item.users.length}人`;
       } else if (item.result === 'comment') {
-        return `${item.user.name}（添加了评论）`
+        return `${item.user.name}（添加了评论）`;
       }
     },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -253,7 +325,7 @@ export default {
   position: relative;
 
   .item-user {
-    &>div {
+    & > div {
       display: inline-block;
     }
   }

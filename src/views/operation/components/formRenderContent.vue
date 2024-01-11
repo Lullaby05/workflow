@@ -15,9 +15,9 @@
 </template>
 <script lang="ts" setup>
 import { getDeptsList } from '@/api/operation/operationApi';
+//@ts-ignore
 import FormRender from '@/components/form-design/components/FormRender.vue';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
-import { cloneDeep } from 'lodash';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -79,6 +79,11 @@ const handleFormStatus = (formItems: any[], status: string) => {
       formItems[i].props.items.length
     ) {
       handleFormStatus(formItems[i].props.items, status);
+    } else if (
+      formItems[i].name === 'TableList' &&
+      formItems[i].props.columns.length
+    ) {
+      handleFormStatus(formItems[i].props.columns, status);
     }
   }
 };

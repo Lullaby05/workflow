@@ -236,21 +236,21 @@ export default {
           let formRef = this.$refs[form.id];
 
           if (formRef && Array.isArray(formRef) && formRef.length > 0) {
-              formRef[0].validate_m((subValid) => {
-                console.log('校验' + form.title, form.id, subValid);
-                if (!subValid && this.showItem(form)) {
-                  success = false;
-                  ElMessage({
-                    message: form.title + '不能为空',
-                    icon: 'none',
-                    // type: "success",
-                    customClass: 'message-error',
-                    duration: 1500,
-                    offset: height / 2 - 120,
-                  });
-                  throw new Error('校验失败');
-                }
-              });
+            formRef[0].validate_m((subValid) => {
+              console.log('校验' + form.title, form.id, subValid);
+              if (!subValid && this.showItem(form)) {
+                success = false;
+                ElMessage({
+                  message: form.title + '不能为空',
+                  icon: 'none',
+                  // type: "success",
+                  customClass: 'message-error',
+                  duration: 1500,
+                  offset: height / 2 - 120,
+                });
+                throw new Error('校验失败');
+              }
+            });
 
             if (form.name === 'TableList') {
               //扫描明细表项
@@ -269,7 +269,6 @@ export default {
                 }
               });
             }
-
           }
         });
         // call(success);

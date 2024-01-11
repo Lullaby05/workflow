@@ -76,7 +76,7 @@
           </popup>
         </div>-->
       <radio-group
-        :disabled = "disabled"
+        :disabled="disabled"
         v-model="_value"
         v-if="isNeedApi"
         direction="horizontal"
@@ -90,7 +90,7 @@
         >
       </radio-group>
       <radio-group
-        :disabled = "disabled"
+        :disabled="disabled"
         v-model="_value"
         v-if="!isNeedApi"
         direction="horizontal"
@@ -164,9 +164,9 @@ export default {
         return this._value;
       }
     },
-    test(){
-      console.log('prpos',this.disabled)
-    }
+    test() {
+      console.log('prpos', this.disabled);
+    },
   },
   emits: ['update:modelValue'],
   mounted() {
