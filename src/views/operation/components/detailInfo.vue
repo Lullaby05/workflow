@@ -40,7 +40,7 @@
           </div>
           <div class="flex">
             <div class="audit-sign">
-              签名：
+              <span v-if="item.signature">签名：</span>
               <img
                 class="sign-img"
                 :src="item.signature"
