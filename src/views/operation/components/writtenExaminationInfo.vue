@@ -10,7 +10,7 @@
           >点击修改申请</Button
         >
         <Button
-          v-if="type === 'edit'"
+          v-if="type === 'edit' && !needEditApply"
           class="jump-info-btn"
           type="primary"
           size="mini"
