@@ -126,6 +126,17 @@ export default {
       currentTime: [],
     };
   },
+  created() {
+    if (!this.modelValue) {
+      // 默认当前时间
+      this.currentDate = new Date().toLocaleString().split(' ')[0].split('/');
+      this.currentTime = new Date()
+        .toLocaleString()
+        .split(' ')[1]
+        .split(':')
+        .slice(0, 2);
+    }
+  },
   methods: {
     openPopup() {
       if (!this.disabled) {
