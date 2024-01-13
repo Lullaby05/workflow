@@ -445,7 +445,10 @@ body {
   flex-direction: column;
   font-size: 14px;
   color: #545456;
-
+  .operation-header {
+    position: absolute;
+    right: 0;
+  }
   .process-form {
     & > div {
       padding: 0 !important;
