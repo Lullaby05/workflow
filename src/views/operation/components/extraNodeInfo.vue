@@ -18,6 +18,8 @@
           >作业信息查看</Button
         >
       </div>
+    </div>
+    <div>
       <formRenderContent
         ref="formRender"
         v-if="
@@ -36,10 +38,7 @@
         {{ `${props.text}进行中，暂无相关信息` }}
       </div>
     </div>
-    <div
-      class="audit-form"
-      v-if="currentProcess && type === 'edit'"
-    >
+    <div class="audit-form" v-if="currentProcess && type === 'edit'">
       <div class="audit-form-title">{{ `${props.title}意见` }}</div>
       <div class="audit-form-content">
         <auditForm
@@ -83,12 +82,9 @@
       :key="index"
     >
       <div class="audit-item-title">
-        <a-divider
-          direction="vertical"
-          :size="6"
-        />
+        <a-divider direction="vertical" :size="6" />
         <span class="audit-item-title-text">{{
-          '第' + (historyData.length - index) + `次${props.text.slice(-2)}结果`
+          "第" + (historyData.length - index) + `次${props.text.slice(-2)}结果`
         }}</span>
       </div>
       <div class="audit-content">
@@ -101,20 +97,20 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import formRenderContent from './formRenderContent.vue';
-import { useCertificate } from '../composition/useCertificate';
-import { normalOperation } from '@/api/operation/operationApi';
-import auditForm from './auditForm.vue';
+import { computed, ref } from "vue";
+import formRenderContent from "./formRenderContent.vue";
+import { useCertificate } from "../composition/useCertificate";
+import { normalOperation } from "@/api/operation/operationApi";
+import auditForm from "./auditForm.vue";
 import {
   blindPlateStatusEnum,
   fireStatusEnum,
   operationTypeEnum,
-} from '../composition/useCertificateDict';
-import { showToast } from 'vant';
-import { Button } from 'vant';
-import detailInfo from './detailInfo.vue';
-import { inject } from 'vue';
+} from "../composition/useCertificateDict";
+import { showToast } from "vant";
+import { Button } from "vant";
+import detailInfo from "./detailInfo.vue";
+import { inject } from "vue";
 
 const props = defineProps({
   formProcessData: {
@@ -131,11 +127,11 @@ const props = defineProps({
   },
   certificateStatus: {
     type: String,
-    default: '',
+    default: "",
   },
   text: {
     type: String,
-    default: '审查结果',
+    default: "审查结果",
   },
   id: {
     type: String,
@@ -143,7 +139,7 @@ const props = defineProps({
   },
   type: {
     type: String,
-    default: 'detail',
+    default: "detail",
   },
   applyUserId: {
     type: String,
@@ -155,17 +151,17 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: '',
+    default: "",
   },
 });
-const userStore = { userId: localStorage.getItem('userId') };
-const wx: any = inject('wx');
+const userStore = { userId: localStorage.getItem("userId") };
+const wx: any = inject("wx");
 
 const { searchFormItem } = useCertificate();
 const auditFormRef = ref<any>(null);
 const formRender = ref<any>(null);
 const formProcessData = ref<any[]>([]);
-const emits = defineEmits(['jumpToEditApply', 'jumpToApplyInfo']);
+const emits = defineEmits(["jumpToEditApply", "jumpToApplyInfo"]);
 
 const needAnalysis = [
   operationTypeEnum.CONFINEDSPACE,
@@ -178,13 +174,13 @@ const currentProcess = computed<any>(() => {
   // 只找最近的一个processKey为''的
   for (let i = props.formProcessData.progress.length - 1; i > 0; i--) {
     const item = props.formProcessData.progress[i];
-    if (item.processKey === '') {
+    if (item.processKey === "") {
       if (item.user.id == userStore.userId && !item.result) {
         return item;
       }
       if (
         props.formProcessData.progress[i - 1] &&
-        props.formProcessData.progress[i - 1].processKey !== ''
+        props.formProcessData.progress[i - 1].processKey !== ""
       ) {
         return false;
       }
@@ -209,16 +205,16 @@ const formContentVisible = computed(() => {
 
 // 审核相关表单
 const auditFormData = ref<any>({
-  result: '',
-  signature: '',
-  remark: '',
+  result: "",
+  signature: "",
+  remark: "",
 });
 
 // 找到所有的一条额外节点的数据
 const tempProgress = props.formProcessData.progress;
 const processData: any[] = [];
 for (let i = 0; i < tempProgress.length; i++) {
-  if (tempProgress[i].processKey === '') {
+  if (tempProgress[i].processKey === "") {
     processData.push(tempProgress[i]);
   }
 }
@@ -226,9 +222,9 @@ for (let i = 0; i < tempProgress.length; i++) {
 // 只有待安全交底中并且需要他签名的情况才可以编辑
 const status = computed<string>(() => {
   if (currentProcess.value && !currentProcess.value.result) {
-    return 'edit';
+    return "edit";
   }
-  return 'detail';
+  return "detail";
 });
 
 const delIndex: number[] = [];
@@ -236,10 +232,10 @@ formProcessData.value = processData.map((item: any, index: number) => {
   // 正常情况
   const tableData: any[] = [
     {
-      result: item.result ? (item.result === 'agree' ? '通过' : '不通过') : '',
-      resultCode: item.result ? (item.result === 'agree' ? 1 : 0) : '',
+      result: item.result ? (item.result === "agree" ? "通过" : "不通过") : "",
+      resultCode: item.result ? (item.result === "agree" ? 1 : 0) : "",
       signature: item.signature,
-      remark: item.comment.length ? item.comment[0].text : '',
+      remark: item.comment.length ? item.comment[0].text : "",
       createTime: item.finishTime,
       round: item.user.name,
       deptName: item.user.deptName,
@@ -252,18 +248,19 @@ formProcessData.value = processData.map((item: any, index: number) => {
       processData[i].nodeId === item.nodeId &&
       processData[i].startTime === item.startTime
     ) {
+      const item = processData[i];
       delIndex.push(i);
       otherData.push({
         result: item.result
-          ? item.result === 'agree'
-            ? '通过'
-            : '不通过'
-          : '',
-        resultCode: item.result ? (item.result === 'agree' ? 1 : 0) : '',
+          ? item.result === "agree"
+            ? "通过"
+            : "不通过"
+          : "",
+        resultCode: item.result ? (item.result === "agree" ? 1 : 0) : "",
         signature: processData[i].signature,
         remark: processData[i].comment.length
           ? processData[i].comment[0].text
-          : '',
+          : "",
         createTime: processData[i].finishTime,
         round: processData[i].user.name,
         deptName: processData[i].user.deptName,
@@ -284,15 +281,15 @@ formProcessData.value.reverse();
 // 没有数据的时候展示的临时数据
 //@ts-ignore
 const personInfoIndex = (props.originalProgress as any[]).findLastIndex(
-  (item: any) => item.props.processKey === ''
+  (item: any) => item.props.processKey === ""
 );
 const personInfo: any = props.originalProgress[personInfoIndex];
 
 const personFieldObj = {
-  ASSIGN_USER: 'assignedUser',
-  FORM_USER: 'formUser',
-  ASSIGN_DEPT: 'assignedDept',
-  FORM_DEPT: 'formDept',
+  ASSIGN_USER: "assignedUser",
+  FORM_USER: "formUser",
+  ASSIGN_DEPT: "assignedDept",
+  FORM_DEPT: "formDept",
 };
 
 const personField =
@@ -315,15 +312,14 @@ const tempData = ref<any[]>([{}]);
 if (!formProcessData.value.length) {
   tempData.value[0].tableData = personArr.value.map((item: any) => {
     return {
-      createTime: '',
-      result: '',
+      createTime: "",
+      result: "",
       round: item.name,
       resultCode: 0,
-      deptName: '',
+      deptName: "",
     };
   });
 }
-console.log('@', formProcessData.value, tempData.value);
 
 //历史数据
 const historyData = computed<any[]>(() => {
@@ -351,9 +347,9 @@ const buttonList = computed<any>(() => {
   if (currentProcess.value && !currentProcess.value.result) {
     return [
       {
-        key: 'operationAnalyze',
-        text: '确定',
-        type: 'primary',
+        key: "operationAnalyze",
+        text: "确定",
+        type: "primary",
       },
     ];
   }
@@ -361,7 +357,7 @@ const buttonList = computed<any>(() => {
 
 const submitForm = async (formData: any) => {
   const params = {
-    action: auditFormData.value.result === '1' ? 'agree' : 'refuse',
+    action: auditFormData.value.result === "1" ? "agree" : "refuse",
     comment: {
       text: auditFormData.value.remark,
     },
@@ -369,15 +365,15 @@ const submitForm = async (formData: any) => {
     instanceId: props.formProcessData.instanceId,
     formData,
     // 看当前节点是不是常规节点，需要传过去更新状态
-    processKey: currentProcess.value.processKey || '',
+    processKey: currentProcess.value.processKey || "",
     taskId: currentProcess.value.taskId,
     nodeId: currentProcess.value.nodeId,
     updateSign: true,
   };
   await normalOperation(props.id, params);
   showToast({
-    type: 'success',
-    message: '操作成功',
+    type: "success",
+    message: "操作成功",
     onClose: () => {
       wx.miniProgram.navigateBack();
     },
@@ -386,7 +382,7 @@ const submitForm = async (formData: any) => {
 
 // 点击按钮处理
 const handleButtonClick = async (key: string) => {
-  if (key === 'operationAnalyze') {
+  if (key === "operationAnalyze") {
     const result = await auditFormRef.value.validate();
     if (!result) {
       if (formDesign.value) {
@@ -404,11 +400,11 @@ const handleButtonClick = async (key: string) => {
   }
 };
 const jumpToEditApply = () => {
-  emits('jumpToEditApply');
+  emits("jumpToEditApply");
 };
 // 跳转到申请预览
 const jumpToApplyInfo = () => {
-  emits('jumpToApplyInfo');
+  emits("jumpToApplyInfo");
 };
 </script>
 <style lang="less">
@@ -423,6 +419,7 @@ body {
   font-size: 14px;
   color: #545456;
   .operation-header {
+    z-index: 1;
     position: absolute;
     right: 0;
   }
