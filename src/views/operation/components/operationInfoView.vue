@@ -152,10 +152,18 @@ progress.forEach((item: any, index: number) => {
       });
     }
   }
+  const formDesign = searchFormItem(props.formProcessData, item.processKey);
+  const formItemIds: string[] = formDesign
+    ? formDesign.formItems.map((item: any) => item.id)
+    : [];
+  const formContentVisible = formItemIds.some(
+    // 有数据才显示
+    (ele: any) => formDesign.formData[ele]
+  );
   progressList.value.push({
     title: item.name + '信息',
     processKey: item.processKey,
-    formDesign: searchFormItem(props.formProcessData, item.processKey),
+    formDesign: !formContentVisible ? null : formDesign,
     tableData: [...tableData, ...otherData],
   });
 });

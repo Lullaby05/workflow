@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <span style="color: #d9001b; line-height: 20px; margin-left: 5px"
-      >系统将自动为您保存填写的信息 {{ abc }}</span
+      >系统将自动为您保存填写的信息</span
     >
     <div class="step">
       <el-steps
