@@ -16,8 +16,8 @@
       <p v-if="!isDraw">若你已确定填写信息无误，请在下方空白处签名</p>
     </div>
     <div class="autographBtn">
-      <div @click="close">返回</div>
-      <div @click="overwrite">重签</div>
+      <div @click="close">取消/返回</div>
+      <div @click="overwrite">重新签名</div>
       <div @click="seaveImages">确定</div>
     </div>
   </div>
@@ -183,16 +183,17 @@ export default {
 }
 .autographBtn {
   width: 100%;
-  height: 10%;
+  height: 30px;
   display: flex;
   justify-content: end;
   align-items: center;
   position: absolute;
   top: 90%;
+  right: 60px;
   z-index: 99999;
 }
 .autographBtn div {
-  width: 15%;
+  width: 75px;
   height: 100%;
   color: #fff;
   display: flex;
@@ -200,6 +201,7 @@ export default {
   align-items: center;
   font-size: 1.3rem;
   margin-right: 1rem;
+  padding: 0 8px;
 }
 .autographBtn div:first-child {
   color: #000;
@@ -207,12 +209,11 @@ export default {
   border-radius: 5px;
 }
 .autographBtn div:nth-child(2) {
-  opacity: 0.4;
-  background: -webkit-linear-gradient(top, #728cfd 0%, #5c7efe 100%);
+  background: #1989fa;
   border-radius: 5px;
 }
 .autographBtn div:last-child {
-  background: -webkit-linear-gradient(top, #728cfd 0%, #5c7efe 100%);
+  background: #1989fa;
   border-radius: 5px;
   margin-right: 5px;
 }
