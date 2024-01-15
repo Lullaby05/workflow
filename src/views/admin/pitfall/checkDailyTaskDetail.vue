@@ -103,6 +103,8 @@ const getDetailData = async () => {
     const formRender = useFormRender(formItem);
     setDisabled(formRender.formsTemp);
     if (checkItemList.value[item.checkItem]) {
+      // 如果原有表单id和当前遍历的表单id相同则不加入进去
+      if (checkItemList.value[item.checkItem][0].id === formItem.formId) return;
       checkItemList.value[item.checkItem].push({
         id: formItem.formId,
         checkStandard: item.checkStandard,
