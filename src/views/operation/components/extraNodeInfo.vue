@@ -7,7 +7,7 @@
           type="primary"
           size="mini"
           @click="jumpToEditApply"
-          >点击修改申请</Button
+          >修改申请</Button
         >
         <Button
           v-if="type === 'edit' && !needEditApply"
@@ -49,7 +49,7 @@
           ref="auditFormRef"
           v-model:auditFormData="auditFormData"
           status="edit"
-          :text="`${props.text.slice(-2)}结果`"
+          :text="`${props.text.substr(0, 2)}结果`"
           :resultText="{ pass: '通过', fail: '不通过' }"
         />
         <div class="operation-apply-form-btn">

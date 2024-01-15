@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { Field, Form } from 'vant';
+import { Field, Form, showToast } from 'vant';
 import { CompareFuncs } from './components/compare/CompareOptions';
 import FormItem from '@/components/common/FormItem.vue';
 import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
@@ -253,6 +253,13 @@ export default {
             });
 
             if (form.name === 'TableList') {
+              // 校验表格为空的情况
+              if (!this.$refs[form.id + '_item'][0].modelValue.length) {
+                showToast({
+                  message: form.title + '不能为空',
+                });
+                throw new Error('校验失败');
+              }
               //扫描明细表项
               this.$refs[form.id + '_item'][0].validate_m((subValid) => {
                 if (!subValid && this.showItem(form)) {

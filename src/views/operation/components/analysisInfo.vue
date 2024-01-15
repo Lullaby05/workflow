@@ -7,7 +7,7 @@
           type="primary"
           size="mini"
           @click="jumpToEditApply"
-          >点击修改申请</Button
+          >修改申请</Button
         >
         <Button
           v-if="type === 'edit' && !needEditApply"

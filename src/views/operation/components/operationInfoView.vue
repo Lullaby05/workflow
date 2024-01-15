@@ -117,9 +117,14 @@ progress.forEach((item: any, index: number) => {
   ) {
     return;
   }
+  const judgeText = item.processKey === 'analyse' ? '合格' : '通过';
   const tableData: any[] = [
     {
-      result: item.result ? (item.result === 'agree' ? '合格' : '不合格') : '',
+      result: item.result
+        ? item.result === 'agree'
+          ? judgeText
+          : `不${judgeText}`
+        : '',
       resultCode: item.result ? (item.result === 'agree' ? 1 : 0) : '',
       signature: item.signature,
       remark: item.comment.length ? item.comment[0].text : '',
@@ -140,8 +145,8 @@ progress.forEach((item: any, index: number) => {
       otherData.push({
         result: item.result
           ? item.result === 'agree'
-            ? '合格'
-            : '不合格'
+            ? judgeText
+            : `不${judgeText}`
           : '',
         resultCode: item.result ? (item.result === 'agree' ? 1 : 0) : '',
         signature: progress[i].signature,
@@ -169,11 +174,11 @@ progress.forEach((item: any, index: number) => {
 });
 
 progressList.value.filter((item: any) => item.tableData.length);
-if (delIndex.length) {
-  progressList.value = progressList.value.filter(
-    (ele: any, i: number) => delIndex.indexOf(i) === -1
-  );
-}
+// if (delIndex.length) {
+//   progressList.value = progressList.value.filter(
+//     (ele: any, i: number) => delIndex.indexOf(i) === -1
+//   );
+// }
 progressList.value.reverse();
 </script>
 <style lang="less" scoped>
