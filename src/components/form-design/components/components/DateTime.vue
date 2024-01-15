@@ -131,7 +131,6 @@ export default {
     openPopup() {
       if (!this.disabled) {
         this.showPicker = true;
-        console.log('@', this.modelValue);
         if (!this.modelValue) {
           // 默认当前时间
           this.currentDate = new Date().toLocaleDateString().split('/');
@@ -143,8 +142,7 @@ export default {
             if (res.miniprogram) {
               this.currentDate = new Date().toLocaleDateString().split('/');
               this.currentTime = new Date()
-                .toLocaleTimeString()
-                .slice(2)
+                .toLocaleTimeString('chinese', { hour12: false })
                 .split(':')
                 .slice(0, 2);
             }
