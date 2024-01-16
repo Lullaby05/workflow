@@ -18,7 +18,7 @@ import { getDeptsList } from '@/api/operation/operationApi';
 // @ts-ignore
 import FormRender from '@/components/form-design/components/FormRender.vue';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
-import { cloneDeep } from 'lodash';
+import { watch } from 'vue';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -33,7 +33,7 @@ const props = defineProps({
     default: 'detail',
   },
 });
-const emits = defineEmits(['handleAddCertification']);
+const emits = defineEmits(['handleAddCertification', 'changeFormData']);
 const router = useRouter();
 const formRender = ref<any>(null);
 
@@ -95,6 +95,14 @@ if (props.status === 'detail') {
 handleFormStatus(design.formItems, props.status);
 
 const { formData, formConfigTemp, formsTemp } = useFormRender(design);
+
+watch(
+  () => formData,
+  (val) => {
+    emits('changeFormData', val);
+  },
+  { immediate: false, deep: true }
+);
 
 // 父组件使用
 const handleSave = (callback: (formData: any) => void) => {

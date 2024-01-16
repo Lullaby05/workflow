@@ -1,8 +1,21 @@
 <template>
   <div class="container">
-    <span style="color: #d9001b; line-height: 20px; margin-left: 5px"
-      >系统将自动为您保存填写的信息</span
-    >
+    <div v-if="type === 'add'">
+      <span
+        style="color: #d9001b; line-height: 20px; margin-left: 5px"
+        v-if="!hasStorage"
+        >系统将自动为您保存填写的信息</span
+      >
+      <span
+        style="color: #d9001b; line-height: 20px; margin-left: 5px"
+        v-else
+        >检测到您有数据未提交，已为您自动填充表单，若不需要填充表单内容，点击<span
+          style="text-decoration: underline; color: #409eff"
+          @click="clearStorageFormData"
+          >一键清空</span
+        >缓存表单</span
+      >
+    </div>
     <div class="step">
       <el-steps
         :active="flag"
@@ -28,6 +41,7 @@
         :design="design"
         status="edit"
         :key="flag"
+        @changeFormData="changeFormData"
       />
       <div v-if="steps.length - 1 === flag">
         <previewCertificate
@@ -65,7 +79,6 @@
         >
       </div>
     </div>
-    <!-- </a-card> -->
   </div>
 </template>
 <script lang="ts" setup>
@@ -75,7 +88,7 @@ import { inject, onBeforeMount, onUnmounted, ref } from 'vue';
 import { useCertificate } from '../composition/useCertificate';
 import previewCertificate from '@/views/operation/components/previewCertificate.vue';
 import { cloneDeep } from 'lodash';
-import { Button, showToast } from 'vant';
+import { Button, showToast, showConfirmDialog } from 'vant';
 import {
   addCertificate,
   getCertificateDetail,
@@ -88,6 +101,7 @@ import { ElSteps, ElStep } from 'element-plus';
 import { getUserDepts } from '@/api/org';
 import { operationTypeEnum } from '../composition/useCertificateDict';
 import { useSafetyCertificationStore } from '@/storeWX';
+import { computed } from 'vue';
 const wx: any = inject('wx');
 const route = useRoute();
 const {
@@ -140,15 +154,94 @@ const {
 } = useCertificate();
 const design = ref<any>();
 const addFormRender = ref<any>();
-const flag = ref<any>(0); // 0:基础信息， 1：相关人员， 2：安全措施附件， 3：预览提交
 let defaultData: any = {}; // 保存默认数据，新增的时候只需要发formData
-let valueKeyMap: any = {}; // valueKey对应的真实formItemId
+let valueKeyMap: any = ref({}); // valueKey对应的真实formItemId
 let saveType = '';
 const formId = ref<string>('');
 const previewId = ref<string>('1');
 
 const store = useSafetyCertificationStore();
 store.setCurrentOperationType(certType as string);
+
+const storageFormData = computed(() => {
+  // 新增的时候才会使用缓存，一键复制和修改的时候不需要缓存
+  return localStorage.getItem(`formData_${certType}_${userId}`) &&
+    type === 'add'
+    ? JSON.parse(
+        localStorage.getItem(`formData_${certType}_${userId}`) as string
+      )
+    : null;
+});
+
+const preservedKeys = computed(() => {
+  return [valueKeyMap.value['applyDeptId'], valueKeyMap.value['certNum']];
+});
+
+// 判断对象里的数据是否有值
+const judgeHasData = (obj: any) => {
+  return Object.keys(obj).some((key) => {
+    if (preservedKeys.value.includes(key)) return false;
+    if (Array.isArray(obj[key])) {
+      return (
+        obj[key].length && obj[key].some((item: any) => judgeHasData(item))
+      );
+    }
+    return obj[key];
+  });
+};
+
+// 是否有缓存
+const hasStorage = computed(() => {
+  // 先看缓存里是否有值
+  if (!storageFormData.value) return false;
+  // 看缓存里除了默认字段其他属性是否有值
+  // 有任何一个值没有都说明没有缓存
+  return judgeHasData(storageFormData.value.formData);
+});
+
+const clearStorageFormData = () => {
+  // 一键清空的时候缓存清掉、数据清掉（除了默认字段）、步骤回到0
+  showConfirmDialog({
+    title: '',
+    message: '一键清空后，表单内容不可恢复，是否继续清空表单内容？',
+  }).then(() => {
+    localStorage.removeItem(`formData_${certType}_${userId}`);
+    design.value.formItems = formItemStep(formItemsAll.value, flag.value);
+    const formData = Object.keys(design.value.formData).reduce(
+      (accumulator: any, key) => {
+        if (preservedKeys.value.includes(key)) {
+          accumulator[key] = design.value.formData[key];
+        }
+        return accumulator;
+      },
+      {}
+    );
+    design.value.formData = formData;
+    flag.value = 0;
+    // 刷新
+    hasStorage.value;
+    location.reload();
+  });
+};
+
+const changeFormData = (val: any) => {
+  if (type === 'add') {
+    const isHasValue = judgeHasData(val);
+    // 如果除了默认的两个值以外还有值则保存到localStorage中
+    if (isHasValue) {
+      localStorage.setItem(
+        `formData_${certType}_${userId}`,
+        JSON.stringify({ currentStep: flag.value, formData: val })
+      );
+    }
+  }
+};
+
+const flag = ref<any>(
+  type === 'add' && storageFormData.value
+    ? storageFormData.value.currentStep || 0
+    : 0
+); // 0:基础信息， 1：相关人员， 2：安全措施附件， 3：预览提交
 
 onBeforeMount(async () => {
   if (type === 'edit') {
@@ -161,10 +254,10 @@ onBeforeMount(async () => {
     design.value = searchFormItem(data, 'apply');
     formItemsAll.value = design.value.formItems;
     design.value.formItems = formItemStep(formItemsAll.value, flag.value);
-    valueKeyMap = generateValueKeyMap(design.value.formItems);
+    valueKeyMap.value = generateValueKeyMap(design.value.formItems);
     design.value.formData = {
       ...design.value.formData,
-      [valueKeyMap['applyDeptId']]: dept.value.data[0].name,
+      [valueKeyMap.value['applyDeptId']]: dept.value.data[0].name,
     };
   } else if (type === 'reApply') {
     // 重新生成
@@ -183,11 +276,11 @@ onBeforeMount(async () => {
     }
     formItemsAll.value = design.value.formItems;
     design.value.formItems = formItemStep(formItemsAll.value, flag.value);
-    valueKeyMap = generateValueKeyMap(design.value.formItems);
+    valueKeyMap.value = generateValueKeyMap(design.value.formItems);
     design.value.formData = {
       ...design.value.formData,
-      [valueKeyMap['certNum']]: newestCode,
-      [valueKeyMap['applyDeptId']]: dept.value.data[0].name,
+      [valueKeyMap.value['certNum']]: newestCode,
+      [valueKeyMap.value['applyDeptId']]: dept.value.data[0].name,
     };
   } else if (type === 'add') {
     // 新增，获取默认数据
@@ -204,10 +297,12 @@ onBeforeMount(async () => {
     if (!design.value) {
       return;
     }
-    valueKeyMap = generateValueKeyMap(design.value.formItems);
+    valueKeyMap.value = generateValueKeyMap(design.value.formItems);
+    const cache = storageFormData.value && storageFormData.value.formData;
     design.value.formData = {
-      [valueKeyMap['certNum']]: newestCode,
-      [valueKeyMap['applyDeptId']]: dept.value.data[0].name,
+      ...cache,
+      [valueKeyMap.value['certNum']]: newestCode,
+      [valueKeyMap.value['applyDeptId']]: dept.value.data[0].name,
     };
   }
 });
@@ -217,7 +312,7 @@ const handleAddCertification = () => {
     // 调接口新增作业证
     const formParamData = {
       ...formData,
-      [valueKeyMap['applyDeptId']]: dept.value.data[0].id,
+      [valueKeyMap.value['applyDeptId']]: dept.value.data[0].id,
     };
     if (saveType === 'reApply' || saveType === 'add') {
       const params = {
@@ -235,6 +330,9 @@ const handleAddCertification = () => {
         message: '新增成功',
         type: 'success',
         onClose: () => {
+          if (saveType === 'add') {
+            localStorage.removeItem(`formData_${certType}_${userId}`);
+          }
           wx.miniProgram.navigateBack();
         },
       });
