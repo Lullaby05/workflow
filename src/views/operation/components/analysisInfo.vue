@@ -105,7 +105,7 @@ import { useCertificate } from '../composition/useCertificate';
 import { normalOperation } from '@/api/operation/operationApi';
 import auditForm from './auditForm.vue';
 import { fireStatusEnum } from '../composition/useCertificateDict';
-import { showToast } from 'vant';
+import { showConfirmDialog, showToast } from 'vant';
 import { Button } from 'vant';
 import detailInfo from './detailInfo.vue';
 import { inject } from 'vue';
@@ -383,12 +383,22 @@ const handleButtonClick = async (key: string) => {
           formItemIds.forEach((item: string) => {
             paramsFormData[item] = formData[item];
           });
-          submitForm(paramsFormData);
+          showConfirmDialog({
+            title: '',
+            message: '提交后无法修改，是否继续提交作业分析信息？',
+          }).then(() => {
+            submitForm(paramsFormData);
+          });
         }
       });
     } else {
       if (!result) {
-        submitForm({});
+        showConfirmDialog({
+          title: '',
+          message: '提交后无法修改，是否继续提交作业分析信息？',
+        }).then(() => {
+          submitForm({});
+        });
       }
     }
   }

@@ -199,7 +199,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   margin-right: 1rem;
   padding: 0 8px;
 }
