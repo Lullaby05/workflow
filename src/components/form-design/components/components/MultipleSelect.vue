@@ -81,7 +81,7 @@
         v-model="_value"
         v-if="isNeedApi"
         direction="horizontal"
-        :disabled = "disabled"
+        :disabled="disabled"
       >
         <checkbox
           style="margin: 5px"
@@ -96,7 +96,7 @@
         v-model="_value"
         v-if="!isNeedApi"
         direction="horizontal"
-        :disabled = "disabled"
+        :disabled="disabled"
       >
         <checkbox
           style="margin: 5px"

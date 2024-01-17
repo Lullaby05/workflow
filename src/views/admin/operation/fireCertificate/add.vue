@@ -378,8 +378,6 @@ const back = () => {
   design.value.formItems = formItemStep(formItemsAll.value, flag.value);
 };
 const submit = () => {
-  flag.value = 0;
-  design.value.formItems = formItemStep(formItemsAll.value, flag.value);
   handleAddCertification();
 };
 </script>

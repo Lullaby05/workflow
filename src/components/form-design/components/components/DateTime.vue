@@ -34,7 +34,7 @@
       >
         <picker-group
           :title="desc"
-          :tabs="['选择日期', '选择时间']"
+          :tabs="type === 'datetime' ? ['选择日期', '选择时间'] : ['选择日期']"
           @confirm="onConfirm"
           @cancel="showPicker = false"
         >
@@ -43,6 +43,7 @@
             v-model="currentDate"
           />
           <time-picker
+            v-if="type === 'datetime'"
             :formatter="formatter"
             v-model="currentTime"
           />
@@ -149,22 +150,24 @@ export default {
           });
         } else {
           this.currentDate = this.modelValue.split(' ')[0].split('-');
-          this.currentTime = this.modelValue.split(' ')[1].split(':');
+          this.currentTime =
+            this.modelValue.split(' ')[1] &&
+            this.modelValue.split(' ')[1].split(':');
         }
       }
     },
     onConfirm(val) {
       this.showPicker = false;
       this._value = this.getFormatVal(val);
-      console.log(
-        this._value,
-        `${val[0].selectedValues.join('-')} ${val[1].selectedValues.join(':')}`
-      );
     },
     getFormatVal(val) {
-      return `${val[0].selectedValues.join('-')} ${val[1].selectedValues.join(
-        ':'
-      )}`;
+      if (this.type === 'datetime') {
+        return `${val[0].selectedValues.join('-')} ${val[1].selectedValues.join(
+          ':'
+        )}`;
+      } else {
+        return `${val[0].selectedValues.join('-')}`;
+      }
     },
     formatter(type, option) {
       switch (type) {

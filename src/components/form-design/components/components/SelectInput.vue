@@ -75,20 +75,28 @@
             <picker :title="placeholder" show-toolbar :columns="options" @confirm="onConfirm" @cancel="showPicker = false"></picker>
           </popup>
         </div>-->
-      <radio-group
+      <Field
         :disabled="disabled"
-        v-model="_value"
+        v-model="formatValue"
         v-if="isNeedApi"
-        direction="horizontal"
+        is-link
+        readonly
+        label=""
+        :placeholder="placeholder"
+        @click="openPopup(i)"
+      />
+      <Popup
+        v-model:show="showPicker"
+        position="bottom"
+        v-if="isNeedApi"
       >
-        <radio
-          style="margin: 5px"
-          v-for="(op, index) in options"
-          :key="index"
-          :name="op.value"
-          >{{ op.label }}</radio
-        >
-      </radio-group>
+        <Picker
+          :columns="options"
+          :columns-field-names="{ text: 'label', value: 'value' }"
+          @cancel="showPicker = false"
+          @confirm="onConfirm"
+        />
+      </Popup>
       <radio-group
         :disabled="disabled"
         v-model="_value"
@@ -147,10 +155,19 @@ export default {
       showPicker: false,
     };
   },
+  computed: {
+    formatValue() {
+      if (this.isNeedApi) {
+        const val = this.options.find((ele) => ele.value === this._value);
+        return val ? val.label : '';
+      }
+      return this._value;
+    },
+  },
   methods: {
     onConfirm(val) {
       this.showPicker = false;
-      this._value = val;
+      this._value = val.selectedValues[0];
     },
     formatterText() {
       if (this.isNeedApi && this.readonly) {
@@ -166,6 +183,9 @@ export default {
     },
     test() {
       console.log('prpos', this.disabled);
+    },
+    openPopup(i) {
+      this.showPicker = true;
     },
   },
   emits: ['update:modelValue'],
