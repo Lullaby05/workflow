@@ -203,12 +203,13 @@ export default {
         let val = '';
         for (const item of this.options) {
           if (this._value.includes(item.value)) {
-            val += `${item.label} `;
+            val += `${item.label}、`;
           }
         }
+        val = val.substr(0, val.length - 1);
         return val;
       } else {
-        return this._value.join(',');
+        return this._value.join('、');
       }
     },
   },
@@ -225,12 +226,13 @@ export default {
         let val = '';
         for (const item of this.options) {
           if (this._value.includes(item.value)) {
-            val += `${item.label} `;
+            val += `${item.label}、`;
           }
         }
+        val = val.substr(0, val.length - 1);
         return val;
       } else {
-        return this._value.join(',');
+        return this._value.join('、');
       }
     },
     openModal() {

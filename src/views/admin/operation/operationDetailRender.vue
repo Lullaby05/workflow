@@ -5,6 +5,7 @@
     v-bind.sync="config"
     @jumpToEditApply="jumpToEditApply"
     @jumpToApplyInfo="jumpToApplyInfo"
+    @jumpToHandle="jumpToHandle"
   />
 </template>
 <script lang="ts" setup>
@@ -112,6 +113,11 @@ const jumpToEditApply = () => {
 const jumpToApplyInfo = () => {
   wx.miniProgram.navigateTo({
     url: `/pages/workplace/operation/fireOperation/handle/index?processKey=preview&id=${config.value.id}&type=detail`,
+  });
+};
+const jumpToHandle = (processKey: any) => {
+  wx.miniProgram.navigateTo({
+    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=${processKey}&id=${config.value.id}&type=edit`,
   });
 };
 </script>

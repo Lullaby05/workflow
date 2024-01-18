@@ -1,5 +1,14 @@
 <template>
   <div class="form-render-container">
+    <!-- <div style="text-align: right; margin-bottom: 5px">
+      <Button
+        v-if="type === 'detail' && currentProcess"
+        type="primary"
+        size="mini"
+        @click="jumpToHandle"
+        >开始作业分析</Button
+      >
+    </div> -->
     <div class="operation-header">
       <div style="text-align: right">
         <Button
@@ -151,7 +160,11 @@ const { searchFormItem } = useCertificate();
 const auditFormRef = ref<any>(null);
 const formRender = ref<any>(null);
 const formProcessData = ref<any[]>([]);
-const emits = defineEmits(['jumpToEditApply', 'jumpToApplyInfo']);
+const emits = defineEmits([
+  'jumpToEditApply',
+  'jumpToApplyInfo',
+  'jumpToHandle',
+]);
 
 //@ts-ignore
 const personInfoIndex = (props.originalProgress as any[]).findLastIndex(
@@ -411,6 +424,10 @@ const jumpToEditApply = () => {
 const jumpToApplyInfo = () => {
   emits('jumpToApplyInfo');
 };
+// 跳转到操作处理页面
+const jumpToHandle = () => {
+  emits('jumpToHandle', 'analyse');
+};
 </script>
 <style lang="less">
 body {
@@ -447,6 +464,7 @@ body {
     background-color: #ffffff;
     line-height: 100px;
     height: 100px;
+    margin-top: 5px;
   }
 }
 

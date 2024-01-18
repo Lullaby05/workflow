@@ -19,7 +19,10 @@
         :rows="4"
         type="textarea"
       >
-        <template #append v-if="enableScan">
+        <template
+          #append
+          v-if="enableScan"
+        >
           <el-button
             v-if="enableScan"
             icon="el-icon-fullscreen"
@@ -34,16 +37,25 @@
         rows="2"
         autosize
         type="textarea"
-        maxlength="2048"
+        maxlength="300"
         :placeholder="placeholder"
         show-word-limit
-        :disabled = "disabled"
+        :disabled="disabled"
       >
-        <template #right-icon v-if="enableScan">
-          <icon name="el-icon-fullscreen" @click="scanCode"></icon>
+        <template
+          #right-icon
+          v-if="enableScan"
+        >
+          <icon
+            name="el-icon-fullscreen"
+            @click="scanCode"
+          ></icon>
         </template>
       </field>
-      <scan-code v-model="visible" @ok="scanOk"></scan-code>
+      <scan-code
+        v-model="visible"
+        @ok="scanOk"
+      ></scan-code>
     </div>
     <div v-else>
       {{ _value }}
@@ -52,60 +64,60 @@
 </template>
 
 <script>
-  import { Field } from 'vant';
-  import ScanCode from '@/components/common/ScanCode.vue';
-  import componentMinxins from '../ComponentMinxins';
+import { Field } from 'vant';
+import ScanCode from '@/components/common/ScanCode.vue';
+import componentMinxins from '../ComponentMinxins';
 
-  export default {
-    mixins: [componentMinxins],
-    name: 'TextareaInput',
-    components: { Field, ScanCode },
-    props: {
-      modelValue: {
-        type: String,
-        default: null,
+export default {
+  mixins: [componentMinxins],
+  name: 'TextareaInput',
+  components: { Field, ScanCode },
+  props: {
+    modelValue: {
+      type: String,
+      default: null,
+    },
+    placeholder: {
+      type: String,
+      default: '请输入内容',
+    },
+    enableScan: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    _value: {
+      get() {
+        return this.modelValue;
       },
-      placeholder: {
-        type: String,
-        default: '请输入内容',
-      },
-      enableScan: {
-        type: Boolean,
-        default: false,
+      set(val) {
+        this.$emit('update:modelValue', val);
       },
     },
-    computed: {
-      _value: {
-        get() {
-          return this.modelValue;
-        },
-        set(val) {
-          this.$emit('update:modelValue', val);
-        },
+  },
+  data() {
+    return {
+      visible: false,
+      popupStyle: {
+        height: '100%',
+        width: '100%',
+        background: 'black',
+        opacity: '0.5',
       },
+    };
+  },
+  methods: {
+    scanCode() {
+      this.visible = true;
     },
-    data() {
-      return {
-        visible: false,
-        popupStyle: {
-          height: '100%',
-          width: '100%',
-          background: 'black',
-          opacity: '0.5',
-        },
-      };
+    scanOk(code) {
+      this._value += code + '\n';
+      showSuccessToast('扫码成功');
     },
-    methods: {
-      scanCode() {
-        this.visible = true;
-      },
-      scanOk(code) {
-        this._value += code + '\n';
-        showSuccessToast('扫码成功');
-      },
-    },
-    emits: ['update:modelValue'],
-  };
+  },
+  emits: ['update:modelValue'],
+};
 </script>
 
 <style scoped></style>

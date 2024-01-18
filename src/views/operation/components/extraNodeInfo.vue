@@ -455,6 +455,7 @@ body {
     background-color: #ffffff;
     line-height: 100px;
     height: 100px;
+    margin-top: 5px;
   }
 }
 
