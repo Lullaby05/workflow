@@ -129,6 +129,7 @@
           :ref="item.id"
           :prop="item.id"
           :label="item.title + '：'"
+          :item="item"
         >
           <form-design-render
             :formData="formData"

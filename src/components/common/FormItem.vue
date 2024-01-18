@@ -50,6 +50,12 @@ export default {
       type: Boolean,
       default: false,
     },
+    item: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
   },
   data() {
     return {
@@ -139,7 +145,7 @@ export default {
           throw new Error('校验失败');
         }
       }
-      if (this.label.includes('安全措施')) {
+      if (this.item.name === 'SafetyMeasure') {
         for (let i = 0; i < this.model[this.prop].tableData.length; i++) {
           const item = this.model[this.prop].tableData[i];
           if (!item.isRelated) {
@@ -155,6 +161,20 @@ export default {
           }
         }
       }
+      if (this.item.name === 'MultilevelLink') {
+        const value = this.model[this.prop];
+        if (!value) return;
+        this.model[this.prop] = value.filter((obj) => {
+          // 检查对象的所有属性值是否都不为空
+          return Object.values(obj).every(
+            (value) => value !== null && value !== undefined && value !== ''
+          );
+        });
+        if (!this.model[this.prop].length) {
+          this.model[this.prop] = [{}];
+        }
+      }
+
       if (!error) {
       }
       if (call) {

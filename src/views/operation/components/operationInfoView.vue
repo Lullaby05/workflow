@@ -101,7 +101,7 @@ currentStep.value =
   ) + 1;
 
 const progressList = ref<any>([]);
-const needShowList = ['analyse', 'review', ''];
+const needShowList = ['analyse', 'review', '', 'siteCheck'];
 
 const delIndex: number[] = [];
 progress.reverse();
