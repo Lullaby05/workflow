@@ -48,7 +48,7 @@ export default {
 import FormRender from '@/components/form-design/components/FormRender.vue';
 // import FormRender from '@/views/common/form/FormRender.vue';
 import { inject, onBeforeMount, ref } from 'vue';
-import { Button } from 'vant';
+import { Button, showConfirmDialog } from 'vant';
 import { useRoute, useRouter } from 'vue-router';
 import { planInfo } from '@/api/webView';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
@@ -214,7 +214,7 @@ const handleSave = async () => {
       .then(() => {
         saveData();
       })
-      .catch(() => {});
+      .catch(() => { });
   }
 };
 
@@ -264,12 +264,12 @@ const saveData = async () => {
         hazardAddr: ele.formRenderData.field_hazardAddr,
         sceneImages: ele.formRenderData.field_sceneImages
           ? ele.formRenderData.field_sceneImages.map((item) => {
-              return {
-                fileUrl: item.sourceUrl,
-                postUrl: item.url,
-                fileType: item.fileType,
-              };
-            })
+            return {
+              fileUrl: item.sourceUrl,
+              postUrl: item.url,
+              fileType: item.fileType,
+            };
+          })
           : [],
         hidRiskLevelCode:
           ele.formRenderData.field_hidRiskLevelCode === '一般隐患' ? '2' : '1',
@@ -284,11 +284,16 @@ const saveData = async () => {
         tenantId: '1',
       };
     });
-  await dailyCheckExecute(params);
-  if (unchecked.length > 0) {
-    await pitfallAdd(unchecked);
-  }
-  send();
+  showConfirmDialog({
+    title: '',
+    message: '提交后无法修改，是否确认提交排查信息？',
+  }).then(() => {
+    await dailyCheckExecute(params);
+    if (unchecked.length > 0) {
+      await pitfallAdd(unchecked);
+    }
+    send();
+  })
 };
 
 const goBack = () => {
@@ -300,6 +305,7 @@ const goBack = () => {
 :root {
   font-size: 12px;
 }
+
 .message-success {
   width: 120px;
   height: 120px;
@@ -307,10 +313,12 @@ const goBack = () => {
   background-color: #4c4c4c;
   color: #dbdbdb;
   flex-direction: column;
+
   .el-message__content {
     font-size: 16px;
     margin-top: 10px;
   }
+
   .el-message__icon {
     font-size: 50px;
     margin-right: 0;
@@ -324,6 +332,7 @@ const goBack = () => {
   padding-bottom: 44px;
   background-color: #f2f2f2;
 }
+
 .submit-btn {
   padding: 0 10px;
   position: fixed;
@@ -335,9 +344,11 @@ const goBack = () => {
     border-radius: 5px;
   }
 }
+
 .check-item {
   font-size: var(--van-font-size-m);
 }
+
 .check-item-title {
   margin-left: 10px;
   font-family: '微软雅黑';
