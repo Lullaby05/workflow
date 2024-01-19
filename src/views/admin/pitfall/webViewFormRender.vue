@@ -287,7 +287,7 @@ const saveData = async () => {
   showConfirmDialog({
     title: '',
     message: '提交后无法修改，是否确认提交排查信息？',
-  }).then(() => {
+  }).then(async () => {
     await dailyCheckExecute(params);
     if (unchecked.length > 0) {
       await pitfallAdd(unchecked);
