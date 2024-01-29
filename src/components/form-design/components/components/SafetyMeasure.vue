@@ -49,7 +49,8 @@
               line-height: 2;
             "
           >
-            {{ i + 1 }}. &nbsp;
+          <div style="height: 20px;"> {{ i + 1 }}. &nbsp;</div>
+           
             <form-design-render
               v-if="index !== _columns.length - 1"
               :index="i + 1"
@@ -119,7 +120,11 @@
           <div class="other_from padding-t-10">
             <div class="other_title flex">
               <span>其他安全措施</span>
-              <icon name="cross" @click.stop="delOther(i)" v-if="!otherReadonly"/>
+              <icon
+                name="cross"
+                @click.stop="delOther(i)"
+                v-if="!otherReadonly"
+              />
             </div>
             <div class="other_content">
               <Field
@@ -327,7 +332,7 @@ export default {
     Picker,
     Cell,
     CellGroup,
-    Icon
+    Icon,
   },
   props: {
     modelValue: {
@@ -856,11 +861,11 @@ export default {
   .other_content {
   }
 }
-.form_item{
+.form_item {
   margin-bottom: 10px;
 }
 .padding-t-10 {
-  padding-top: 10px
+  padding-top: 10px;
 }
 .flex {
   display: flex;
@@ -906,5 +911,11 @@ export default {
 }
 :deep(.van-cell:after) {
   border-bottom: none;
+}
+:deep(.van-radio__icon--checked .van-icon) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff00;
 }
 </style>
