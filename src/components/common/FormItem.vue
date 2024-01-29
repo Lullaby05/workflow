@@ -1,6 +1,9 @@
 <template>
-  <div class="m-form-item">
-    <div class="m-form-item_title">
+  <div :class="{
+    'm-form-item': true,
+    'safe': label == '安全措施：'
+  }">
+    <div class="m-form-item_title" v-if="label != '安全措施：'">
       <span
         class="title-required"
         v-if="required || rule.length > 0"
@@ -182,10 +185,18 @@ export default {
       }
     },
   },
+  //挂载
+  mounted() {
+    console.log("组件名称",this.label);
+  }
 };
 </script>
 
 <style lang="less" scoped>
+.safe{
+  padding: 0px !important;
+  background: #ffffff00 !important;
+}
 .m-form-item {
   position: relative;
   padding: 10px 10px 20px 10px;

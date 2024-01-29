@@ -239,8 +239,8 @@ const changeFormData = (val: any) => {
 
 const flag = ref<any>(
   type === 'add' && storageFormData.value
-    ? storageFormData.value.currentStep || 0
-    : 0
+    ? storageFormData.value.currentStep || 2
+    : 2
 ); // 0:基础信息， 1：相关人员， 2：安全措施附件， 3：预览提交
 
 onBeforeMount(async () => {
