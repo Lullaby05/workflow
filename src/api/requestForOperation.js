@@ -99,6 +99,8 @@ async function refreshTokenFn(options, resolve) {
               message: '登录过期，请重新登录',
               duration: 1500,
               onClose: () => {
+                localStorage.removeItem('wflow-token');
+                localStorage.removeItem('refreshToken');
                 wx.miniProgram.redirectTo({
                   url: '/pages/login/index',
                 });
