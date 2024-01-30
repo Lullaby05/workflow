@@ -463,6 +463,10 @@ const submit = () => {
     color: #f59a23;
   }
 }
+:deep(.m-form-item){
+  padding: 10px 10px 0px 10px;
+  margin-bottom: 1px;
+}
 </style>
 
 <style>
