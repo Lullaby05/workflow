@@ -159,7 +159,7 @@ import {
   fireStatusEnum,
   operationTypeEnum,
 } from '../composition/useCertificateDict';
-import { Field, Form, showToast, Button } from 'vant';
+import { Field, Form, showToast, Button, showConfirmDialog } from 'vant';
 //@ts-ignore
 import signModal from '@/views/admin/pitfall/sign.vue';
 
@@ -369,13 +369,18 @@ const handleButtonClick = async (key: string) => {
       updateSign: true,
       userId: userStore.userId,
     };
-    await normalOperation(props.id, params);
-    showToast({
-      type: 'success',
-      message: '操作成功',
-      onClose: () => {
-        wx.miniProgram.navigateBack();
-      },
+    showConfirmDialog({
+      title: '',
+      message: '提交后无法修改，是否继续提交安全交底信息？',
+    }).then(async () => {
+      await normalOperation(props.id, params);
+      showToast({
+        type: 'success',
+        message: '操作成功',
+        onClose: () => {
+          wx.miniProgram.navigateBack();
+        },
+      });
     });
   }
 };
