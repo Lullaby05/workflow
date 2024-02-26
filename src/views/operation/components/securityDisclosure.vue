@@ -4,73 +4,94 @@
       class="disclosure-form"
       v-if="status === 'edit'"
     >
-      <Form required="auto">
-        <Field
-          label-width="120"
-          v-model="formData.signature"
-          readonly
-          :rules="[{ required: true }]"
-          label="安全交底人签名"
-          placeholder="点击签名"
-          input-align="right"
-          @click-input="openSignModal(false)"
-        >
-          <template
-            v-if="formData.signature"
-            #input
+      <div class="form">
+        <Form required="auto">
+          <Field
+            label-width="120"
+            v-model="formData.signature"
+            readonly
+            :rules="[{ required: true }]"
+            label="安全交底人签名"
+            placeholder="点击签名"
+            input-align="right"
+            @click-input="openSignModal(false)"
           >
-            <img
+            <template
               v-if="formData.signature"
-              class="sign-img"
-              :src="formData.signature"
-            />
-          </template>
-        </Field>
-        <Field
-          readonly
-          :rules="[{ required: true }]"
-          label-align="top"
-          label="接受交底人签名"
-          placeholder="点击签名"
-          input-align="left"
-          @click-input.self="openSignModal(true)"
+              #input
+            >
+              <img
+                v-if="formData.signature"
+                class="sign-img"
+                :src="formData.signature"
+              />
+            </template>
+          </Field>
+        </Form>
+        <div
+          class="add-sign-btn"
+          v-if="formData.otherSignature.length > 0"
         >
-          <template
-            v-if="formData.otherSignature.length > 0"
-            #input
+          <Button
+            type="primary"
+            size="mini"
+            @click.self="openSignModal(true)"
+            >添加签名</Button
           >
-            <div class="sign-input-list">
-              <div
-                class="sign-input-item"
-                v-for="(item, index) in formData.otherSignature"
-                :key="index"
-              >
-                <img
-                  class="sign-img"
-                  :src="item"
-                />
-                <span
-                  style="color: #d9001b; font-size: 12px"
-                  @click.self="deleteSignature(index)"
-                  >删除</span
+        </div>
+        <Form required="auto">
+          <Field
+            readonly
+            :rules="[{ required: true }]"
+            label-align="top"
+            label="接受交底人签名"
+            placeholder="点击签名"
+            input-align="left"
+            @click-input.self="openSignModal(true)"
+          >
+            <template
+              v-if="formData.otherSignature.length > 0"
+              #input
+            >
+              <div class="sign-input-list">
+                <div
+                  class="sign-input-item"
+                  v-for="(item, index) in formData.otherSignature"
+                  :key="index"
                 >
+                  <img
+                    class="sign-img"
+                    :src="item"
+                  />
+                  <div
+                    style="
+                      color: #d43030;
+                      font-size: 12px;
+                      line-height: 12px;
+                      text-align: right;
+                    "
+                  >
+                    <span
+                      style="
+                        border: 1px solid #d43030;
+                        padding: 2px 8px;
+                        border-radius: 20px;
+                      "
+                      @click.self="deleteSignature(index)"
+                      >删除签名</span
+                    >
+                  </div>
+                </div>
               </div>
-            </div>
-          </template>
-          <template #label>
-            <div class="sign-label">
-              <div>接受交底人签名</div>
-              <Button
-                v-if="formData.otherSignature.length > 0"
-                type="primary"
-                size="mini"
-                @click.self="openSignModal(true)"
-                >添加签名</Button
-              >
-            </div>
-          </template>
-        </Field>
-      </Form>
+            </template>
+            <template #label>
+              <div class="sign-label">
+                <div>接受交底人签名</div>
+              </div>
+            </template>
+          </Field>
+        </Form>
+      </div>
       <div
         class="operation-apply-form-btn"
         v-if="status === 'edit'"
@@ -96,11 +117,16 @@
       >
         <div class="disclosure-content">
           <div class="disclosure-content-data">
-            <div class="content-label">安全交底人签名</div>
-            <div class="content-sign">
+            <div class="content-label">
+              <div>
+                <span class="title-required">* </span>
+                <span>安全交底人签名</span>
+              </div>
               <span class="sign-person-name">{{
                 lastDisclosure.user.name
               }}</span>
+            </div>
+            <div class="content-sign">
               <img
                 class="sign-img"
                 :src="lastDisclosure.signature"
@@ -108,7 +134,10 @@
             </div>
           </div>
           <div class="disclosure-content-data-accept">
-            <div class="content-label">接受交底人签名</div>
+            <div class="content-label">
+              <span class="title-required">* </span>
+              <span>接受交底人签名</span>
+            </div>
             <div class="content-sign-list">
               <div
                 class="sign-item"
@@ -387,7 +416,7 @@ const handleButtonClick = async (key: string) => {
 </script>
 <style lang="less">
 body {
-  background-color: #f2f2f2;
+  background-color: #fbfbfb;
 }
 </style>
 <style lang="less" scoped>
@@ -395,8 +424,9 @@ body {
   --van-cell-group-inset-padding: 0;
 }
 .sign-img {
-  width: 300px;
-  height: 150px;
+  outline: 1px solid #e4e7ed;
+  width: calc((100vw - 52px) / 3);
+  object-fit: cover;
 }
 
 .slide-fade-enter-active,
@@ -410,14 +440,28 @@ body {
   opacity: 0;
 }
 .form-render-container {
-  padding-top: 5px;
+  padding-top: 10px;
   font-size: 14px;
   .disclosure-form {
-    background-color: #ffffff;
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .add-sign-btn {
+        margin-right: 16px;
+        text-align: right;
+        button {
+          width: fit-content;
+          padding: 6px 12px 6px 12px;
+          border-radius: 147px;
+          background: #165dff;
+        }
+      }
+    }
     .sign-input-list {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 5px;
+      gap: 10px;
     }
     .sign-label {
       display: flex;
@@ -428,29 +472,19 @@ body {
     }
     .operation-apply-form-btn {
       text-align: center;
-      margin-top: 30px;
-      padding-bottom: 20px;
-      width: 100%;
+      margin: 31px 0 10px 0;
+      padding: 0 16px;
       button {
-        width: 90%;
-        border-radius: 8px;
+        width: 100%;
+        --van-button-primary-background: #165dff;
+        border-radius: 4px;
       }
       button + button {
-        margin-left: 12px;
+        margin-left: 10px;
       }
     }
   }
-  .sign-img {
-    width: 100px;
-    height: 50px;
-  }
   .disclosure-form-detail {
-    .disclosure-form-card {
-      border-top: 1px solid #d7d7d7;
-      border-bottom: 1px solid #d7d7d7;
-      padding: 10px;
-      background-color: #ffffff;
-    }
     .disclosure-person {
       margin-bottom: 10px;
       .person-text {
@@ -460,28 +494,34 @@ body {
     }
 
     .disclosure-content {
+      .title-required {
+        color: @theme-danger;
+      }
       .disclosure-content-data {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid #d7d7d7;
-        padding-bottom: 10px;
+        background-color: #ffffff;
+        padding: 10px 16px;
+        margin-bottom: 10px;
+        .content-label {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .content-sign {
+          display: flex;
+          flex-direction: column;
+          margin-top: 20px;
+        }
       }
       .disclosure-content-data-accept {
+        background-color: #ffffff;
+        padding: 10px 16px;
         margin-top: 10px;
         .content-sign-list {
+          margin-top: 20px;
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
           gap: 10px;
         }
-      }
-      .content-sign {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .sign-img {
-        width: 100px;
-        height: 50px;
       }
     }
   }

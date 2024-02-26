@@ -11,7 +11,6 @@
         >
         <Button
           v-if="type === 'edit' && !needEditApply"
-          class="jump-info-btn"
           type="primary"
           size="mini"
           @click="jumpToApplyInfo"
@@ -446,7 +445,7 @@ const jumpToApplyInfo = () => {
 </script>
 <style lang="less">
 body {
-  background-color: #f2f2f2;
+  background-color: #fbfbfb;
 }
 </style>
 <style lang="less" scoped>
@@ -454,11 +453,17 @@ body {
   display: flex;
   flex-direction: column;
   font-size: 14px;
-  color: #545456;
+  color: #333333;
   .operation-header {
     z-index: 1;
     position: absolute;
-    right: 0;
+    right: 16px;
+    top: 10px;
+    button {
+      --van-button-primary-background: #165dff;
+      --van-button-mini-padding: 6px 12px;
+      border-radius: 147px;
+    }
   }
   .process-form {
     & > div {
@@ -469,9 +474,6 @@ body {
       min-width: 120px;
       justify-content: flex-end;
     }
-  }
-  .jump-info-btn {
-    margin: 5px 10px 5px 0;
   }
   .no-form-data {
     text-align: center;
@@ -484,21 +486,20 @@ body {
 
 .audit-form {
   .audit-form-title {
-    padding: 10px 5px 8px 5px;
+    padding: 15px 5px 15px 16px;
   }
   .audit-form-content {
-    background-color: #ffffff;
     .operation-apply-form-btn {
       text-align: center;
-      margin-top: 10px;
-      padding-bottom: 20px;
-      width: 100%;
+      margin: 31px 0 10px 0;
+      padding: 0 16px;
       button {
-        width: 90%;
-        border-radius: 8px;
+        width: 100%;
+        --van-button-primary-background: #165dff;
+        border-radius: 4px;
       }
       button + button {
-        margin-left: 12px;
+        margin-left: 10px;
       }
     }
   }
@@ -527,7 +528,9 @@ body {
 }
 
 .audit-form-container-title {
-  padding: 10px 5px 8px 5px;
+  padding: 10px 5px 10px 16px;
+  font-size: 14px;
+  color: #333333;
 }
 .audit-content {
   background-color: #ffffff;

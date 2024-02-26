@@ -11,7 +11,10 @@
           :placeholder="'请选择' + currentOptions.placeholder[index]"
         />
       </div>
-      <el-radio-group v-model="_value" v-else>
+      <el-radio-group
+        v-model="_value"
+        v-else
+      >
         <el-radio
           class="w-row-text"
           style="margin: 5px"
@@ -75,7 +78,10 @@
           </div>
         </div>
       </div>
-      <el-radio-group v-model="_valuePc" v-else>
+      <el-radio-group
+        v-model="_valuePc"
+        v-else
+      >
         <el-radio
           class="w-row-text"
           style="margin: 5px"
@@ -87,12 +93,15 @@
       </el-radio-group>
     </div>
     <div v-else-if="mode === 'MOBILE' && !readonly">
-      <collapse v-model="actives" v-if="_valuePc.length > 0">
+      <collapse
+        v-model="actives"
+        v-if="_valuePc.length > 0"
+      >
         <collapse-item
           :lazy-render="false"
           style="background: #f7f8fa"
           :name="i"
-          :key="i+key"
+          :key="i + key"
           v-for="(row, i) in _valuePc"
         >
           <template #title>
@@ -100,7 +109,7 @@
             <span
               class="del-row"
               @click.stop="removeLink(i)"
-              v-if="!readonly && i>0"
+              v-if="!readonly && i > 0"
               >删除</span
             >
           </template>
@@ -155,7 +164,11 @@
           </div>
         </collapse-item>
       </collapse>
-      <div class="m-tb-empty" v-if="!readonly" @click="addLink">
+      <div
+        class="m-tb-empty"
+        v-if="!readonly"
+        @click="addLink"
+      >
         + 添加数据
       </div>
     </div>
@@ -166,7 +179,11 @@
         :cell-style="cellStyle"
         :header-cell-style="tbCellStyle"
       >
-        <el-table-column type="index" label="序号" width="60"></el-table-column>
+        <el-table-column
+          type="index"
+          label="序号"
+          width="60"
+        ></el-table-column>
         <el-table-column
           v-for="(item, index) in currentOptions.placeholder"
           :key="index"
@@ -190,14 +207,14 @@ import {
   Field,
   Popup,
   Picker,
-} from "vant";
-import componentMinxins from "../ComponentMinxins";
-import multilevelLinkApi from "@/api/multilevelLink";
-import { cloneDeep } from "lodash";
+} from 'vant';
+import componentMinxins from '../ComponentMinxins';
+import multilevelLinkApi from '@/api/multilevelLink';
+import { cloneDeep } from 'lodash';
 
 export default {
   mixins: [componentMinxins],
-  name: "MultilevelLink",
+  name: 'MultilevelLink',
   components: {
     Radio,
     RadioGroup,
@@ -221,7 +238,7 @@ export default {
       default: () => {
         return [
           {
-            key: "0",
+            key: '0',
             options: [],
           },
         ];
@@ -250,30 +267,30 @@ export default {
           0,
           false
         );
-        let type = "";
-        let num = "";
-        if(this.currentOptions.options[1]){
-          this.currentOptions.options[0].map((key,value)=>{
-          let v =  this.modelValue[i][this.currentOptions.fields[0]]
-          if(v == value){
-            type = key
-          }
-        })
+        let type = '';
+        let num = '';
+        if (this.currentOptions.options[1]) {
+          this.currentOptions.options[0].map((key, value) => {
+            let v = this.modelValue[i][this.currentOptions.fields[0]];
+            if (v == value) {
+              type = key;
+            }
+          });
         }
-        
-        if(this.currentOptions.options[1]){
-          this.currentOptions.options[1].map((key,value)=>{
-          let v =  this.modelValue[i][this.currentOptions.fields[1]]
-          if(v == value){
-            num = key
-          }
-        })
+
+        if (this.currentOptions.options[1]) {
+          this.currentOptions.options[1].map((key, value) => {
+            let v = this.modelValue[i][this.currentOptions.fields[1]];
+            if (v == value) {
+              num = key;
+            }
+          });
         }
-        
-        this.show_v[i] = [type.key,num.key];
+
+        this.show_v[i] = [type.key, num.key];
       }
     }
-    console.log("modelValue:", this.currentOptions.options);
+    console.log('modelValue:', this.currentOptions.options);
   },
   computed: {
     _valuePc: {
@@ -284,7 +301,7 @@ export default {
         return [{}];
       },
       set(val) {
-        this.$emit("update:modelValue", val);
+        this.$emit('update:modelValue', val);
       },
     },
   },
@@ -293,33 +310,33 @@ export default {
       showPicker: false,
       readonlyVal: [],
       tbCellStyle: {
-        background: "#e8e8e8",
-        padding: "10px 0",
+        background: '#e8e8e8',
+        padding: '10px 0',
       },
       cellStyle: {
-        padding: "0",
-        height: "40px",
+        padding: '0',
+        height: '40px',
       },
       allOptionsMap: [],
       key: 1,
       actives: [],
       customFieldName: {
-        text: "key",
-        value: "value",
+        text: 'key',
+        value: 'value',
       },
       show_v: [],
     };
   },
   methods: {
     mapToArray(index, val) {
-     return this.allOptionsMap[index].get(val);
+      return this.allOptionsMap[index].get(val);
     },
     addLink() {
-      this._valuePc.push({'certNum':''});
+      this._valuePc.push({ certNum: '' });
       this.show_v.push([]);
       this.actives.push(this._valuePc.length - 1);
       this.key++;
-      console.log("新增:", this._valuePc);
+      console.log('新增:', this._valuePc);
     },
     removeLink(i) {
       this._valuePc.splice(i, 1);
@@ -342,23 +359,23 @@ export default {
           );
         }
       }
-      return result ? result.key : "";
+      return result ? result.key : '';
     },
     async changeLink(val, currentIndex, index, needClear = true) {
       if (val) {
         // 清空后续下拉框的数据以及_valuePc对应字段的数据
         for (let i = index + 1; i < this.currentOptions.options.length; i++) {
           if (needClear) {
-            this._valuePc[currentIndex][this.currentOptions.fields[i]] = "";
+            this._valuePc[currentIndex][this.currentOptions.fields[i]] = '';
             this.show_v[currentIndex] = [];
           }
           this.currentOptions.options[i] = [];
         }
         // 将值放到对应的字段中
         this._valuePc[currentIndex][this.currentOptions.fields[index]] = val;
-        this.$emit("update:modelValue", this._valuePc);
+        this.$emit('update:modelValue', this._valuePc);
         if (index >= this.currentOptions.columns - 1) {
-          this.$emit("update:currentOptions", this.currentOptions);
+          this.$emit('update:currentOptions', this.currentOptions);
           return;
         }
         // 请求下一个下拉框的数据，如果map里有直接从map拿
@@ -369,7 +386,7 @@ export default {
           );
           let dataArr = data.data;
           // 后台返回值可能是Map，需要转换成数组
-          if (Object.prototype.toString.call(dataArr) === "[object Object]") {
+          if (Object.prototype.toString.call(dataArr) === '[object Object]') {
             this.currentOptions.options[index + 1] = Object.keys(dataArr).map(
               (key) => ({
                 key,
@@ -388,11 +405,11 @@ export default {
             this.currentOptions.options[index + 1]
           );
         }
-        this.$emit("update:currentOptions", this.currentOptions);
+        this.$emit('update:currentOptions', this.currentOptions);
       } else {
         // 清空后续下拉框的数据以及_valuePc对应字段的数据
         for (let i = index + 1; i < this.currentOptions.options.length; i++) {
-          this._valuePc[currentIndex][this.currentOptions.fields[i]] = "";
+          this._valuePc[currentIndex][this.currentOptions.fields[i]] = '';
           this.currentOptions.options[i] = [];
         }
       }
@@ -408,10 +425,11 @@ export default {
       this.changeLink(val.selectedValues[0], currentIndex, index, needClear);
       this.currentOptions.show[index] = false;
       this.show_v[currentIndex][index] = val.selectedOptions[0].key;
-      this._valuePc[currentIndex][this.currentOptions.fields[index]] = val.selectedValues[0]
+      this._valuePc[currentIndex][this.currentOptions.fields[index]] =
+        val.selectedValues[0];
     },
   },
-  emits: ["update:modelValue", "update:currentOptions"],
+  emits: ['update:modelValue', 'update:currentOptions'],
 };
 </script>
 
@@ -442,7 +460,7 @@ export default {
   }
 }
 .m-tb-empty {
-  padding: 20px 10px 0px 10px;
+  padding: 10px;
   // background: #f7f8fa;
   color: #1989fa;
   text-align: center;

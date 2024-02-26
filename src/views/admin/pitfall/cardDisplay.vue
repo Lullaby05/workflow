@@ -1,47 +1,49 @@
 <template>
-  <div class="card-display-title">
-    <div>{{ title }}</div>
-    <div :style="statusStyle">{{ statusText }}</div>
-  </div>
-  <div class="card-display-content">
-    <div
-      class="content-items"
-      v-for="item in filterItems"
-      :key="item.id"
-    >
-      <div v-if="!item.notNeedField">{{ item.field }}:</div>
+  <div class="card-display-container">
+    <div class="card-display-title">
+      <div>{{ title }}</div>
+      <div :style="statusStyle">{{ statusText }}</div>
+    </div>
+    <div class="card-display-content">
       <div
-        v-if="item.type === 'image' && item.value"
-        class="img-container"
+        class="content-items"
+        v-for="item in filterItems"
+        :key="item.id"
       >
-        <img
-          class="sign-img"
-          :src="item.value"
-        />
-      </div>
-      <div v-else-if="item.type === 'sign' && item.value">
-        <img
-          class="sign-img"
-          :src="item.value"
-        />
-      </div>
-      <div v-else-if="item.type === 'signArray' && item.value">
-        <div class="sign-list">
-          <div
+        <div v-if="!item.notNeedField">{{ item.field }}:</div>
+        <div
+          v-if="item.type === 'image' && item.value"
+          class="img-container"
+        >
+          <img
             class="sign-img"
-            v-if="item.value.length"
-            v-for="(url, index) in item.value"
-            :key="index"
-          >
-            <img :src="url" />
+            :src="item.value"
+          />
+        </div>
+        <div v-else-if="item.type === 'sign' && item.value">
+          <img
+            class="sign-img"
+            :src="item.value"
+          />
+        </div>
+        <div v-else-if="item.type === 'signArray' && item.value">
+          <div class="sign-list">
+            <div
+              class="sign-img"
+              v-if="item.value.length"
+              v-for="(url, index) in item.value"
+              :key="index"
+            >
+              <img :src="url" />
+            </div>
           </div>
         </div>
+        <slot
+          v-else-if="item.type === 'slot'"
+          :name="item.slotName || 'default'"
+        ></slot>
+        <div v-else>{{ item.value }}</div>
       </div>
-      <slot
-        v-else-if="item.type === 'slot'"
-        :name="item.slotName || 'default'"
-      ></slot>
-      <div v-else>{{ item.value }}</div>
     </div>
   </div>
 </template>
@@ -75,20 +77,26 @@ const taskStateEnum = {
   },
   4: {
     text: '按时完成',
-    color: '#1890ff',
+    color: '#165dff',
   },
   5: {
     text: '逾期未完成',
-    color: '#d9001b',
+    color: '#D43030',
   },
   6: {
     text: '逾期完成',
-    color: '#f6ab4a',
+    color: '#FF8D1A',
   },
 };
 
 const { title = '', items = [], status = '' } = props.cardItems;
-const statusStyle = { color: taskStateEnum[status]?.color || '#9a9a9a' };
+const statusStyle = {
+  color: taskStateEnum[status]?.color || '#9a9a9a',
+  border: `1px solid ${taskStateEnum[status]?.color || '#9a9a9a'}`,
+  padding: '2px 8px',
+  borderRadius: '20px',
+  fontSize: '12px',
+};
 const statusText = taskStateEnum[status]?.text || '未开始';
 const filterItems = items
   .filter((ele) => ele.visible === undefined || ele.visible)
@@ -107,12 +115,19 @@ const filterItems = items
   });
 </script>
 <style lang="less" scoped>
-.card-display-title {
+.card-display-container {
   background: #fff;
+  padding-top: 10px;
+  color: #333333;
+}
+.card-display-title {
+  font-size: 14px;
+  font-weight: 500;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0 10px;
-  padding-top: 10px;
+  border-bottom: 0.5px solid #e5e5ea;
 }
 
 .card-display-content {
@@ -120,17 +135,18 @@ const filterItems = items
   overflow: hidden;
   white-space: break-spaces;
   overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 0 0;
+  gap: 20px;
   .content-items {
-    margin: 10px;
+    font-size: 12px;
+    line-height: 12px;
     display: flex;
     div:first-child {
       text-align: right;
       // flex: 0 0 140px;
       margin-right: 10px;
-    }
-
-    div {
-      line-height: 28px;
     }
 
     .img-container {

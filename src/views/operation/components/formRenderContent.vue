@@ -115,6 +115,7 @@ defineExpose({
 <style lang="less" scoped>
 .form-render-container {
   display: flex;
+  margin-top: 5px;
 
   .process-form {
     & > div {
@@ -132,6 +133,9 @@ defineExpose({
     :deep(.readonly),
     :deep(.m-form-item_title) {
       font-size: 14px;
+    }
+    :deep(.readonly .m-form-item) {
+      padding: 10px 16px 20px 16px;
     }
   }
 }

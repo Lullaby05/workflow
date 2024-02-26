@@ -1,11 +1,10 @@
 <template>
   <div class="check-box">
-    {{ cache }}
     <div
       class="check-item"
       v-for="(ele, index) in Object.keys(checkItemList)"
     >
-      <span class="check-item-title">{{ `排查项目${index + 1}：${ele}` }}</span>
+      <div class="check-item-title">{{ `排查项目${index + 1}：${ele}` }}</div>
       <div
         class="item-slot"
         v-for="item in checkItemList[ele]"
@@ -48,7 +47,7 @@ export default {
 import FormRender from '@/components/form-design/components/FormRender.vue';
 // import FormRender from '@/views/common/form/FormRender.vue';
 import { inject, onBeforeMount, ref } from 'vue';
-import { Button, showConfirmDialog } from 'vant';
+import { Button, showConfirmDialog, showToast } from 'vant';
 import { useRoute, useRouter } from 'vue-router';
 import { planInfo } from '@/api/webView';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
@@ -72,21 +71,10 @@ document.title = '开始排查';
 const send = () => {
   const html = document.getElementsByTagName('html')[0];
   const height = html.clientHeight;
-  ElMessage({
+  showToast({
+    type: 'success',
     message: '保存成功',
-    icon: Success,
-    center: true,
-    // type: 'success',
-    customClass: 'message-success',
-    duration: 1500,
-    offset: height / 2 - 120,
     onClose: () => {
-      wx.miniProgram.postMessage({
-        data: {
-          foo: '123',
-          route: route,
-        },
-      });
       wx.miniProgram.navigateBack();
     },
   });
@@ -182,12 +170,10 @@ const getContentData = async () => {
       //   formConfigTemp: formRender.formConfigTemp,
       // });
     });
-    console.log('@', checkItemList.value);
   }
 };
 
 const setDisabled = (formsTemp) => {
-  console.log('@formConfigTemp', formsTemp);
   formsTemp.forEach((e) => {
     e.props.disabled = true;
     if (e.name === 'TableList') {
@@ -214,7 +200,7 @@ const handleSave = async () => {
       .then(() => {
         saveData();
       })
-      .catch(() => { });
+      .catch(() => {});
   }
 };
 
@@ -264,12 +250,12 @@ const saveData = async () => {
         hazardAddr: ele.formRenderData.field_hazardAddr,
         sceneImages: ele.formRenderData.field_sceneImages
           ? ele.formRenderData.field_sceneImages.map((item) => {
-            return {
-              fileUrl: item.sourceUrl,
-              postUrl: item.url,
-              fileType: item.fileType,
-            };
-          })
+              return {
+                fileUrl: item.sourceUrl,
+                postUrl: item.url,
+                fileType: item.fileType,
+              };
+            })
           : [],
         hidRiskLevelCode:
           ele.formRenderData.field_hidRiskLevelCode === '一般隐患' ? '2' : '1',
@@ -293,7 +279,7 @@ const saveData = async () => {
       await pitfallAdd(unchecked);
     }
     send();
-  })
+  });
 };
 
 const goBack = () => {
@@ -305,43 +291,27 @@ const goBack = () => {
 :root {
   font-size: 12px;
 }
-
-.message-success {
-  width: 120px;
-  height: 120px;
-  border-radius: 5px;
-  background-color: #4c4c4c;
-  color: #dbdbdb;
-  flex-direction: column;
-
-  .el-message__content {
-    font-size: 16px;
-    margin-top: 10px;
-  }
-
-  .el-message__icon {
-    font-size: 50px;
-    margin-right: 0;
-  }
-}
 </style>
 
 <style lang="less" scoped>
 .check-box {
   min-height: 100vh;
-  padding-bottom: 44px;
-  background-color: #f2f2f2;
+  padding-bottom: 74px;
+  background-color: #fbfbfb;
+  box-sizing: border-box;
 }
 
 .submit-btn {
-  padding: 0 10px;
+  padding: 0 16px;
   position: fixed;
-  bottom: 15px;
+  bottom: 30px;
   width: 100%;
   box-sizing: border-box;
+  --van-button-primary-background: #165dff;
+  --van-button-primary-border-color: #165dff;
 
   button {
-    border-radius: 5px;
+    border-radius: 4px;
   }
 }
 
@@ -350,22 +320,44 @@ const goBack = () => {
 }
 
 .check-item-title {
-  margin-left: 10px;
-  font-family: '微软雅黑';
-  font-weight: 400;
-  font-style: normal;
-  color: #000000;
-  line-height: 40px;
+  font-size: 16px;
+  padding: 16px 0 10px 16px;
+  font-weight: 500;
+  color: #333333;
+  line-height: 16px;
 }
 
 .item-slot {
   // margin-top: 20px;
 
   .form-render-title {
-    line-height: 30px;
-    padding: 5px 10px;
-    background-color: #d7d7d7;
-    color: #7f7f7f;
+    background-color: #ffffff;
+    padding: 16px 0 10px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d2129;
+  }
+  :deep(.process-form) {
+    & > div + div {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: calc(100vw - 32px);
+        height: 0.5px;
+        margin: 0 16px;
+        background-color: #e5e5ea;
+      }
+    }
+    .m-form-item {
+      padding: 13px 16px 13px 16px;
+      margin-bottom: 1px;
+      font-weight: 400;
+      --van-field-input-disabled-text-color: #999999;
+      --van-field-input-text-color: #999999;
+      --van-cell-value-color: #999999;
+    }
   }
 }
 </style>

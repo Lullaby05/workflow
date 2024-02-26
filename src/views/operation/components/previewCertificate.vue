@@ -127,7 +127,7 @@ const printObj = {
 .preview-certificate {
   display: flex;
   flex-direction: column;
-  padding: 5px 5px 20px;
+  padding-bottom: 20px;
 
   .btn-group {
     flex: 0 0 auto;

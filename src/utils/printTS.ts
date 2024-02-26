@@ -20,18 +20,18 @@ export function bindVar(
       );
       let returnVal = '';
       returnVal += `<div style="display: block;text-align: center; font-size: 20px; font-weight: bold; height: 30px;">${result && result.result
-          ? result.result === 'agree'
-            ? '通过'
-            : '不通过'
-          : ''
+        ? result.result === 'agree'
+          ? '通过'
+          : '不通过'
+        : ''
         }</div>`;
       returnVal += `<div style="display: flex; align-items: center; justify-content: flex-end;" ><span>签名：</span>${result && result.signature
-          ? `<img style="width: 100px; height: 50px; display: inline-block;padding: 2px;object-fit: cover;" src="${result.signature}"/>`
-          : '<span style="margin-left: 40px;"></span>'
+        ? `<img style="width: 100px; height: 50px; display: inline-block;padding: 2px;object-fit: cover;" src="${result.signature}"/>`
+        : '<span style="margin-left: 40px;"></span>'
         }`;
       returnVal += `<span>${result && result.finishTime
-          ? formatDate(result.finishTime, 'yyyy年MM月DD日HH时mm分')
-          : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日&nbsp;&nbsp;&nbsp;&nbsp;时&nbsp;&nbsp;&nbsp;&nbsp;分'
+        ? formatDate(result.finishTime, 'yyyy年MM月DD日HH时mm分')
+        : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日&nbsp;&nbsp;&nbsp;&nbsp;时&nbsp;&nbsp;&nbsp;&nbsp;分'
         }</span></div>`;
 
       return `<div>${returnVal}</div>`;
@@ -161,6 +161,9 @@ async function decodeFieldVal(formData: any, item: any, val: any) {
           decodeFieldVal(row, col, value[i]);
         });
       });
+      if (!value.length) {
+        value.push({})
+      }
       break;
     case 'SafetyMeasure':
       value = [];
@@ -168,7 +171,7 @@ async function decodeFieldVal(formData: any, item: any, val: any) {
         value.push({
           number: row.number,
           securityMeasure: row.securityMeasure,
-          isRelated: row.isRelated,
+          isRelated: `<div style="color:${row.isRelated === '是' ? '#43CF7C' : ''}">${row.isRelated}</div>`,
           confirmPerson: row.confirmPerson,
         });
       });

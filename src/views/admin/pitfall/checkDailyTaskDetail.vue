@@ -149,18 +149,30 @@ onBeforeMount(() => {
 <style lang="less" scoped>
 .check-box {
   min-height: 100vh;
-  background-color: #f2f2f2;
+  background-color: #fbfbfb;
+  box-sizing: border-box;
   font-size: 12px;
+  padding-top: 10px;
+}
+.card-display-container {
+  margin: 0 10px;
+  padding: 16px 8px 20px 8px;
+  box-shadow: 0px 2px 8px 1px #e5e5ea;
+  border-radius: 4px;
+  :deep(.card-display-title) {
+    padding: 0 0 10px 0;
+  }
 }
 .check-item {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .check-item-title {
-  margin-left: 10px;
-  font-family: '微软雅黑';
+  font-size: 16px;
+  margin-left: 16px;
+  line-height: 16px;
   font-weight: 400;
   font-style: normal;
-  color: #000000;
+  color: #333333;
 }
 
 .row {
@@ -169,17 +181,40 @@ onBeforeMount(() => {
   }
 }
 .row + .row {
-  margin-top: 14px;
+  margin-top: 20px;
 }
 
 .item-slot {
-  margin-top: 15px;
-
+  background-color: #ffffff;
+  margin-top: 10px;
+  font-size: 14px;
   .form-render-title {
     line-height: 20px;
-    padding: 5px 10px;
-    background-color: #d7d7d7;
-    color: #7f7f7f;
+    padding: 16px;
+    font-weight: 700;
+  }
+  :deep(.process-form) {
+    & > div + div {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: calc(100vw - 32px);
+        height: 0.5px;
+        margin: 0 16px;
+        background-color: #e5e5ea;
+      }
+    }
+    .m-form-item {
+      padding: 13px 16px 13px 16px;
+      margin-bottom: 1px;
+      font-weight: 400;
+      --van-cell-value-color: #1d2129;
+      .m-form-item_title {
+        color: #86909c;
+      }
+    }
   }
 }
 </style>

@@ -262,22 +262,35 @@ export default {
   line-height: 10px;
 }
 .van-popup {
-  --van-popup-close-icon-margin: 10px;
+  --van-popup-close-icon-margin: 20px;
+  --van-popup-close-icon-size: 18px;
+  border-radius: 20px 20px 0px 0px;
 }
 .popup-container {
   display: flex;
   flex-direction: column;
   .title {
     text-align: center;
-    line-height: 40px;
-    border-bottom: 1px solid #f2f2f2;
-    font-size: 14px;
+    line-height: 56px;
+    font-size: 16px;
   }
   .bottom-btn {
     text-align: center;
-    padding: 20px 0;
+    padding: 10px 16px;
+    margin-top: 20px;
+    box-shadow: 0px -2px 8px 1px #e5e5ea;
     button {
-      width: 25%;
+      height: 40px;
+      border-radius: 25px;
+      --van-button-primary-background: #165dff;
+      --van-button-default-background: #fbfbfb;
+      --van-button-default-border-color: #cccccc;
+    }
+    button:nth-child(1) {
+      width: 36vw;
+    }
+    button:nth-child(2) {
+      width: 52vw;
     }
     button + button {
       margin-left: 10px;
@@ -285,26 +298,28 @@ export default {
   }
 }
 .select-list {
-  padding: 10px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   font-size: 14px;
-  gap: 10px;
+  gap: 16px 8px;
   .select-item {
-    color: #333333;
-    border: 1px solid #d7d7d7;
-    border-radius: 5px;
-    padding: 5px 20px;
+    color: #4e5969;
+    padding: 13px 20px;
     flex: 0 0 auto;
     min-width: calc((100% - 20px) / 3);
     box-sizing: border-box;
     text-align: center;
+    border-radius: 4px;
+    background: #fafafa;
   }
   .select-item-active {
-    color: #67a9ff;
+    color: #165dff;
     background-color: #ecf8fe;
-    border: 1px solid #67a9ff;
+    outline: 0.5px solid #165dff;
+    border-radius: 4px;
+    background: #f5faff;
   }
 }
 </style>

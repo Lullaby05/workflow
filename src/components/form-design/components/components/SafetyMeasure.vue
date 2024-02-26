@@ -80,14 +80,14 @@
           </form-item>
           <form-item
             :model="row"
-            :rule="rules['SignPanel']"
-            :ref="`SignPanel_${i}`"
-            prop="SignPanel"
+            :rule="rules['confirmPerson']"
+            :ref="`confirmPerson_${i}`"
+            prop="confirmPerson"
             label="确认人"
             :key="'column_' + 3"
           >
             <Field
-              v-model="row[SignPanel]"
+              v-model="row['confirmPerson']"
               is-link
               readonly
               label=""

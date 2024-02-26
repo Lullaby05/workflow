@@ -1,16 +1,19 @@
 <template>
   <div class="container">
-    <div v-if="type === 'add'">
+    <div
+      v-if="type === 'add'"
+      style="padding: 10px 16px"
+    >
       <span
-        style="color: #d9001b; line-height: 20px; margin-left: 5px"
+        style="color: #86909c; line-height: 12px"
         v-if="!hasStorage"
         >系统将自动为您保存填写的信息</span
       >
       <span
-        style="color: #d9001b; line-height: 20px; margin-left: 5px"
+        style="color: #86909c; line-height: 18px"
         v-else
         >检测到您有数据未提交，已为您自动填充表单，若不需要填充表单内容，点击<span
-          style="text-decoration: underline; color: #409eff"
+          style="text-decoration: underline; color: #165dff"
           @click="clearStorageFormData"
           >一键清空</span
         >缓存表单</span
@@ -29,6 +32,17 @@
           style="font-size: 12px"
         />
       </el-steps>
+    </div>
+    <div
+      v-if="flag === 0"
+      style="
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #333333;
+        margin-left: 16px;
+      "
+    >
+      作业相关信息
     </div>
     <div
       class="add-form-render-container"
@@ -382,6 +396,9 @@ const submit = () => {
 };
 </script>
 <style lang="less" scoped>
+.container {
+  background-color: #fbfbfb;
+}
 .header {
   font-size: 18px;
   margin-bottom: 30px;
@@ -396,10 +413,6 @@ const submit = () => {
   }
 }
 
-:deep(.step) {
-  margin: 0 0 10px 0 !important;
-}
-
 .add-form-render-container {
   // padding: 0px 20px 20px 20px;
   display: flex;
@@ -411,24 +424,30 @@ const submit = () => {
 }
 
 .form-render-btns {
-  margin-top: 16px;
+  margin-top: 20px;
   text-align: center;
   display: flex;
-  margin-bottom: 5px;
+  padding: 16px 10px;
+  background: #ffffff;
+  box-shadow: 0px -2px 8px 1px #e5e5ea;
+  --van-button-primary-background: #165dff;
 
   button {
     flex: 1;
+    border-radius: 25px;
+    height: 40px;
   }
 
   button + button {
-    margin-left: 12px;
+    margin-left: 10px;
   }
 }
 
 .step {
   padding: 10px;
   background: #fff;
-  margin: 10px;
+  margin: 0 8px 10px 8px;
+  border-radius: 4px;
 }
 
 :deep(.el-step__icon) {
@@ -463,9 +482,13 @@ const submit = () => {
     color: #f59a23;
   }
 }
-:deep(.m-form-item){
-  padding: 10px 10px 0px 10px;
+:deep(.m-form-item) {
+  padding: 10px 10px 0px 16px;
   margin-bottom: 1px;
+  font-weight: 400;
+  --van-field-input-disabled-text-color: #999999;
+  --van-field-input-text-color: #999999;
+  --van-cell-value-color: #999999;
 }
 </style>
 
