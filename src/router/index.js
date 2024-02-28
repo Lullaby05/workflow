@@ -120,7 +120,7 @@ const router = createRouter({
       name: 'check',
       component: () => import('@/views/admin/pitfall/checkDailyTaskDetail.vue'),
       meta: {
-        title: 'wflow-pro | 详情',
+        title: '',
         viewport: viewport,
       },
     },
@@ -129,7 +129,7 @@ const router = createRouter({
       name: 'sign',
       component: () => import('@/views/admin/pitfall/sign.vue'),
       meta: {
-        title: 'wflow-pro | 详情',
+        title: '',
         viewport: viewport,
       },
     },
@@ -139,7 +139,7 @@ const router = createRouter({
       component: () =>
         import('@/views/admin/operation/operationDetailRender.vue'),
       meta: {
-        title: 'wflow-pro | 作业详情',
+        title: '',
         viewport: viewport,
       },
     },
@@ -149,7 +149,7 @@ const router = createRouter({
       component: () =>
         import('@/views/admin/operation/fireCertificate/add.vue'),
       meta: {
-        title: 'wflow-pro | 新增',
+        title: '',
         viewport: viewport,
       },
     },

@@ -160,10 +160,9 @@
       >
         <div class="disclosure-person">
           <span class="person-text">{{ personArr[0].name }}</span>
+          <span class="dept-text">{{ personArr[0].deptName }}</span>
         </div>
-        <div class="no-data">
-          <div class="no-data-text">待签署</div>
-        </div>
+        <div class="no-data">待签署</div>
       </div>
     </div>
     <Transition
@@ -220,6 +219,10 @@ const props = defineProps({
   certType: {
     type: String,
     required: true,
+  },
+  backStep: {
+    type: Number,
+    default: 1,
   },
 });
 
@@ -407,7 +410,9 @@ const handleButtonClick = async (key: string) => {
         type: 'success',
         message: '操作成功',
         onClose: () => {
-          wx.miniProgram.navigateBack();
+          wx.miniProgram.navigateBack({
+            delta: props.backStep,
+          });
         },
       });
     });
@@ -484,15 +489,41 @@ body {
       }
     }
   }
-  .disclosure-form-detail {
+  .disclosure-form-card {
+    padding: 14px 16px 16px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 20px;
+    box-shadow: 0px 2px 8px 1px #e5e5ea;
+    position: relative;
     .disclosure-person {
-      margin-bottom: 10px;
-      .person-text {
+      span:nth-child(1) {
+        font-size: 14px;
         color: #333333;
-        font-weight: bold;
+      }
+      span:nth-child(2) {
+        color: #86909c;
+        font-weight: 400;
+        font-size: 12px;
+      }
+      span + span {
+        margin-left: 10px;
       }
     }
-
+    .no-data {
+      width: 100%;
+      text-align: center;
+      background: #f5f7fa;
+      border: 1px solid #e5e5e5;
+      color: #4e5969;
+      font-size: 14px;
+      padding: 41px 0;
+    }
+  }
+  .disclosure-form-detail {
     .disclosure-content {
       .title-required {
         color: @theme-danger;
@@ -524,12 +555,6 @@ body {
         }
       }
     }
-  }
-  .no-data {
-    text-align: center;
-    background-color: #fde8cc;
-    padding: 5px 0;
-    color: #333333;
   }
 }
 </style>

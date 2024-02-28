@@ -1,14 +1,5 @@
 <template>
   <div class="form-render-container">
-    <!-- <div style="text-align: right; margin-bottom: 5px">
-      <Button
-        v-if="type === 'detail' && currentProcess"
-        type="primary"
-        size="mini"
-        @click="jumpToHandle"
-        >开始作业分析</Button
-      >
-    </div> -->
     <div class="operation-header">
       <div style="text-align: right">
         <Button
@@ -24,6 +15,13 @@
           size="mini"
           @click="jumpToApplyInfo"
           >作业信息查看</Button
+        >
+        <Button
+          v-if="type === 'detail' && currentProcess"
+          type="primary"
+          size="mini"
+          @click="jumpToHandle"
+          >开始作业分析</Button
         >
       </div>
     </div>
@@ -150,6 +148,10 @@ const props = defineProps({
   applyUserId: {
     type: String,
     required: true,
+  },
+  backStep: {
+    type: Number,
+    default: 1,
   },
 });
 const userStore = { userId: localStorage.getItem('userId') };
@@ -379,7 +381,9 @@ const submitForm = async (formData: any) => {
     type: 'success',
     message: '操作成功',
     onClose: () => {
-      wx.miniProgram.navigateBack();
+      wx.miniProgram.navigateBack({
+        delta: Number(props.backStep),
+      });
     },
   });
 };

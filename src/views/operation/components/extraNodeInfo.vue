@@ -16,6 +16,13 @@
           @click="jumpToApplyInfo"
           >作业信息查看</Button
         >
+        <Button
+          v-if="type === 'detail' && currentProcess"
+          type="primary"
+          size="mini"
+          @click="jumpToHandle"
+          >开始{{ props.text }}</Button
+        >
       </div>
     </div>
     <div>
@@ -154,6 +161,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  backStep: {
+    type: Number,
+    default: 1,
+  },
 });
 const userStore = { userId: localStorage.getItem('userId') };
 const wx: any = inject('wx');
@@ -162,7 +173,11 @@ const { searchFormItem } = useCertificate();
 const auditFormRef = ref<any>(null);
 const formRender = ref<any>(null);
 const formProcessData = ref<any[]>([]);
-const emits = defineEmits(['jumpToEditApply', 'jumpToApplyInfo']);
+const emits = defineEmits([
+  'jumpToEditApply',
+  'jumpToApplyInfo',
+  'jumpToHandle',
+]);
 
 const needAnalysis = [
   operationTypeEnum.CONFINEDSPACE,
@@ -376,7 +391,9 @@ const submitForm = async (formData: any) => {
     type: 'success',
     message: '操作成功',
     onClose: () => {
-      wx.miniProgram.navigateBack();
+      wx.miniProgram.navigateBack({
+        delta: Number(props.backStep),
+      });
     },
   });
 };
@@ -418,6 +435,10 @@ const jumpToEditApply = () => {
 // 跳转到申请预览
 const jumpToApplyInfo = () => {
   emits('jumpToApplyInfo');
+};
+// 跳转到操作处理页面
+const jumpToHandle = () => {
+  emits('jumpToHandle', 'analyse');
 };
 </script>
 <style lang="less">

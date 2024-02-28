@@ -29,6 +29,7 @@ const {
   refreshToken = '31dbcd5f82aa4c799cd51a9f98823b77',
   userId = 1,
   type = 'edit',
+  backStep = 1,
 } = route.query;
 
 localStorage.setItem('userId', userId as string);
@@ -98,6 +99,7 @@ const getDetailData = async () => {
       type,
       certType: detail.certType,
       title,
+      backStep,
     };
   });
 };
@@ -117,7 +119,7 @@ const jumpToApplyInfo = () => {
 };
 const jumpToHandle = (processKey: any) => {
   wx.miniProgram.navigateTo({
-    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=${processKey}&id=${config.value.id}&type=edit`,
+    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=${processKey}&id=${config.value.id}&type=edit&backStep=2`,
   });
 };
 </script>
