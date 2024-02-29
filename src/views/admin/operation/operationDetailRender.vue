@@ -119,7 +119,9 @@ const jumpToApplyInfo = () => {
 };
 const jumpToHandle = (processKey: any) => {
   wx.miniProgram.navigateTo({
-    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=${processKey}&id=${config.value.id}&type=edit&backStep=2`,
+    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=${processKey}&id=${
+      config.value.id
+    }&type=edit&backStep=2&name=${title?.slice(0, -2)}`,
   });
 };
 </script>

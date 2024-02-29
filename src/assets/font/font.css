@@ -1,0 +1,13 @@
+@font-face {
+  font-family: '思源黑体';
+  src: url('./SourceHanSansSC-Regular-2.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '思源黑体 Medium';
+  src: url('./SourceHanSansOLD-Medium-2.otf');
+  font-weight: normal;
+  font-style: normal;
+}

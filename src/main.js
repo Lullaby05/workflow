@@ -13,6 +13,7 @@ import 'vant/lib/index.css';
 
 import '@/assets/global.css';
 import '@/assets/iconfont/iconfont.css';
+import '@/assets/font/font.css';
 
 import Ellipsis from './components/common/Ellipsis.vue';
 import WDialog from './components/common/WDialog.vue';

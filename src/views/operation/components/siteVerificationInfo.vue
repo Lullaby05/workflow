@@ -1,6 +1,9 @@
 <template>
   <div class="form-render-container">
-    <div class="operation-header">
+    <div
+      class="operation-header"
+      :style="{ top: formDesign || type === 'detail' ? '10px' : '5px' }"
+    >
       <div style="text-align: right">
         <Button
           v-if="needEditApply"
@@ -460,7 +463,7 @@ const jumpToApplyInfo = () => {
 };
 // 跳转到操作处理页面
 const jumpToHandle = () => {
-  emits('jumpToHandle', 'analyse');
+  emits('jumpToHandle', 'siteCheck');
 };
 </script>
 <style lang="less">

@@ -1,6 +1,9 @@
 <template>
   <div class="form-render-container">
-    <div class="operation-header">
+    <div
+      class="operation-header"
+      :style="{ top: formDesign || type === 'edit' ? '10px' : '5px' }"
+    >
       <div style="text-align: right">
         <Button
           v-if="needEditApply"
@@ -21,7 +24,7 @@
           type="primary"
           size="mini"
           @click="jumpToHandle"
-          >开始{{ props.text }}</Button
+          >开始{{ currentProcess.name }}</Button
         >
       </div>
     </div>
@@ -438,7 +441,7 @@ const jumpToApplyInfo = () => {
 };
 // 跳转到操作处理页面
 const jumpToHandle = () => {
-  emits('jumpToHandle', 'analyse');
+  emits('jumpToHandle', '');
 };
 </script>
 <style lang="less">

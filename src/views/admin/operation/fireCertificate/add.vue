@@ -36,6 +36,7 @@
     <div
       v-if="flag === 0"
       style="
+        font-family: '思源黑体 Medium';
         margin-bottom: 10px;
         font-size: 14px;
         color: #333333;

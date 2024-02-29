@@ -1,6 +1,9 @@
 <template>
   <div class="form-render-container">
-    <div class="operation-header">
+    <div
+      class="operation-header"
+      :style="{ top: formDesign || type === 'edit' ? '10px' : '5px' }"
+    >
       <div style="text-align: right">
         <Button
           v-if="needEditApply"

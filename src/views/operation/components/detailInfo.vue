@@ -121,6 +121,7 @@ const jumpToEditApply = () => {
     align-items: center;
     .audit-person {
       span:nth-child(1) {
+        font-family: '思源黑体 Medium';
         font-size: 14px;
         color: #333333;
       }
@@ -177,8 +178,10 @@ const jumpToEditApply = () => {
       display: flex;
       align-items: flex-start;
       .sign-img {
+        max-width: 150px;
         height: 60px;
         border: 1px solid rgba(228, 231, 237, 0.7);
+        object-fit: cover;
       }
     }
     .audit-time {
