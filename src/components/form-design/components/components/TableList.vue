@@ -509,13 +509,16 @@ export default {
               if (!this._value[j][this.columns[i].id]) {
                 const html = document.getElementsByTagName('html')[0];
                 const height = html.clientHeight;
-                ElMessage({
-                  message: this.columns[i].title + '不能为空',
-                  icon: 'none',
-                  duration: 1500,
-                  customClass: 'm-valid-error-message',
-                  offset: height / 2 - 120,
+                showToast({
+                  message: form.title + '不能为空',
                 });
+                // ElMessage({
+                //   message: this.columns[i].title + '不能为空',
+                //   icon: 'none',
+                //   duration: 1500,
+                //   customClass: 'm-valid-error-message',
+                //   offset: height / 2 - 120,
+                // });
                 throw new Error('校验失败');
               }
             }

@@ -160,6 +160,7 @@
 </template>
 
 <script>
+import { showToast } from 'vant';
 import draggable from 'vuedraggable';
 import FormItem from '@/components/common/FormItem.vue';
 import FormDesignRender from '../../design/FormDesignRender.vue';
@@ -349,14 +350,17 @@ export default {
           formRef[0].validate_m((subValid) => {
             if (!subValid) {
               success = false;
-              ElMessage({
+              showToast({
                 message: form.title + '不能为空',
-                icon: 'none',
-                // type: "success",
-                customClass: 'message-error',
-                duration: 1500,
-                offset: height / 2 - 120,
               });
+              // ElMessage({
+              //   message: form.title + '不能为空',
+              //   icon: 'none',
+              //   // type: "success",
+              //   customClass: 'message-error',
+              //   duration: 1500,
+              //   offset: height / 2 - 120,
+              // });
               throw new Error('校验失败');
             }
           });
