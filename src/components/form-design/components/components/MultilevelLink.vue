@@ -167,9 +167,13 @@
       <div
         class="m-tb-empty"
         v-if="!readonly"
-        @click="addLink"
       >
-        + 添加数据
+        <Button
+          type="primary"
+          size="small"
+          @click="addLink"
+          >添加数据</Button
+        >
       </div>
     </div>
     <div v-else>
@@ -207,6 +211,7 @@ import {
   Field,
   Popup,
   Picker,
+  Button,
 } from 'vant';
 import componentMinxins from '../ComponentMinxins';
 import multilevelLinkApi from '@/api/multilevelLink';
@@ -223,6 +228,7 @@ export default {
     Field,
     Popup,
     Picker,
+    Button,
   },
   props: {
     modelValue: {
@@ -444,7 +450,7 @@ export default {
   float: right;
   margin-right: 20px;
   font-size: 1rem;
-  color: #8c8c8c;
+  color: #d43030;
 }
 .other_from {
   position: relative;
@@ -460,9 +466,14 @@ export default {
   }
 }
 .m-tb-empty {
+  font-size: 14px;
   padding: 10px;
-  // background: #f7f8fa;
-  color: #1989fa;
-  text-align: center;
+  text-align: right;
+  --van-button-primary-background: #165dff;
+  --van-button-small-padding: 6px 10px;
+  --van-button-small-height: 24px;
+  button {
+    border-radius: 197px;
+  }
 }
 </style>

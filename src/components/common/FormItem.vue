@@ -212,7 +212,7 @@ export default {
   & > div:first-child {
     margin-bottom: 8px;
     font-size: 1.2rem;
-    color: #86909c;
+    color: #333333;
   }
 
   & > div:last-child {

@@ -89,11 +89,15 @@
       </collapse>
       <div
         class="m-add-row"
-        @click="addRow"
         v-if="!disabled && !readonly"
       >
-        <icon name="el-icon-plus"></icon>
-        <span> {{ placeholder }}</span>
+        <!-- <icon name="el-icon-plus"></icon> -->
+        <Button
+          type="primary"
+          size="small"
+          @click="addRow"
+          >{{ placeholder }}</Button
+        >
       </div>
     </div>
     <template v-else>
@@ -231,6 +235,7 @@ import {
   showToast,
   showDialog,
   showConfirmDialog,
+  Button,
 } from 'vant';
 import FormItem from '@/components/common/FormItem.vue';
 import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
@@ -246,6 +251,7 @@ export default {
     Collapse,
     CollapseItem,
     FormDesignRender,
+    Button,
   },
   props: {
     modelValue: {
@@ -590,7 +596,7 @@ export default {
   float: right;
   margin-right: 10px;
   font-size: 1rem;
-  color: #8c8c8c;
+  color: #d43030;
 }
 
 :deep(.valid-error) {
@@ -674,10 +680,15 @@ export default {
 }
 
 .m-add-row {
-  color: @theme-primary;
-  padding-top: 10px;
-  text-align: center;
-  cursor: pointer;
+  font-size: 14px;
+  padding: 10px;
+  text-align: right;
+  --van-button-primary-background: #165dff;
+  --van-button-small-padding: 6px 10px;
+  --van-button-small-height: 24px;
+  button {
+    border-radius: 197px;
+  }
 }
 
 :deep(.van-collapse-item__content) {

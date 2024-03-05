@@ -18,21 +18,38 @@
           label="安全措施"
           props="safetyMeasure"
         ></el-table-column>
-        <el-table-column label="是否涉及" props="isRelated">
+        <el-table-column
+          label="是否涉及"
+          props="isRelated"
+        >
           <template #default="scope">
             <el-radio-group>
-              <el-radio label="是" value="是" size="large"></el-radio>
-              <el-radio label="否" value="否" size="large"></el-radio>
+              <el-radio
+                label="是"
+                value="是"
+                size="large"
+              ></el-radio>
+              <el-radio
+                label="否"
+                value="否"
+                size="large"
+              ></el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
-        <el-table-column label="确认人" props="confirmPerson">
+        <el-table-column
+          label="确认人"
+          props="confirmPerson"
+        >
           <form-design-render :config="signPanalConfig" />
         </el-table-column>
       </el-table>
     </div>
     <div v-else-if="mode === 'MOBILE'">
-      <cell-group inset class="cell-group">
+      <cell-group
+        inset
+        class="cell-group"
+      >
         <div
           style="background: #f7f8fa"
           :name="i"
@@ -49,8 +66,8 @@
               line-height: 2;
             "
           >
-          <div style="height: 20px;"> {{ i + 1 }}. &nbsp;</div>
-           
+            <div style="height: 20px">{{ i + 1 }}. &nbsp;</div>
+
             <form-design-render
               v-if="index !== _columns.length - 1"
               :index="i + 1"
@@ -96,7 +113,10 @@
               input-align="right"
               size="16"
             />
-            <Popup v-model:show="showPicker[i]" position="bottom">
+            <Popup
+              v-model:show="showPicker[i]"
+              position="bottom"
+            >
               <Picker
                 :columns="userListOptions"
                 :columns-field-names="{ text: 'name', value: 'name' }"
@@ -164,8 +184,16 @@
           </div>
         </div>
       </div>
-      <div class="m-tb-empty" v-if="!otherReadonly" @click="addSafetyMeasure">
-        + 添加其他安全措施
+      <div
+        class="m-tb-empty"
+        v-if="!otherReadonly"
+      >
+        <Button
+          type="primary"
+          size="small"
+          @click="addSafetyMeasure"
+          >添加其他安全措施</Button
+        >
       </div>
     </div>
     <template v-else>
@@ -184,21 +212,43 @@
             label="序号"
             width="55"
           ></el-table-column>
-          <el-table-column label="安全措施" props="safetyMeasure">
+          <el-table-column
+            label="安全措施"
+            props="safetyMeasure"
+          >
             <template #default="scope">
               {{ scope.row.securityMeasure }}
             </template>
           </el-table-column>
-          <el-table-column label="是否涉及" props="isRelated" width="130">
+          <el-table-column
+            label="是否涉及"
+            props="isRelated"
+            width="130"
+          >
             <template #default="scope">
-              <el-radio-group v-if="!readonly" v-model="scope.row.isRelated">
-                <el-radio size="large" value="是" label="是"></el-radio>
-                <el-radio size="large" value="否" label="否"></el-radio>
+              <el-radio-group
+                v-if="!readonly"
+                v-model="scope.row.isRelated"
+              >
+                <el-radio
+                  size="large"
+                  value="是"
+                  label="是"
+                ></el-radio>
+                <el-radio
+                  size="large"
+                  value="否"
+                  label="否"
+                ></el-radio>
               </el-radio-group>
               <span v-else>{{ scope.row.isRelated }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="确认人" props="confirmPerson" width="200">
+          <el-table-column
+            label="确认人"
+            props="confirmPerson"
+            width="200"
+          >
             <template #default="scope">
               <el-select
                 v-if="!readonly"
@@ -226,14 +276,17 @@
           type="primary"
           @click="addSafetyMeasure"
           v-if="!readonly"
-          >{{ "添加其他安全措施" }}</el-button
+          >{{ '添加其他安全措施' }}</el-button
         >
         <div
           class="otherSafetyMeasure"
           v-for="(item, index) in _value.otherSafetyMeasure"
           :key="index"
         >
-          <el-form :model="item" inline>
+          <el-form
+            :model="item"
+            inline
+          >
             <el-form-item field="otherMeasure">
               <el-input
                 v-model="item.otherMeasure"
@@ -292,8 +345,8 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import { ValueType } from "../ComponentsConfigExport";
+import draggable from 'vuedraggable';
+import { ValueType } from '../ComponentsConfigExport';
 import {
   Collapse,
   CollapseItem,
@@ -306,20 +359,21 @@ import {
   Cell,
   CellGroup,
   Icon,
-} from "vant";
-import FormItem from "@/components/common/FormItem.vue";
-import FormDesignRender from "@/components/form-design/design/FormDesignRender.vue";
-import componentMinxins from "../ComponentMinxins";
-import signPanal from "./SignPanel.vue";
-import userPicker from "./UserPicker.vue";
+  Button,
+} from 'vant';
+import FormItem from '@/components/common/FormItem.vue';
+import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
+import componentMinxins from '../ComponentMinxins';
+import signPanal from './SignPanel.vue';
+import userPicker from './UserPicker.vue';
 import {
   getSafetyMeasureSmiple,
   getUserList,
-} from "@/api/operation/safetyMeasure";
-import { useSafetyCertificationStore } from "../../../../storeWX";
+} from '@/api/operation/safetyMeasure';
+import { useSafetyCertificationStore } from '../../../../storeWX';
 
 export default {
-  name: "SafetyMeasure",
+  name: 'SafetyMeasure',
   components: {
     draggable,
     FormItem,
@@ -333,6 +387,7 @@ export default {
     Cell,
     CellGroup,
     Icon,
+    Button,
   },
   props: {
     modelValue: {
@@ -346,7 +401,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "添加数据",
+      default: '添加数据',
     },
     columns: {
       type: Array,
@@ -376,7 +431,7 @@ export default {
     },
     mode: {
       type: String,
-      default: "DESIGN",
+      default: 'DESIGN',
     },
     required: {
       type: Boolean,
@@ -402,17 +457,17 @@ export default {
     getUserList().then((res) => {
       this.userListOptions = res.data;
     });
-    console.log("_columns:", this._columns);
+    console.log('_columns:', this._columns);
   },
   computed: {
     rules() {
       const rules = {};
       if (this.required) {
         rules.isRelated = [
-          { required: true, message: "请选择是否涉及", trigger: "change" },
+          { required: true, message: '请选择是否涉及', trigger: 'change' },
         ];
         rules.confirmPerson = [
-          { required: true, message: "请完成签名", trigger: "change" },
+          { required: true, message: '请完成签名', trigger: 'change' },
         ];
       }
       return rules;
@@ -422,7 +477,7 @@ export default {
         return this.columns;
       },
       set(val) {
-        this.$emit("update:columns", val);
+        this.$emit('update:columns', val);
       },
     },
     selectFormItem: {
@@ -440,37 +495,37 @@ export default {
       actives: [],
       otherActives: [],
       tbCellStyle: {
-        background: "#e8e8e8",
-        padding: "10px 0",
+        background: '#e8e8e8',
+        padding: '10px 0',
       },
       cellStyle: {
-        padding: "0",
-        height: "40px",
+        padding: '0',
+        height: '40px',
       },
       showPicker: [],
       userListOptions: [],
       userPickerConfig: {
-        icon: "el-icon-avatar",
-        name: "UserPicker",
-        title: "人员选择",
+        icon: 'el-icon-avatar',
+        name: 'UserPicker',
+        title: '人员选择',
         props: {
           enablePrint: true,
           expansion: false,
           multiple: false,
           options: [],
           required: false,
-          valueKey: "",
+          valueKey: '',
         },
         value: [],
-        valueType: "User",
+        valueType: 'User',
       },
       safeConfig: {
         number: {
-          valueType: "String",
-          icon: "el-icon-edit",
-          name: "TextInput",
-          title: "序号",
-          value: "",
+          valueType: 'String',
+          icon: 'el-icon-edit',
+          name: 'TextInput',
+          title: '序号',
+          value: '',
           props: {
             enableScan: false,
             enablePrint: true,
@@ -479,11 +534,11 @@ export default {
           readonly: true,
         },
         securityMeasure: {
-          valueType: "String",
-          icon: "el-icon-edit",
-          name: "TextInput",
-          title: "安全措施",
-          value: "",
+          valueType: 'String',
+          icon: 'el-icon-edit',
+          name: 'TextInput',
+          title: '安全措施',
+          value: '',
           props: {
             enableScan: false,
             enablePrint: true,
@@ -492,14 +547,14 @@ export default {
           readonly: true,
         },
         isRelated: {
-          valueType: "String",
-          icon: "el-icon-circlecheck",
-          name: "SelectInput",
-          title: "是否涉及",
-          value: "",
+          valueType: 'String',
+          icon: 'el-icon-circlecheck',
+          name: 'SelectInput',
+          title: '是否涉及',
+          value: '',
           props: {
             expanding: false,
-            options: ["是", "否"],
+            options: ['是', '否'],
             enablePrint: true,
             required: true,
             isNeedApi: false,
@@ -507,16 +562,16 @@ export default {
           readonly: this.readonly,
         },
         confirmPerson: {
-          valueType: "User",
-          icon: "el-icon-avatar",
-          name: "UserPicker",
-          title: "确认人",
+          valueType: 'User',
+          icon: 'el-icon-avatar',
+          name: 'UserPicker',
+          title: '确认人',
           value: [],
           props: {
             options: [],
             multiple: false,
             enablePrint: true,
-            placeholder: "",
+            placeholder: '',
             required: true,
             expansion: false,
           },
@@ -524,17 +579,17 @@ export default {
         },
       },
       signPanalConfig: {
-        icon: "el-icon-edit",
-        name: "SignPanel",
+        icon: 'el-icon-edit',
+        name: 'SignPanel',
         props: {
-          color: "#000000",
+          color: '#000000',
           enablePrint: true,
           required: false,
           thickness: 2,
         },
-        title: "签名",
-        value: "",
-        valueType: "String",
+        title: '签名',
+        value: '',
+        valueType: 'String',
       },
       _value: {
         tableData: [],
@@ -547,7 +602,7 @@ export default {
     _value: {
       deep: true,
       handler(val) {
-        this.$emit("update:modelValue", val);
+        this.$emit('update:modelValue', val);
       },
     },
   },
@@ -560,7 +615,7 @@ export default {
         return {
           number: index + 1,
           securityMeasure: ele.securityMeasure,
-          isRelated: "",
+          isRelated: '',
           confirmPerson: [],
         };
       });
@@ -570,14 +625,14 @@ export default {
         this.otherReadonly = true;
       } else {
         this.otherActives = this._value.otherSafetyMeasure.map(
-          (item, index) => "7000" + (index + 1)
+          (item, index) => '7000' + (index + 1)
         );
       }
-      console.log("安全措施:", this._value.tableData);
-      console.log("其他安全措施:", this._columns);
+      console.log('安全措施:', this._value.tableData);
+      console.log('其他安全措施:', this._columns);
     },
     isReadonly(item) {
-      return item.perm === "R";
+      return item.perm === 'R';
     },
     showError(col, val) {
       if (col.props.required) {
@@ -595,17 +650,17 @@ export default {
     },
     addSafetyMeasure() {
       this._value.otherSafetyMeasure.push({
-        otherMeasure: "",
-        organizer: "",
+        otherMeasure: '',
+        organizer: '',
         confirmPerson: [],
       });
-      this.otherActives.push("7000" + this._value.otherSafetyMeasure.length);
-      console.log("其他安全措施:", this.otherActives);
+      this.otherActives.push('7000' + this._value.otherSafetyMeasure.length);
+      console.log('其他安全措施:', this.otherActives);
     },
     delOther(i) {
       showConfirmDialog({
-        title: "提示",
-        message: "您确定要删除该行数据吗？",
+        title: '提示',
+        message: '您确定要删除该行数据吗？',
       }).then(() => {
         this._value.otherSafetyMeasure.splice(i, 1);
       });
@@ -618,7 +673,7 @@ export default {
       this.showPicker[i] = false;
     },
     validate(call) {
-      if (this.mode === "PC") {
+      if (this.mode === 'PC') {
         if (this.rowLayout) {
           let result = true;
           for (let i = 0; i < this.columns.length; i++) {
@@ -668,7 +723,7 @@ export default {
       }
     },
   },
-  emits: ["update:modelValue"],
+  emits: ['update:modelValue'],
 };
 </script>
 
@@ -698,7 +753,7 @@ export default {
   float: right;
   margin-right: 20px;
   font-size: 1rem;
-  color: #8c8c8c;
+  color: #d43030;
 }
 
 :deep(.valid-error) {
@@ -794,10 +849,15 @@ export default {
 }
 
 .m-tb-empty {
-  padding: 20px 10px 0px 10px;
-  // background: #f7f8fa;
-  color: #1989fa;
-  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  text-align: right;
+  --van-button-primary-background: #165dff;
+  --van-button-small-padding: 6px 10px;
+  --van-button-small-height: 24px;
+  button {
+    border-radius: 197px;
+  }
 }
 
 .l-form-header {

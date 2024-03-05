@@ -1,18 +1,33 @@
 <template>
   <div>
     <div v-if="mode === 'DESIGN'">
-      <draggable class="l-drag-from" item-key="id" v-model="_columns" v-bind="dragProps" :component-data="{ tag: 'div', type: 'transition-group' }" @start="
-        drag = true;
-      selectFormItem = null;
-      " @end="drag = false">
+      <draggable
+        class="l-drag-from"
+        item-key="id"
+        v-model="_columns"
+        v-bind="dragProps"
+        :component-data="{ tag: 'div', type: 'transition-group' }"
+        @start="
+          drag = true;
+          selectFormItem = null;
+        "
+        @end="drag = false"
+      >
         <template #item="{ element, index }">
-          <div class="l-form-item" @click.stop="selectItem(element)" :style="getSelectedClass(element)">
+          <div
+            class="l-form-item"
+            @click.stop="selectItem(element)"
+            :style="getSelectedClass(element)"
+          >
             <div class="l-form-header">
               <p>
                 <span v-if="element.props.required">*</span>{{ element.title }}
               </p>
               <div class="l-option">
-                <icon name="el-icon-close" @click="delItem(index)"></icon>
+                <icon
+                  name="el-icon-close"
+                  @click="delItem(index)"
+                ></icon>
               </div>
               <form-design-render :config="element" />
             </div>
@@ -25,66 +40,182 @@
     </div>
     <div v-else-if="mode === 'MOBILE'">
       <collapse v-model="actives">
-        <div class="m-tb-empty" v-if="_value.length === 0">
+        <div
+          class="m-tb-empty"
+          v-if="_value.length === 0"
+        >
           点击下方 + 添加数据
         </div>
-        <collapse-item :lazy-render="false" style="background: #f7f8fa" :name="i" v-for="(row, i) in _value" :key="i">
+        <collapse-item
+          :lazy-render="false"
+          style="background: #f7f8fa"
+          :name="i"
+          v-for="(row, i) in _value"
+          :key="i"
+        >
           <template #title>
             <span>第 {{ i + 1 }} 项 </span>
-            <span class="m-valid-error" v-show="isError(i)">
+            <span
+              class="m-valid-error"
+              v-show="isError(i)"
+            >
               <icon name="el-icon-warning"></icon>
             </span>
-            <span class="del-row" @click.stop="delRow(i, row)" v-if="!readonly">删除</span>
+            <span
+              class="del-row"
+              @click.stop="delRow(i, row)"
+              v-if="!readonly"
+              >删除</span
+            >
           </template>
-          <form-item :model="row" :rule="rules[column.id]" :ref="`${column.id}_${i}`" :prop="column.id" :label="column.title" v-for="(column, index) in _columns" :key="'column_' + index">
-            <form-design-render :index="i + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column" />
+          <form-item
+            :model="row"
+            :rule="rules[column.id]"
+            :ref="`${column.id}_${i}`"
+            :prop="column.id"
+            :label="column.title"
+            v-for="(column, index) in _columns"
+            :key="'column_' + index"
+          >
+            <form-design-render
+              :index="i + 1"
+              :formData="formData"
+              :readonly="isReadonly(column)"
+              v-model="row[column.id]"
+              :mode="mode"
+              :config="column"
+            />
           </form-item>
         </collapse-item>
       </collapse>
-      <div class="m-add-row" @click="addRow" v-if="!readonly">
+      <div
+        class="m-add-row"
+        @click="addRow"
+        v-if="!readonly"
+      >
         <icon name="el-icon-plus"></icon>
         <span> {{ placeholder }}</span>
       </div>
     </div>
     <template v-else>
       <template v-if="rowLayout">
-        <el-table :cell-style="cellStyle" :header-cell-style="tbCellStyle" :border="showBorder" :summary-method="getSummaries" :show-summary="showSummary" :data="_value" style="width: 100%">
-          <el-table-column fixed type="index" label="序号" width="55"></el-table-column>
-          <el-table-column :min-width="getMinWidth(column)" v-for="(column, index) in _columns" :prop="column.id" :label="column.title">
+        <el-table
+          :cell-style="cellStyle"
+          :header-cell-style="tbCellStyle"
+          :border="showBorder"
+          :summary-method="getSummaries"
+          :show-summary="showSummary"
+          :data="_value"
+          style="width: 100%"
+        >
+          <el-table-column
+            fixed
+            type="index"
+            label="序号"
+            width="55"
+          ></el-table-column>
+          <el-table-column
+            :min-width="getMinWidth(column)"
+            v-for="(column, index) in _columns"
+            :prop="column.id"
+            :label="column.title"
+          >
             <template #header>
-              <span style="color: #da4b2b" v-show="column.props.required">*</span>
+              <span
+                style="color: #da4b2b"
+                v-show="column.props.required"
+                >*</span
+              >
               {{ column.title }}
             </template>
             <template v-slot="scope">
-              <form-design-render :index="scope.$index + 1" :formData="formData" :class="{
-                'valid-error': showError(
-                  column,
-                  _value[scope.$index][column.id]
-                ),
-                readonly: readonly,
-              }" v-model="_value[scope.$index][column.id]" :readonly="isReadonly(column)" :mode="mode" :config="column" />
+              <form-design-render
+                :index="scope.$index + 1"
+                :formData="formData"
+                :class="{
+                  'valid-error': showError(
+                    column,
+                    _value[scope.$index][column.id]
+                  ),
+                  readonly: readonly,
+                }"
+                v-model="_value[scope.$index][column.id]"
+                :readonly="isReadonly(column)"
+                :mode="mode"
+                :config="column"
+              />
             </template>
           </el-table-column>
-          <el-table-column fixed="right" min-width="95" label="操作" v-if="!readonly">
+          <el-table-column
+            fixed="right"
+            min-width="95"
+            label="操作"
+            v-if="!readonly"
+          >
             <template v-slot="scope">
-              <el-button type="primary" link @click="copyData(scope.$index, scope.row)">复制</el-button>
-              <el-button type="danger" link @click="delRow(scope.$index, scope.row)">删除</el-button>
+              <el-button
+                type="primary"
+                link
+                @click="copyData(scope.$index, scope.row)"
+                >复制</el-button
+              >
+              <el-button
+                type="danger"
+                link
+                @click="delRow(scope.$index, scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
-        <el-button size="default" icon="el-icon-plus" @click="addRow" v-if="!readonly">{{ placeholder }}</el-button>
+        <el-button
+          size="default"
+          icon="el-icon-plus"
+          @click="addRow"
+          v-if="!readonly"
+          >{{ placeholder }}</el-button
+        >
       </template>
       <template v-else>
-        <el-form :rules="rules" :model="row" :ref="`table-form-${i}`" class="table-column" v-for="(row, i) in _value" :key="i">
+        <el-form
+          :rules="rules"
+          :model="row"
+          :ref="`table-form-${i}`"
+          class="table-column"
+          v-for="(row, i) in _value"
+          :key="i"
+        >
           <div class="table-column-action">
             <span>第 {{ i + 1 }} 项</span>
-            <icon name="el-icon-close" @click="delRow(i, row)" v-if="!readonly"></icon>
+            <icon
+              name="el-icon-close"
+              @click="delRow(i, row)"
+              v-if="!readonly"
+            ></icon>
           </div>
-          <el-form-item v-for="(column, index) in _columns" :key="'column_' + index" :prop="column.id" :label="column.title">
-            <form-design-render :index="index + 1" :formData="formData" :readonly="isReadonly(column)" v-model="row[column.id]" :mode="mode" :config="column" />
+          <el-form-item
+            v-for="(column, index) in _columns"
+            :key="'column_' + index"
+            :prop="column.id"
+            :label="column.title"
+          >
+            <form-design-render
+              :index="index + 1"
+              :formData="formData"
+              :readonly="isReadonly(column)"
+              v-model="row[column.id]"
+              :mode="mode"
+              :config="column"
+            />
           </el-form-item>
         </el-form>
-        <el-button size="small" icon="el-icon-plus" @click="addRow" v-if="!readonly">{{ placeholder }}</el-button>
+        <el-button
+          size="small"
+          icon="el-icon-plus"
+          @click="addRow"
+          v-if="!readonly"
+          >{{ placeholder }}</el-button
+        >
       </template>
     </template>
   </div>
@@ -392,7 +523,7 @@ export default {
   float: right;
   margin-right: 10px;
   font-size: 1rem;
-  color: #8c8c8c;
+  color: #d43030;
 }
 
 :deep(.valid-error) {
@@ -409,7 +540,6 @@ export default {
   }
 
   .cell {
-
     .el-input__wrapper,
     .el-input__inner,
     .el-textarea__inner {
