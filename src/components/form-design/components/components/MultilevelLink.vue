@@ -120,7 +120,10 @@
             <div class="other_title">
               {{ currentOptions.placeholder[index] }}
             </div>
-            <div class="other_content">
+            <div
+              class="other_content"
+              v-if="show_v[i]"
+            >
               <Field
                 v-model="show_v[i][index]"
                 :key="currentOptions.fields[index]"
@@ -128,10 +131,11 @@
                 :placeholder="'请选择' + currentOptions.placeholder[index]"
                 label=""
                 :readonly="true"
-                @click="showClick(index)"
+                @click="showClick(i, index)"
               />
               <Popup
-                v-model:show="currentOptions.show[index]"
+                v-if="currentOptions.show[i]"
+                v-model:show="currentOptions.show[i][index]"
                 round
                 position="bottom"
               >
@@ -141,8 +145,7 @@
                   :columns="allOptionsMap[0]"
                   :columns-field-names="customFieldName"
                   @confirm="(val) => changeLink_m(val, i, index)"
-                  @cancel="showCancel(index)"
-                  @change="onChange"
+                  @cancel="showCancel(i, index)"
                   :key="currentOptions.fields[index]"
                 />
                 <Picker
@@ -156,8 +159,8 @@
                   "
                   :columns-field-names="customFieldName"
                   @confirm="(val) => changeLink_m(val, i, index)"
-                  @cancel="showCancel(index)"
-                  :key="currentOptions.fields[index]"
+                  @cancel="showCancel(i, index)"
+                  :key="i + currentOptions.fields[index]"
                 />
               </Popup>
             </div>
@@ -251,23 +254,23 @@ export default {
       },
     },
   },
-  created() {
+  async created() {
     this.allOptionsMap = this.currentOptions.options.map((item, index) => {
       if (index === 0) {
         return item;
       }
       return new Map();
     });
-    let show = [];
-    this.currentOptions.options.forEach((e) => {
-      show.push(false);
+    let show = new Array(this.currentOptions.options.length).fill([]);
+    this.currentOptions.options.forEach((e, index) => {
+      show[index].push(false);
     });
     this.currentOptions.show = show;
     if (this.modelValue.length) {
       this.readonlyVal = cloneDeep(this.modelValue);
       for (let i = 0; i < this.modelValue.length; i++) {
         this.actives.push(i);
-        this.changeLink(
+        await this.changeLink(
           this.modelValue[i][this.currentOptions.fields[0]],
           i,
           0,
@@ -275,24 +278,22 @@ export default {
         );
         let type = '';
         let num = '';
-        if (this.currentOptions.options[1]) {
-          this.currentOptions.options[0].map((key, value) => {
+        if (this.currentOptions.options[0]) {
+          this.currentOptions.options[0].map((item) => {
             let v = this.modelValue[i][this.currentOptions.fields[0]];
-            if (v == value) {
-              type = key;
+            if (v == item.value) {
+              type = item;
             }
           });
         }
 
         if (this.currentOptions.options[1]) {
-          this.currentOptions.options[1].map((key, value) => {
-            let v = this.modelValue[i][this.currentOptions.fields[1]];
-            if (v == value) {
-              num = key;
-            }
-          });
+          let lastV = this.modelValue[i][this.currentOptions.fields[0]];
+          let v = this.modelValue[i][this.currentOptions.fields[1]];
+          const options = this.allOptionsMap[1].get(lastV);
+          const item = options && options.find((ele) => ele.value === v);
+          num = item || {};
         }
-
         this.show_v[i] = [type.key, num.key];
       }
     }
@@ -339,6 +340,7 @@ export default {
     },
     addLink() {
       this._valuePc.push({ certNum: '' });
+      this.currentOptions.show.push([]);
       this.show_v.push([]);
       this.actives.push(this._valuePc.length - 1);
       this.key++;
@@ -420,17 +422,23 @@ export default {
         }
       }
     },
-    showCancel(index) {
-      this.currentOptions.show[index] = false;
+    showCancel(i, index) {
+      this.currentOptions.show[i] = new Array(
+        this.currentOptions.options.length
+      ).fill(false);
     },
-    showClick(index) {
-      this.currentOptions.show[index] = true;
+    showClick(i, index) {
+      this.currentOptions.show[i] = new Array(
+        this.currentOptions.options.length
+      ).fill(false);
+      this.currentOptions.show[i][index] = true;
     },
     changeLink_m(val, currentIndex, index, needClear = true) {
       // debugger;
       this.changeLink(val.selectedValues[0], currentIndex, index, needClear);
-      this.currentOptions.show[index] = false;
-      this.show_v[currentIndex][index] = val.selectedOptions[0].key;
+      this.currentOptions.show[currentIndex][index] = false;
+      this.show_v[currentIndex][index] =
+        val.selectedOptions[0] && val.selectedOptions[0].key;
       this._valuePc[currentIndex][this.currentOptions.fields[index]] =
         val.selectedValues[0];
     },
