@@ -4,7 +4,7 @@
       class="operation-header"
       :style="{ top: formDesign || type === 'edit' ? '10px' : '5px' }"
     >
-      <div style="text-align: right">
+      <div style="text-align: right; display: flex">
         <Button
           v-if="needEditApply"
           type="primary"
@@ -472,13 +472,15 @@ body {
     background-color: #ffffff;
     line-height: 100px;
     height: 100px;
-    margin-top: 5px;
+    margin-top: 45px;
   }
 }
 
 .audit-form {
   .audit-form-title {
     padding: 15px 5px 15px 16px;
+    font-weight: 500;
+    font-family: '思源黑体 Medium';
   }
   .audit-form-content {
     .operation-apply-form-btn {
@@ -520,6 +522,8 @@ body {
 }
 
 .audit-form-container-title {
+  font-weight: 500;
+  font-family: '思源黑体 Medium';
   padding: 10px 5px 10px 16px;
   font-size: 14px;
   color: #333333;

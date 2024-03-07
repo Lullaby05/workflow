@@ -7,6 +7,7 @@
   >
     <div
       class="m-form-item_title"
+      :class="{ tableTitle: item.name === 'TableList' }"
       v-if="label != '安全措施：'"
     >
       <span
@@ -210,9 +211,14 @@ export default {
   margin-bottom: 10px;
 
   & > div:first-child {
+    font-weight: 400;
     margin-bottom: 8px;
     font-size: 1.2rem;
     color: #333333;
+  }
+  .tableTitle {
+    font-weight: 500;
+    font-family: '思源黑体 Medium';
   }
 
   & > div:last-child {

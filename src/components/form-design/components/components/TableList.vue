@@ -241,6 +241,7 @@ import FormItem from '@/components/common/FormItem.vue';
 import FormDesignRender from '@/components/form-design/design/FormDesignRender.vue';
 import componentMinxins from '../ComponentMinxins';
 import { ElMessage } from 'element-plus';
+import { nextTick } from 'vue';
 
 export default {
   mixins: [componentMinxins],
@@ -432,7 +433,9 @@ export default {
         const v = Object.assign([], this._value);
         v.push(row);
         this._value = v;
-        this.actives = this._value.map((item, index) => index);
+        nextTick(() => {
+          this.actives = this._value.map((item, index) => index);
+        });
       }
     },
     delItem(id) {
@@ -586,6 +589,14 @@ export default {
 
 .readonly {
   padding: 5px 0;
+}
+:deep(.m-form-item) {
+  margin-bottom: 0;
+  padding: 10px 10px 0 16px;
+  font-weight: 400;
+  --van-field-input-disabled-text-color: #999999;
+  --van-field-input-text-color: #999999;
+  --van-cell-value-color: #999999;
 }
 
 :deep(.m-form-item .valid-error) {

@@ -62,7 +62,6 @@
               background: white;
               display: flex;
               padding: 10px;
-              font-size: 1rem;
               line-height: 2;
             "
           >
@@ -139,7 +138,7 @@
         >
           <div class="other_from padding-t-10">
             <div class="other_title flex">
-              <span>其他安全措施</span>
+              <span>{{ i + 1 }}.安全措施</span>
               <icon
                 name="cross"
                 @click.stop="delOther(i)"
@@ -737,7 +736,6 @@ export default {
 
 .m-valid-error {
   margin-left: 10px;
-  font-size: 1rem;
   color: @theme-danger;
 }
 
@@ -752,7 +750,6 @@ export default {
 .del-row {
   float: right;
   margin-right: 20px;
-  font-size: 1rem;
   color: #d43030;
 }
 
@@ -861,7 +858,6 @@ export default {
 }
 
 .l-form-header {
-  font-size: small;
   color: #818181;
   text-align: left;
   position: relative;
@@ -915,7 +911,7 @@ export default {
 
   .other_title {
     margin-bottom: 0px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: #545456;
   }
   .other_content {
@@ -945,9 +941,9 @@ export default {
     padding: 0px 10px 10px 10px;
     display: flex;
     justify-content: space-between;
-    font-size: 1rem;
+    font-size: 1.2rem;
     .m-form-item_title {
-      font-size: 1rem;
+      font-size: 1.2rem;
       margin-bottom: 0px;
       display: flex;
       align-items: center;
