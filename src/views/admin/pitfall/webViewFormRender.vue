@@ -57,6 +57,7 @@ import Success from './success.vue';
 
 import {
   checkPlanDetailForm,
+  checkPlanDetailForms,
   dailyCheckExecute,
   getDailyCheckDetail,
   pitfallAdd,
@@ -113,7 +114,8 @@ const checkItemList = ref({});
 const getContentData = async () => {
   let data = {};
   if (type !== 'detail') {
-    const res = await checkPlanDetailForm(taskType, checkTableIds);
+    // const res = await checkPlanDetailForm(taskType, checkTableIds);
+    const res = await checkPlanDetailForms(taskId);
     data = res.data;
   } else {
     const res = await getDailyCheckDetail(id);

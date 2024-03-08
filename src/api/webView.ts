@@ -9,10 +9,10 @@ import request from './requestForOperation.js';
 export const planInfo = (taskTyperl: string, ids?: string) => {
   console.log(ids);
   return request({
-    url: '/business/check/plan/info?taskType='+taskTyperl+'&ids='+ids,
+    url: '/business/check/plan/info?taskType=' + taskTyperl + '&ids=' + ids,
     method: 'post',
   }).then((res) => {
-      return res.data
+    return res.data
   })
 };
 export interface checkPlanDataType {
@@ -37,21 +37,28 @@ export const checkPlanAdd = (data: checkPlanDataType) => {
     url: '/business/check/plan/create',
     method: 'post',
     data,
-  }).then((res) => {return res.data});
+  }).then((res) => { return res.data });
 };
 // 排查计划详情中的表单详情
 export const checkPlanDetailForm = (taskType: string, ids: string[]) => {
   return request({
     url: `/business/check/plan/info?taskType=${taskType}&ids=${ids}`,
     method: 'post',
-  }).then((res) => {return res.data});
+  }).then((res) => { return res.data });
+};
+// 排查计划详情中的表单详情
+export const checkPlanDetailForms = (id: string) => {
+  return request({
+    url: `/business/check/plan/infos?id=${id}`,
+    method: 'post',
+  }).then((res) => { return res.data });
 };
 // 排查计划详情
 export const getDailyCheckDetail = (id: string) => {
   return request({
     url: `/business/check/task/detail?id=${id}`,
     method: 'post',
-  }).then((res) => {return res.data});
+  }).then((res) => { return res.data });
 };
 
 interface dailyCheckExecuteType {
@@ -67,7 +74,7 @@ export const dailyCheckExecute = (data: dailyCheckExecuteType) => {
     url: '/business/check/task/execute',
     method: 'post',
     data,
-  }).then((res) => {return res.data});
+  }).then((res) => { return res.data });
 };
 
 interface pitfallAddType {
@@ -103,5 +110,5 @@ export const pitfallAdd = (data: pitfallAddType[]) => {
     url: '/business/process/record/create',
     method: 'post',
     data,
-  }).then((res) => {return res.data});
+  }).then((res) => { return res.data });
 };
