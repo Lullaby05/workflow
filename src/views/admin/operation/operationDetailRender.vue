@@ -18,6 +18,8 @@ import {
 import { onUnmounted } from 'vue';
 import { formatDate } from '@/utils/utils';
 import { inject } from 'vue';
+import { getBtnPermission } from '@/api/operation';
+import { operationTypeEnum } from '../forOperation/enum/enum';
 const wx: any = inject('wx');
 
 const route = useRoute();
@@ -73,10 +75,24 @@ const components = {
 
 const config = ref();
 
+const cerTypeEnum = {
+  [operationTypeEnum.BLINDPLATE]: 'BlindPlateCertificate',
+  [operationTypeEnum.CONFINEDSPACE]: 'ConfinedSpaceCertificate',
+  [operationTypeEnum.GROUND]: 'GroundCertificate',
+  [operationTypeEnum.HIGHALTITUDE]: 'HighAltitudeCertificate',
+  [operationTypeEnum.FIRE]: 'FireCertificate',
+  [operationTypeEnum.HOIST]: 'HoistCertificate',
+  [operationTypeEnum.BROKENROAD]: 'BrokenRoadCertificate',
+  [operationTypeEnum.TEMPELECTRICITY]: 'TempElectricityCertificate',
+};
+
 const getDetailData = async () => {
   const {
     data: { data: detail },
   } = await getCertificateBaseDetail(id as string);
+  const {
+    data: { data: btn },
+  } = await getBtnPermission();
   getCertificateDetail(id as string).then((res: any) => {
     if (res.code !== 0) return;
     res.data.processProgress.progress = res.data.processProgress.progress.map(
@@ -88,6 +104,7 @@ const getDetailData = async () => {
         };
       }
     );
+    const certTypeStr = cerTypeEnum[detail.certType as operationTypeEnum];
     config.value = {
       formProcessData: res.data.processProgress,
       originalProgress: res.data.originalProgress,
@@ -98,6 +115,9 @@ const getDetailData = async () => {
       id,
       type,
       certType: detail.certType,
+      btnPermission: btn
+        .filter((ele: string) => ele.includes(certTypeStr))
+        .map((ele: string) => ele.replace(certTypeStr, '')),
       title,
       backStep,
     };

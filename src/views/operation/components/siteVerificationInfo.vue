@@ -6,7 +6,7 @@
     >
       <div style="text-align: right; display: flex">
         <Button
-          v-if="needEditApply"
+          v-if="needEditApply && props.btnPermission.includes('Add')"
           type="primary"
           size="mini"
           @click="jumpToEditApply"
@@ -20,7 +20,11 @@
           >作业信息查看</Button
         >
         <Button
-          v-if="type === 'detail' && currentProcess"
+          v-if="
+            type === 'detail' &&
+            currentProcess &&
+            props.btnPermission.includes('SiteCheck')
+          "
           type="primary"
           size="mini"
           @click="jumpToHandle"
@@ -163,6 +167,10 @@ const props = defineProps({
   backStep: {
     type: Number,
     default: 1,
+  },
+  btnPermission: {
+    type: Array,
+    default: () => [],
   },
 });
 const userStore = { userId: localStorage.getItem('userId') };

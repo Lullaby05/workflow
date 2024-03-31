@@ -60,6 +60,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  btnPermission: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 const formProcessData = ref<any>({});
@@ -104,13 +108,15 @@ const buttonList = computed<any>(() => {
   if (needAnalysis) {
     switch (props.certificateStatus as fireStatusEnum) {
       case fireStatusEnum.待分析: {
-        return [
-          {
-            key: 'revocation',
-            text: '撤回申请',
-            status: 'danger',
-          },
-        ];
+        return props.btnPermission.includes('WithDrew')
+          ? [
+              {
+                key: 'revocation',
+                text: '撤回申请',
+                status: 'danger',
+              },
+            ]
+          : [];
       }
       case fireStatusEnum.分析不合格:
       case fireStatusEnum.书面审核不通过:
@@ -121,25 +127,29 @@ const buttonList = computed<any>(() => {
         return [];
       }
       default: {
-        return [
-          {
-            key: 'cancel',
-            text: '取消申请',
-            status: 'danger',
-          },
-        ];
+        return props.btnPermission.includes('Cancel')
+          ? [
+              {
+                key: 'cancel',
+                text: '取消申请',
+                status: 'danger',
+              },
+            ]
+          : [];
       }
     }
   } else {
     switch (props.certificateStatus as blindPlateStatusEnum) {
       case blindPlateStatusEnum.书面审核中: {
-        return [
-          {
-            key: 'revocation',
-            text: '撤回申请',
-            status: 'danger',
-          },
-        ];
+        return props.btnPermission.includes('WithDrew')
+          ? [
+              {
+                key: 'revocation',
+                text: '撤回申请',
+                status: 'danger',
+              },
+            ]
+          : [];
       }
       case blindPlateStatusEnum.书面审核不通过:
       case blindPlateStatusEnum.安全交底不通过:
@@ -149,13 +159,16 @@ const buttonList = computed<any>(() => {
         return [];
       }
       default: {
-        return [
-          {
-            key: 'cancel',
-            text: '取消申请',
-            status: 'danger',
-          },
-        ];
+        return props.btnPermission.includes('Cancel')
+          ? [
+              {
+                key: 'cancel',
+                text: '取消申请',
+                status: 'danger',
+                permission: 'Cancel',
+              },
+            ]
+          : [];
       }
     }
   }

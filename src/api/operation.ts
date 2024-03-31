@@ -31,3 +31,11 @@ export const getProcessKeyEnum = (certType: string) => {
     method: 'post',
   });
 };
+
+// 获取用户按钮权限
+export const getBtnPermission = () => {
+  return request({
+    url: "/business/tenant/user/menu/get-menu-btn-by-user/3",
+    method: "POST",
+  });
+}
