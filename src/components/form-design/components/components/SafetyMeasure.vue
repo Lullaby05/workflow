@@ -126,9 +126,6 @@
           </form-item>
         </div>
       </cell-group>
-      <div class="m-form-item_title">
-        <span>其他安全措施:</span>
-      </div>
       <div v-if="_value.otherSafetyMeasure.length > 0">
         <div
           class="form_item"
