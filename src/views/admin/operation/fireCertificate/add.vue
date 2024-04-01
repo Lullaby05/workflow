@@ -216,9 +216,16 @@ const hasStorage = computed(() => {
 
 const clearStorageFormData = () => {
   // 一键清空的时候缓存清掉、数据清掉（除了默认字段）、步骤回到0
+  const needAnalysis = [
+    operationTypeEnum.CONFINEDSPACE,
+    operationTypeEnum.FIRE,
+    operationTypeEnum.TEMPELECTRICITY,
+  ].includes(certType as operationTypeEnum);
   showConfirmDialog({
     title: '',
-    message: '一键清空后，表单内容不可恢复，是否继续清空表单内容？',
+    message: needAnalysis
+      ? '提交后进入作业分析流程，是否继续提交？'
+      : '提交后进入书面审查流程，是否继续提交？',
   }).then(() => {
     localStorage.removeItem(`formData_${certType}_${userId}`);
     design.value.formItems = formItemStep(formItemsAll.value, flag.value);
@@ -323,54 +330,61 @@ onBeforeMount(async () => {
 });
 
 const handleAddCertification = () => {
-  addFormRender!.value.handleSave(async (formData: any) => {
-    // 调接口新增作业证
-    const formParamData = {
-      ...formData,
-      [valueKeyMap.value['applyDeptId']]: dept.value.data[0].id,
-    };
-    if (saveType === 'reApply' || saveType === 'add') {
-      const params = {
-        ...defaultData,
-        formData: formParamData,
-        deptId: '1486186',
-        processUsers: {},
+  showConfirmDialog({
+    title: '',
+    message: '一键清空后，表单内容不可恢复，是否继续清空表单内容？',
+  }).then(() => {
+    addFormRender!.value.handleSave(async (formData: any) => {
+      // 调接口新增作业证
+      const formParamData = {
+        ...formData,
+        [valueKeyMap.value['applyDeptId']]: dept.value.data[0].id,
       };
-      await addCertificate(
-        certType as string,
-        defaultData.processDefId,
-        params
-      );
-      showToast({
-        message: '新增成功',
-        type: 'success',
-        onClose: () => {
-          if (saveType === 'add') {
-            localStorage.removeItem(`formData_${certType}_${userId}`);
-          }
-          wx.miniProgram.navigateBack();
-        },
-      });
-    } else {
-      // 编辑作业证，不改变原有流程
-      const params = {
-        action: 'agree',
-        formData: formParamData,
-        instanceId: design.value.instanceId,
-        processKey: 'apply',
-        taskId: design.value.progress[design.value.progress.length - 1].taskId,
-        userId: userId,
-        nodeId: design.value.progress[design.value.progress.length - 1].nodeId,
-      };
-      await normalOperation(id as string, params);
-      showToast({
-        message: '编辑成功',
-        type: 'success',
-        onClose: () => {
-          wx.miniProgram.navigateBack();
-        },
-      });
-    }
+      if (saveType === 'reApply' || saveType === 'add') {
+        const params = {
+          ...defaultData,
+          formData: formParamData,
+          deptId: '1486186',
+          processUsers: {},
+        };
+        await addCertificate(
+          certType as string,
+          defaultData.processDefId,
+          params
+        );
+        showToast({
+          message: '新增成功',
+          type: 'success',
+          onClose: () => {
+            if (saveType === 'add') {
+              localStorage.removeItem(`formData_${certType}_${userId}`);
+            }
+            wx.miniProgram.navigateBack();
+          },
+        });
+      } else {
+        // 编辑作业证，不改变原有流程
+        const params = {
+          action: 'agree',
+          formData: formParamData,
+          instanceId: design.value.instanceId,
+          processKey: 'apply',
+          taskId:
+            design.value.progress[design.value.progress.length - 1].taskId,
+          userId: userId,
+          nodeId:
+            design.value.progress[design.value.progress.length - 1].nodeId,
+        };
+        await normalOperation(id as string, params);
+        showToast({
+          message: '编辑成功',
+          type: 'success',
+          onClose: () => {
+            wx.miniProgram.navigateBack();
+          },
+        });
+      }
+    });
   });
 };
 
