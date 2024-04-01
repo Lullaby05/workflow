@@ -128,18 +128,18 @@ getDetailData();
 
 const jumpToEditApply = () => {
   wx.miniProgram.redirectTo({
-    url: `/pages/workplace/operation/components/operationAdd/index?certType=${config.value.certType}&id=${config.value.id}&type=edit`,
+    url: `/mainFeaturePage/pages/workplace/operation/components/operationAdd/index?certType=${config.value.certType}&id=${config.value.id}&type=edit`,
   });
 };
 
 const jumpToApplyInfo = () => {
   wx.miniProgram.navigateTo({
-    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=preview&id=${config.value.id}&type=detail`,
+    url: `/mainFeaturePage/pages/workplace/operation/fireOperation/handle/index?processKey=preview&id=${config.value.id}&type=detail`,
   });
 };
 const jumpToHandle = (processKey: any) => {
   wx.miniProgram.navigateTo({
-    url: `/pages/workplace/operation/fireOperation/handle/index?processKey=${processKey}&id=${
+    url: `/mainFeaturePage/pages/workplace/operation/fireOperation/handle/index?processKey=${processKey}&id=${
       config.value.id
     }&type=edit&backStep=2&name=${title?.slice(0, -2)}`,
   });
