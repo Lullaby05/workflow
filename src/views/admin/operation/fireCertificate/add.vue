@@ -216,16 +216,9 @@ const hasStorage = computed(() => {
 
 const clearStorageFormData = () => {
   // 一键清空的时候缓存清掉、数据清掉（除了默认字段）、步骤回到0
-  const needAnalysis = [
-    operationTypeEnum.CONFINEDSPACE,
-    operationTypeEnum.FIRE,
-    operationTypeEnum.TEMPELECTRICITY,
-  ].includes(certType as operationTypeEnum);
   showConfirmDialog({
     title: '',
-    message: needAnalysis
-      ? '提交后进入作业分析流程，是否继续提交？'
-      : '提交后进入书面审查流程，是否继续提交？',
+    message: '一键清空后，表单内容不可恢复，是否继续清空表单内容？',
   }).then(() => {
     localStorage.removeItem(`formData_${certType}_${userId}`);
     design.value.formItems = formItemStep(formItemsAll.value, flag.value);
@@ -330,9 +323,16 @@ onBeforeMount(async () => {
 });
 
 const handleAddCertification = () => {
+  const needAnalysis = [
+    operationTypeEnum.CONFINEDSPACE,
+    operationTypeEnum.FIRE,
+    operationTypeEnum.TEMPELECTRICITY,
+  ].includes(certType as operationTypeEnum);
   showConfirmDialog({
     title: '',
-    message: '一键清空后，表单内容不可恢复，是否继续清空表单内容？',
+    message: needAnalysis
+      ? '提交后进入作业分析流程，是否继续提交？'
+      : '提交后进入书面审查流程，是否继续提交？',
   }).then(() => {
     addFormRender!.value.handleSave(async (formData: any) => {
       // 调接口新增作业证
