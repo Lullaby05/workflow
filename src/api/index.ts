@@ -1,6 +1,6 @@
 import Axios from './requestForOperation.js';
 
-export const UploadPath = '/outer/business/upload/uploadFile';
+export const UploadPath = '/businessApi/business/upload/uploadFile';
 
 /**
  * @param code  control_cycle(管控周期)

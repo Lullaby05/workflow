@@ -14,7 +14,7 @@ const service = axios.create({
   headers: {
     Authorization: 'Bearer testSec_1_1',
   },
-  baseURL: '/outer',
+  baseURL: '/businessApi',
   timeout: 50000,
 });
 let lastOptions = null;
