@@ -1,34 +1,99 @@
 <template>
-  <div class="from-panel" ref="panel" v-loading="loading">
+  <div
+    class="from-panel"
+    ref="panel"
+    v-loading="loading"
+  >
     <div class="from-title">
       <div>
-        <span>📢 长按流程可拖拽排序，拖拽分组名右侧
+        <span
+          >📢 长按流程可拖拽排序，拖拽分组名右侧
           <icon name="el-icon-rank"></icon> 可对分组排序
         </span>
       </div>
       <div>
-        <el-button type="primary" icon="el-icon-plus" size="small" @click="newProcess(null)" round>新建表单</el-button>
-        <el-button icon="el-icon-plus" @click="addGroup" size="small" round>新建分组</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="small"
+          @click="newProcess(null)"
+          round
+          >新建表单</el-button
+        >
+        <el-button
+          icon="el-icon-plus"
+          @click="addGroup"
+          size="small"
+          round
+          >新建分组</el-button
+        >
       </div>
     </div>
-    <draggable v-model="groups" item-key="id" group="group" handle=".el-icon-rank" filter=".undrag" :component-data="{ tag: 'div', type: 'transition-group' }" @start="groupsSort = true" v-bind="groupDragOptions" @end="doGroupSort">
+    <draggable
+      v-model="groups"
+      item-key="id"
+      group="group"
+      handle=".el-icon-rank"
+      filter=".undrag"
+      :component-data="{ tag: 'div', type: 'transition-group' }"
+      @start="groupsSort = true"
+      v-bind="groupDragOptions"
+      @end="doGroupSort"
+    >
       <template #item="{ element }">
-        <div :class="{
-          'form-group': true,
-          undrag: element.id === 0 || element.id === undefined,
-        }" v-show="element.id > 1 || element.items.length > 0">
+        <div
+          :class="{
+            'form-group': true,
+            undrag: element.id === 0 || element.id === undefined,
+          }"
+          v-show="element.id > 1 || element.items.length > 0"
+        >
           <div class="form-group-title">
             <span>{{ element.name }}</span>
             <span>({{ element.items.length }})</span>
-            <icon name="el-icon-rank" title="长按拖动可对分组排序"></icon>
+            <icon
+              name="el-icon-rank"
+              title="长按拖动可对分组排序"
+            ></icon>
             <div v-if="!(element.id === 0 || element.id === undefined)">
-              <el-button type="primary" link icon="el-icon-edit" size="small" @click="editGroup(element)">修改</el-button>
-              <el-button type="primary" link icon="el-icon-delete" size="small" @click="delGroup(element)">删除</el-button>
+              <el-button
+                type="primary"
+                link
+                icon="el-icon-edit"
+                size="small"
+                @click="editGroup(element)"
+                >修改</el-button
+              >
+              <el-button
+                type="primary"
+                link
+                icon="el-icon-delete"
+                size="small"
+                @click="delGroup(element)"
+                >删除</el-button
+              >
             </div>
           </div>
-          <group-forms :group="element" :group-sort="groupsSort" :groups="groups" :sort="true" :form-drag-options="formDragOptions" v-model="element.items" @refresh="getGroupModels" />
-          <div style="text-align: center" v-if="element.items === undefined || element.items.length === 0">
-            <el-button style="padding-top: 0" link icon="el-icon-plus" @click="newProcess(element.id)">创建新表单</el-button>
+          <group-forms
+            :group="element"
+            :group-sort="groupsSort"
+            :groups="groups"
+            :sort="true"
+            :form-drag-options="formDragOptions"
+            v-model="element.items"
+            @refresh="getGroupModels"
+          />
+          <div
+            style="text-align: center"
+            v-if="element.items === undefined || element.items.length === 0"
+          >
+            <el-button
+              style="padding-top: 0"
+              link
+              icon="el-icon-plus"
+              @click="newProcess(element.id)"
+              >创建新表单</el-button
+            >
           </div>
         </div>
       </template>
@@ -92,7 +157,8 @@ export default {
     newProcess(groupId) {
       this.$store.commit('setIsEdit', false);
       window.open(
-        `/#/admin/design${this.$isNotEmpty(groupId) ? '?groupId=' + groupId : ''
+        `/wflow/#/admin/design${
+          this.$isNotEmpty(groupId) ? '?groupId=' + groupId : ''
         }`,
         '_blank'
       );
@@ -135,8 +201,8 @@ export default {
     delGroup(group) {
       this.$confirm(
         '删除分组并不会删除表单，表单将会被转移到 “其他” 分组，确定要删除分组 ' +
-        group.name +
-        '?',
+          group.name +
+          '?',
         '提示',
         {
           confirmButtonText: '确定',
@@ -203,14 +269,14 @@ body {
     margin-bottom: 10px;
     height: 30px;
 
-    &>div:first-child {
+    & > div:first-child {
       position: absolute;
       left: 0;
       font-size: 13px;
       color: @theme-warning;
     }
 
-    &>div:last-child {
+    & > div:last-child {
       position: absolute;
       right: 0;
       top: -5px;
@@ -253,13 +319,13 @@ body {
       }
     }
 
-    &>span:nth-child(2) {
+    & > span:nth-child(2) {
       margin-left: 5px;
       color: #8c8c8c;
       font-size: smaller;
     }
 
-    &>div {
+    & > div {
       float: right;
 
       button {

@@ -5,13 +5,29 @@
         <span @click="libSelect = 0">组件库</span>
       </div>
       <div>
-        <div class="components" v-for="(group, i) in baseComponents" :key="i">
+        <div
+          class="components"
+          v-for="(group, i) in baseComponents"
+          :key="i"
+        >
           <p>{{ group.name }}</p>
           <ul>
-            <draggable class="drag" :list="group.components" item-key="id" :sort="false" :group="{ name: 'form', pull: 'clone', put: false }" @start="isStart = true" @end="isStart = false" :clone="clone">
+            <draggable
+              class="drag"
+              :list="group.components"
+              item-key="id"
+              :sort="false"
+              :group="{ name: 'form', pull: 'clone', put: false }"
+              @start="isStart = true"
+              @end="isStart = false"
+              :clone="clone"
+            >
               <template #item="{ element }">
                 <li>
-                  <icon :name="element.icon" style="width: 12px; height: 12px"></icon>
+                  <icon
+                    :name="element.icon"
+                    style="width: 12px; height: 12px"
+                  ></icon>
                   <span>{{ element.title }}</span>
                 </li>
               </template>
@@ -24,43 +40,89 @@
     <el-main class="layout-main">
       <div class="tool-nav">
         <div>
-          <el-tooltip class="item" effect="dark" content="移动端" placement="bottom-start">
-            <icon :name="`el-icon-cellphone ${showMobile ? 'select' : ''}`" @click="showMobile = true"></icon>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="移动端"
+            placement="bottom-start"
+          >
+            <icon
+              :name="`el-icon-cellphone ${showMobile ? 'select' : ''}`"
+              @click="showMobile = true"
+            ></icon>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="PC端" placement="bottom-start">
-            <icon :name="`el-icon-monitor ${!showMobile ? 'select' : ''}`" @click="showMobile = false"></icon>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="PC端"
+            placement="bottom-start"
+          >
+            <icon
+              :name="`el-icon-monitor ${!showMobile ? 'select' : ''}`"
+              @click="showMobile = false"
+            ></icon>
           </el-tooltip>
         </div>
         <div>
-          <el-tooltip class="item" effect="dark" content="预览表单" placement="bottom-start">
-            <div style="display: flex; align-items: center; cursor: pointer" @click="viewForms">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="预览表单"
+            placement="bottom-start"
+          >
+            <div
+              style="display: flex; align-items: center; cursor: pointer"
+              @click="viewForms"
+            >
               <icon name="el-icon-view"></icon>
               <span style="font-size: 13px; color: #666666">预览表单</span>
             </div>
           </el-tooltip>
         </div>
       </div>
-      <div class="work-form" @click="release">
+      <div
+        class="work-form"
+        @click="release"
+      >
         <div :class="{ mobile: showMobile, pc: !showMobile }">
           <div :class="{ bd: showMobile }">
             <div :class="{ 'form-content': showMobile }">
               <div class="form">
-                <div class="tip" v-show="forms.length === 0 && !isStart">
+                <div
+                  class="tip"
+                  v-show="forms.length === 0 && !isStart"
+                >
                   👈 请在左侧选择控件并拖至此处
                 </div>
-                <draggable class="drag-from" item-key="id" v-model="forms" v-bind="dragProps" :component-data="{ tag: 'div', type: 'transition-group' }" @start="
-                  drag = true;
-                selectFormItem = null;
-                " @end="drag = false">
+                <draggable
+                  class="drag-from"
+                  item-key="id"
+                  v-model="forms"
+                  v-bind="dragProps"
+                  :component-data="{ tag: 'div', type: 'transition-group' }"
+                  @start="
+                    drag = true;
+                    selectFormItem = null;
+                  "
+                  @end="drag = false"
+                >
                   <template #item="{ element, index }">
-                    <div class="form-item" @click.stop="selectItem(element)" :style="getSelectedClass(element)">
+                    <div
+                      class="form-item"
+                      @click.stop="selectItem(element)"
+                      :style="getSelectedClass(element)"
+                    >
                       <div class="form-header">
                         <p>
-                          <span v-if="element.props.required">*</span>{{ element.title }}
+                          <span v-if="element.props.required">*</span
+                          >{{ element.title }}
                         </p>
                         <div class="option">
                           <!--<icon name="el-icon-copy-document" @click="copy"></icon>-->
-                          <icon name="el-icon-close" @click="del(index)"></icon>
+                          <icon
+                            name="el-icon-close"
+                            @click="del(index)"
+                          ></icon>
                         </div>
                         <form-design-render :config="element" />
                       </div>
@@ -75,8 +137,15 @@
     </el-main>
 
     <el-aside class="layout-param">
-      <div class="tool-nav-r" v-if="selectFormItem">
-        <icon :key="selectFormItem.icon" :name="selectFormItem.icon" style="margin-right: 5px; font-size: medium"></icon>
+      <div
+        class="tool-nav-r"
+        v-if="selectFormItem"
+      >
+        <icon
+          :key="selectFormItem.icon"
+          :name="selectFormItem.icon"
+          style="margin-right: 5px; font-size: medium"
+        ></icon>
         <span>{{ selectFormItem.title }}</span>
       </div>
       <div v-if="!selectFormItem || forms.length === 0">
@@ -86,36 +155,87 @@
         </div>
         <form-config />
       </div>
-      <div style="text-align: left; padding: 10px" v-else>
+      <div
+        style="text-align: left; padding: 10px"
+        v-else
+      >
         <form-component-config :key="selectFormItem.id" />
       </div>
     </el-aside>
-    <w-dialog clickClose width="750px" :border="false" @ok="doPrint" title="打印预览" okText="打印" v-model="viewPrintVisible">
-      <div id="print" v-if="viewPrintVisible" v-html="printContent"></div>
+    <w-dialog
+      clickClose
+      width="750px"
+      :border="false"
+      @ok="doPrint"
+      title="打印预览"
+      okText="打印"
+      v-model="viewPrintVisible"
+    >
+      <div
+        id="print"
+        v-if="viewPrintVisible"
+        v-html="printContent"
+      ></div>
     </w-dialog>
-    <w-dialog clickClose width="700px" :showFooter="false" :border="false" title="表单预览" v-model="viewFormVisible">
+    <w-dialog
+      clickClose
+      width="700px"
+      :showFooter="false"
+      :border="false"
+      title="表单预览"
+      v-model="viewFormVisible"
+    >
       <template #title>
         <div>
           <span>表单预览</span>
-          <el-radio-group style="margin: 0 30px" v-model="forViewMode">
+          <el-radio-group
+            style="margin: 0 30px"
+            v-model="forViewMode"
+          >
             <el-radio label="PC">电脑端</el-radio>
             <el-radio label="MOBILE">手机端（需保存才生效）</el-radio>
           </el-radio-group>
-          <el-popover placement="bottom" title="手机扫码预览表单" width="195" trigger="click">
-            <qrcode-vue :value="qrCode" :size="170" level="H" />
+          <el-popover
+            placement="bottom"
+            title="手机扫码预览表单"
+            width="195"
+            trigger="click"
+          >
+            <qrcode-vue
+              :value="qrCode"
+              :size="170"
+              level="H"
+            />
             <template #reference>
               <el-link type="primary">扫码预览</el-link>
             </template>
           </el-popover>
-          <el-link v-if="customPrint" style="margin-left: 30px" type="primary" @click="showPrint">打印预览</el-link>
+          <el-link
+            v-if="customPrint"
+            style="margin-left: 30px"
+            type="primary"
+            @click="showPrint"
+            >打印预览</el-link
+          >
         </div>
       </template>
       <div v-show="forViewMode === 'PC'">
-        <form-render ref="form" v-model="formData" :forms="formsTemp" mode="PC" :config="formConfigTemp" />
+        <form-render
+          ref="form"
+          v-model="formData"
+          :forms="formsTemp"
+          mode="PC"
+          :config="formConfigTemp"
+        />
       </div>
       <div v-if="forViewMode === 'MOBILE'">
         <div style="display: flex; justify-content: center">
-          <iframe width="400px" height="700px" frameborder="0" :src="`/#/admin/design?code=${$route.query.code}&mobilePreview=true`"></iframe>
+          <iframe
+            width="400px"
+            height="700px"
+            frameborder="0"
+            :src="`/wflow/#/admin/design?code=${$route.query.code}&mobilePreview=true`"
+          ></iframe>
         </div>
       </div>
     </w-dialog>
@@ -187,11 +307,11 @@ export default {
     },
     forms: {
       get() {
-        this.initProcessFormKeys(this.$store.state.design.formItems)
+        this.initProcessFormKeys(this.$store.state.design.formItems);
         return this.$store.state.design.formItems;
       },
       set(val) {
-        this.initProcessFormKeys(val)
+        this.initProcessFormKeys(val);
         this.$store.state.design.formItems = val;
       },
     },
@@ -428,7 +548,7 @@ iframe {
   width: 100%;
   color: rgba(17, 31, 44, 0.85);
 
-  &>p {
+  & > p {
     padding: 0 20px;
   }
 

@@ -58,14 +58,13 @@ export default defineConfig({
     proxy: {
       '/businessApi': {
         // target: 'http://172.16.16.9:32200',
-        target: 'http://119.91.134.51:32200', // 测试服务器
+        target: 'https://business.api.xkrsecure.com/', // 测试服务器
         changeOrigin: true,
       },
       '/wflowApi': {
         // target: 'http://172.16.16.9:10000',
-        target: 'http://119.91.134.51:10000/', // 测试服务器
+        target: 'https://business.api.xkrsecure.com/', // 测试服务器
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/wflowApi/, '/businessApi'),
       },
     },
   },

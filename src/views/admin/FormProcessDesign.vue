@@ -1,29 +1,85 @@
 <template>
   <el-container v-loading="loading">
-    <div style="width: 100%" v-if="isMobilePreview">
+    <div
+      style="width: 100%"
+      v-if="isMobilePreview"
+    >
       <mobile-preview />
     </div>
-    <div v-else style="width: 100%" :class="{ 'process-design': activeSelect === 'processDesign' }">
-      <el-header style="background: white; position: fixed; width: 100%; z-index: 99">
-        <layout-header v-model="activeSelect" @publish="publishProcess" @save="save"></layout-header>
+    <div
+      v-else
+      style="width: 100%"
+      :class="{ 'process-design': activeSelect === 'processDesign' }"
+    >
+      <el-header
+        style="background: white; position: fixed; width: 100%; z-index: 99"
+      >
+        <layout-header
+          v-model="activeSelect"
+          @publish="publishProcess"
+          @save="save"
+        ></layout-header>
       </el-header>
       <div class="layout-body">
-        <form-base-setting ref="baseSetting" v-show="activeSelect === 'baseSetting'" />
-        <form-design ref="formSetting" v-show="activeSelect === 'formSetting'" />
-        <process-design ref="processDesign" v-show="activeSelect === 'processDesign'" />
-        <form-pro-setting ref="proSetting" v-show="activeSelect === 'proSetting'" />
+        <form-base-setting
+          ref="baseSetting"
+          v-show="activeSelect === 'baseSetting'"
+        />
+        <form-design
+          ref="formSetting"
+          v-show="activeSelect === 'formSetting'"
+        />
+        <process-design
+          ref="processDesign"
+          v-show="activeSelect === 'processDesign'"
+        />
+        <form-pro-setting
+          ref="proSetting"
+          v-show="activeSelect === 'proSetting'"
+        />
       </div>
-      <w-dialog :showFooter="false" v-model="validVisible" title="设置项检查">
-        <el-steps align-center :active="validStep" finish-status="success">
-          <el-step v-for="(step, i) in validOptions" :title="step.title" :key="i" :icon="step.icon" :status="step.status" :description="step.description" />
+      <w-dialog
+        :showFooter="false"
+        v-model="validVisible"
+        title="设置项检查"
+      >
+        <el-steps
+          align-center
+          :active="validStep"
+          finish-status="success"
+        >
+          <el-step
+            v-for="(step, i) in validOptions"
+            :title="step.title"
+            :key="i"
+            :icon="step.icon"
+            :status="step.status"
+            :description="step.description"
+          />
         </el-steps>
-        <el-result :icon="validIcon" :title="errTitle" :subTitle="validResult.desc">
+        <el-result
+          :icon="validIcon"
+          :title="errTitle"
+          :subTitle="validResult.desc"
+        >
           <template #icon>
-            <icon style="font-size: 30px" v-if="!validResult.finished" name="el-icon-loading"></icon>
+            <icon
+              style="font-size: 30px"
+              v-if="!validResult.finished"
+              name="el-icon-loading"
+            ></icon>
           </template>
           <template #sub-title>
-            <div class="err-info" v-if="validResult.errs.length > 0">
-              <ellipsis hover-tip v-for="(err, i) in validResult.errs" :key="i + '_err'" :content="err">
+            <div
+              class="err-info"
+              v-if="validResult.errs.length > 0"
+            >
+              <ellipsis
+                hover-tip
+                v-for="(err, i) in validResult.errs"
+                :key="i + '_err'"
+                :content="err"
+              >
                 <template #pre>
                   <icon name="el-icon-warning"></icon>
                 </template>
@@ -31,7 +87,11 @@
             </div>
           </template>
           <template #extra>
-            <el-button type="primary" v-if="validResult.finished" @click="doAfter">
+            <el-button
+              type="primary"
+              v-if="validResult.finished"
+              @click="doAfter"
+            >
               {{ validResult.action }}
             </el-button>
           </template>
@@ -316,7 +376,7 @@ export default {
     createReload(groupId, formId) {
       if (!this.$isNotEmpty(this.$route.query.code)) {
         window.location.replace(
-          `${window.location.origin}/#/admin/design?groupId=${groupId}&code=${formId}`
+          `${window.location.origin}/wflow/#/admin/design?groupId=${groupId}&code=${formId}`
         );
         window.location.reload();
       }
@@ -403,7 +463,7 @@ export default {
   max-height: 180px;
   overflow-y: auto;
 
-  &>div {
+  & > div {
     padding: 5px;
     margin: 2px 0;
     width: 220px;

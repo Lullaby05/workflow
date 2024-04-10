@@ -1,40 +1,132 @@
 <template>
-  <draggable class="group-items" :sort="true" item-key="id" v-model="_value" group="from" @end="groupModelsSort(group)" :component-data="{ tag: 'div', type: 'transition-group' }" v-show="!groupsSort" filter=".undrag" v-bind="formDragOptions">
+  <draggable
+    class="group-items"
+    :sort="true"
+    item-key="id"
+    v-model="_value"
+    group="from"
+    @end="groupModelsSort(group)"
+    :component-data="{ tag: 'div', type: 'transition-group' }"
+    v-show="!groupsSort"
+    filter=".undrag"
+    v-bind="formDragOptions"
+  >
     <template #item="{ element }">
       <div :class="{ 'form-group-item': true, undrag: element.isStop }">
         <el-row :gutter="20">
-          <el-col :span="6" class="w-h-center">
-            <icon :name="`${element.logo.icon} w-h-center`" :style="`background: ${element.logo.background}`"></icon>
-            <ellipsis class="item-title" hover-tip :content="element.formName" />
+          <el-col
+            :span="6"
+            class="w-h-center"
+          >
+            <icon
+              :name="`${element.logo.icon} w-h-center`"
+              :style="`background: ${element.logo.background}`"
+            ></icon>
+            <ellipsis
+              class="item-title"
+              hover-tip
+              :content="element.formName"
+            />
           </el-col>
-          <el-col :span="1" class="w-t-center">
-            <el-tag size="small" type="success">v{{ element.version }}</el-tag>
+          <el-col
+            :span="1"
+            class="w-t-center"
+          >
+            <el-tag
+              size="small"
+              type="success"
+              >v{{ element.version }}</el-tag
+            >
           </el-col>
-          <el-col :span="5" class="w-t-center">
-            <ellipsis class="w-desc-text" :content="element.remark || '...'" />
+          <el-col
+            :span="5"
+            class="w-t-center"
+          >
+            <ellipsis
+              class="w-desc-text"
+              :content="element.remark || '...'"
+            />
           </el-col>
-          <el-col :span="6" class="w-t-center">
-            <ellipsis class="w-desc-text" :content="'更新于：' + element.updated" />
+          <el-col
+            :span="6"
+            class="w-t-center"
+          >
+            <ellipsis
+              class="w-desc-text"
+              :content="'更新于：' + element.updated"
+            />
           </el-col>
-          <el-col :span="6" class="w-t-right">
-            <el-button type="primary" link v-if="!element.isStop" icon="el-icon-edit" size="small" @click="editModel(element, group)">编辑
+          <el-col
+            :span="6"
+            class="w-t-right"
+          >
+            <el-button
+              type="primary"
+              link
+              v-if="!element.isStop"
+              icon="el-icon-edit"
+              size="small"
+              @click="editModel(element, group)"
+              >编辑
             </el-button>
-            <el-button type="primary" link :icon="element.isStop ? 'el-icon-check' : 'el-icon-close'" size="small" @click="stopModel(element)">
+            <el-button
+              type="primary"
+              link
+              :icon="element.isStop ? 'el-icon-check' : 'el-icon-close'"
+              size="small"
+              @click="stopModel(element)"
+            >
               {{ element.isStop ? '启用' : '停用' }}
             </el-button>
-            <el-button type="primary" link icon="el-icon-delete" size="small" @click="delModel(element)" v-if="element.isStop">
+            <el-button
+              type="primary"
+              link
+              icon="el-icon-delete"
+              size="small"
+              @click="delModel(element)"
+              v-if="element.isStop"
+            >
               删除
             </el-button>
-            <el-popover placement="left" trigger="click" width="400" style="margin-left: 10px" @show="moveSelect === null" v-else>
-              <el-radio-group v-model="moveSelect" size="small">
-                <el-radio :label="g.id" border v-for="g in groups" :key="g.id" v-show="g.id > 1" :disabled="g.id === group.id" style="margin: 10px">{{ g.name }}
+            <el-popover
+              placement="left"
+              trigger="click"
+              width="400"
+              style="margin-left: 10px"
+              @show="moveSelect === null"
+              v-else
+            >
+              <el-radio-group
+                v-model="moveSelect"
+                size="small"
+              >
+                <el-radio
+                  :label="g.id"
+                  border
+                  v-for="g in groups"
+                  :key="g.id"
+                  v-show="g.id > 1"
+                  :disabled="g.id === group.id"
+                  style="margin: 10px"
+                  >{{ g.name }}
                 </el-radio>
               </el-radio-group>
               <div style="text-align: right; margin: 0">
-                <el-button type="primary" size="small" @click="moveModel(element)">保存</el-button>
+                <el-button
+                  type="primary"
+                  size="small"
+                  @click="moveModel(element)"
+                  >保存</el-button
+                >
               </div>
               <template #reference>
-                <el-button type="primary" link icon="el-icon-promotion" size="small">移动</el-button>
+                <el-button
+                  type="primary"
+                  link
+                  icon="el-icon-promotion"
+                  size="small"
+                  >移动</el-button
+                >
               </template>
             </el-popover>
           </el-col>
@@ -120,12 +212,12 @@ export default {
     editModel(item, group) {
       if (!this.$route.name.includes('ForOperation')) {
         window.open(
-          `/#/admin/design?code=${item.formId}&groupId=${item.groupId}`,
+          `/wflow/#/admin/design?code=${item.formId}&groupId=${item.groupId}`,
           '_blank'
         );
       } else {
         window.open(
-          `/#/admin/designForOperation?code=${item.formId}&groupId=${item.groupId}`,
+          `/wflow/#/admin/designForOperation?code=${item.formId}&groupId=${item.groupId}`,
           '_blank'
         );
       }
