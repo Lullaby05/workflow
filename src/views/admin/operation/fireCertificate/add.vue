@@ -153,11 +153,13 @@ document.title = `${certObj[certType as keyof typeof certObj].title}作业证申
 localStorage.setItem('userId', userId as string);
 localStorage.setItem('wflow-token', token as string);
 localStorage.setItem('refreshToken', refreshToken as string);
+localStorage.setItem('certType', certType as string);
 
 onUnmounted(() => {
   localStorage.removeItem('userId');
   localStorage.removeItem('wflow-token');
   localStorage.removeItem('refreshToken');
+  localStorage.removeItem('certType');
 });
 
 const {

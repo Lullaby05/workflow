@@ -9,6 +9,7 @@
     :formData="formData"
     :readonly="readonly"
     :is="config.name"
+    :config="config"
     :mode="mode"
     style="width: 100%"
     v-model="_value"
@@ -16,77 +17,77 @@
 </template>
 
 <script>
-  import components from '@/components/form-design/components/ComponentExport';
+import components from '@/components/form-design/components/ComponentExport';
 
-  export default {
-    name: 'FormRender',
-    components: components,
-    props: {
-      mode: {
-        type: String,
-        default: 'DESIGN',
-      },
-      readonly: {
-        type: Boolean,
-        default: false,
-      },
-      modelValue: {
-        default: undefined,
-      },
-      config: {
-        type: Object,
-        default: () => {
-          return {};
-        },
-      },
-      index: {
-        type: Number,
-        default: 0,
-      },
-      formData: {
-        type: Object,
-        default: () => {
-          return {};
-        },
+export default {
+  name: 'FormRender',
+  components: components,
+  props: {
+    mode: {
+      type: String,
+      default: 'DESIGN',
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    modelValue: {
+      default: undefined,
+    },
+    config: {
+      type: Object,
+      default: () => {
+        return {};
       },
     },
-    computed: {
-      _value: {
-        get() {
-          return this.modelValue;
-        },
-        set(val) {
-          this.$emit('update:modelValue', val);
-        },
+    index: {
+      type: Number,
+      default: 0,
+    },
+    formData: {
+      type: Object,
+      default: () => {
+        return {};
       },
     },
-    data() {
-      return {};
-    },
-    methods: {
-      validate(call) {
-        debugger;
-        if (this.$refs.form.validate) {
-          this.$refs.form.validate(call);
-        } else {
-          call(true);
-        }
+  },
+  computed: {
+    _value: {
+      get() {
+        return this.modelValue;
       },
-      validate_m(call) {
-        // debugger;
-        if (this.$refs.form.validate_m) {
-          this.$refs.form.validate_m(call);
-        } else {
-          call(true);
-        }
+      set(val) {
+        this.$emit('update:modelValue', val);
       },
     },
-    mounted() { 
-      // console.log("config",this.config.name)
-      // console.log("config",this.config.props)
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    validate(call) {
+      debugger;
+      if (this.$refs.form.validate) {
+        this.$refs.form.validate(call);
+      } else {
+        call(true);
+      }
     },
-    emits: ['update:modelValue'],
-  };
+    validate_m(call) {
+      // debugger;
+      if (this.$refs.form.validate_m) {
+        this.$refs.form.validate_m(call);
+      } else {
+        call(true);
+      }
+    },
+  },
+  mounted() {
+    // console.log("config",this.config.name)
+    // console.log("config",this.config.props)
+  },
+  emits: ['update:modelValue'],
+};
 </script>
 
 <style lang="less" scoped></style>

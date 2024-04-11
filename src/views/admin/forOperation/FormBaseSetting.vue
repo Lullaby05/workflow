@@ -281,7 +281,6 @@ export default {
     setup() {
       const setup = this.$store.state.design;
       setup.groupId = 116;
-      console.log('@', setup.operationType);
       if (setup.operationType) {
         // 初始化
         this.handleChangeOperationType(setup.operationType);

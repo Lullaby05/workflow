@@ -54,7 +54,7 @@
             <icon name="el-icon-setting"></icon>
             <template #title>流程管理(作业用)</template>
           </el-menu-item>
-          <el-menu-item index="/web-view/formRender">
+          <!-- <el-menu-item index="/web-view/formRender">
             <icon name="el-icon-setting"></icon>
             <template #title>表单管理</template>
           </el-menu-item>
@@ -81,7 +81,7 @@
           <el-menu-item index="/operation/print">
             <icon name="el-icon-setting"></icon>
             <template #title>作业打印</template>
-          </el-menu-item>
+          </el-menu-item> -->
         </div>
       </el-menu>
     </el-aside>

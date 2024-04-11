@@ -1,39 +1,104 @@
 <template>
-  <w-dialog v-if="pcMode" :border="false" closeFree width="600px" @ok="selectOk" :title="title" v-model="visible">
-    <div class="picker" v-if="visible">
-      <div class="candidate" v-loading="loading">
+  <w-dialog
+    v-if="pcMode"
+    :border="false"
+    closeFree
+    width="600px"
+    @ok="selectOk"
+    :title="title"
+    v-model="visible"
+  >
+    <div
+      class="picker"
+      v-if="visible"
+    >
+      <div
+        class="candidate"
+        v-loading="loading"
+      >
         <div v-if="type !== 'role'">
-          <el-input v-model="search" @input="searchUser" style="width: 95%" clearable placeholder="搜索人员，支持拼音、姓名" prefix-icon="el-icon-search" />
+          <el-input
+            v-model="search"
+            @input="searchUser"
+            style="width: 95%"
+            clearable
+            placeholder="搜索人员，支持拼音、姓名"
+            prefix-icon="el-icon-search"
+          />
           <div v-show="!showUsers">
-            <ellipsis hoverTip style="height: 18px; color: #8c8c8c; padding: 5px 0 0" :row="1" :content="deptStackStr">
+            <ellipsis
+              hoverTip
+              style="height: 18px; color: #8c8c8c; padding: 5px 0 0"
+              :row="1"
+              :content="deptStackStr"
+            >
               <template #pre>
                 <icon name="el-icon-officebuilding"></icon>
               </template>
             </ellipsis>
             <div style="margin-top: 5px">
-              <el-checkbox v-model="checkAll" @change="handleCheckAllChange" :disabled="!multiple">全选</el-checkbox>
-              <span v-show="deptStack.length > 0" class="top-dept" @click="beforeNode">上一级</span>
+              <el-checkbox
+                v-model="checkAll"
+                @change="handleCheckAllChange"
+                :disabled="!multiple"
+                >全选</el-checkbox
+              >
+              <span
+                v-show="deptStack.length > 0"
+                class="top-dept"
+                @click="beforeNode"
+                >上一级</span
+              >
             </div>
           </div>
         </div>
-        <div class="role-header" v-else>
+        <div
+          class="role-header"
+          v-else
+        >
           <div>系统角色</div>
         </div>
-        <div class="org-items" :style="type === 'role' ? 'height: 350px' : ''">
-          <el-empty :image-size="100" description="似乎没有数据" v-show="orgs.length === 0" />
-          <div v-for="(org, index) in orgs" :key="index" :class="orgItemClass(org)" @click="selectChange(org)">
-            <el-checkbox v-model="org.selected" :disabled="disableDept(org)"></el-checkbox>
+        <div
+          class="org-items"
+          :style="type === 'role' ? 'height: 350px' : ''"
+        >
+          <el-empty
+            :image-size="100"
+            description="似乎没有数据"
+            v-show="orgs.length === 0"
+          />
+          <div
+            v-for="(org, index) in orgs"
+            :key="index"
+            :class="orgItemClass(org)"
+            @click="selectChange(org)"
+          >
+            <el-checkbox
+              v-model="org.selected"
+              :disabled="disableDept(org)"
+            ></el-checkbox>
             <div v-if="org.type === 'dept'">
               <icon name="el-icon-folderopened"></icon>
               <span class="name">{{ org.name }}</span>
-              <span @click.stop="nextNode(org)" :class="`next-dept${org.selected ? '-disable' : ''}`">
+              <span
+                @click.stop="nextNode(org)"
+                :class="`next-dept${org.selected ? '-disable' : ''}`"
+              >
                 <icon name="iconfont icon-map-site"></icon>下级
               </span>
             </div>
             <div v-else-if="org.type === 'user'">
-              <avatar :size="35" :name="org.name" :status="org.isLeader ? 'leader' : ''" :src="org.avatar" />
+              <avatar
+                :size="35"
+                :name="org.name"
+                :status="org.isLeader ? 'leader' : ''"
+                :src="org.avatar"
+              />
             </div>
-            <div style="display: inline-block" v-else>
+            <div
+              style="display: inline-block"
+              v-else
+            >
               <icon name="iconfont icon-bumen"></icon>
               <span class="name">{{ org.name }}</span>
             </div>
@@ -45,61 +110,149 @@
           <span>已选 {{ select.length }} 项</span>
           <span @click="clearSelected">清空</span>
         </div>
-        <div class="org-items" style="height: 350px">
-          <el-empty :image-size="100" description="请点击左侧列表选择数据" v-show="select.length === 0" />
-          <div v-for="(org, index) in select" :key="index" :class="orgItemClass(org)">
+        <div
+          class="org-items"
+          style="height: 350px"
+        >
+          <el-empty
+            :image-size="100"
+            description="请点击左侧列表选择数据"
+            v-show="select.length === 0"
+          />
+          <div
+            v-for="(org, index) in select"
+            :key="index"
+            :class="orgItemClass(org)"
+          >
             <div v-if="org.type === 'dept'">
               <icon name="el-icon-folderopened"></icon>
-              <span style="position: static" class="name">{{ org.name }}</span>
+              <span
+                style="position: static"
+                class="name"
+                >{{ org.name }}</span
+              >
             </div>
-            <div v-else-if="org.type === 'user'" style="display: flex; align-items: center">
-              <avatar :size="35" :name="org.name" :src="org.avatar" />
+            <div
+              v-else-if="org.type === 'user'"
+              style="display: flex; align-items: center"
+            >
+              <avatar
+                :size="35"
+                :name="org.name"
+                :src="org.avatar"
+              />
             </div>
             <div v-else>
               <icon name="iconfont icon-bumen"></icon>
               <span class="name">{{ org.name }}</span>
             </div>
-            <icon name="el-icon-close" @click="noSelected(index)"></icon>
+            <icon
+              name="el-icon-close"
+              @click="noSelected(index)"
+            ></icon>
           </div>
         </div>
       </div>
     </div>
   </w-dialog>
-  <popup v-else v-model:show="visible" :style="popupStyle" position="left" lazy-render safe-area-inset-bottom>
-    <nav-bar :title="title" placeholder left-text="返回" right-text="确定" left-arrow @click-left="close" @click-right="selectOk" />
+  <popup
+    v-else
+    v-model:show="visible"
+    :style="popupStyle"
+    position="left"
+    lazy-render
+    safe-area-inset-bottom
+  >
+    <nav-bar
+      :title="title"
+      placeholder
+      left-text="返回"
+      right-text="确定"
+      left-arrow
+      @click-left="close"
+      @click-right="selectOk"
+    />
     <div class="mobile-picker">
       <div style="padding: 15px">
-        <el-input v-model="search" @input="searchUser" clearable prefix-icon="el-icon-search" placeholder="搜索人员，支持拼音、姓名"></el-input>
+        <el-input
+          v-model="search"
+          @input="searchUser"
+          clearable
+          prefix-icon="el-icon-search"
+          placeholder="搜索人员，支持拼音、姓名"
+        ></el-input>
       </div>
-      <cell class="m-org-item m-org-item-tab" v-if="type !== 'role'">
+      <cell
+        class="m-org-item m-org-item-tab"
+        v-if="type !== 'role'"
+      >
         <template #title>
-          <checkbox shape="square" :disabled="!multiple" @change="handleCheckAllChange" v-model="checkAll">
+          <checkbox
+            shape="square"
+            :disabled="!multiple"
+            @change="handleCheckAllChange"
+            v-model="checkAll"
+          >
             全选
-            <span style="margin: 0 10px; color: #8c8c8c">已选 [ {{ select.length }} ]</span>
-            <span v-show="select.length > 0 && multiple" style="color: #3971f8" @click.stop="clearSelected">清空</span>
+            <span style="margin: 0 10px; color: #8c8c8c"
+              >已选 [ {{ select.length }} ]</span
+            >
+            <span
+              v-show="select.length > 0 && multiple"
+              style="color: #3971f8"
+              @click.stop="clearSelected"
+              >清空</span
+            >
           </checkbox>
         </template>
-        <template #right-icon v-if="deptStack.length > 0">
-          <div @click="beforeNode" class="to-top">
+        <template
+          #right-icon
+          v-if="deptStack.length > 0"
+        >
+          <div
+            @click="beforeNode"
+            class="to-top"
+          >
             上一级
           </div>
         </template>
       </cell>
-      <list v-model="loading" finished error-text="请求失败，点击重新加载">
-        <cell class="m-org-item" v-for="org in showUsers ? searchUsers : nodes" :key="org.id">
+      <list
+        v-model="loading"
+        finished
+        error-text="请求失败，点击重新加载"
+      >
+        <cell
+          class="m-org-item"
+          v-for="org in showUsers ? searchUsers : nodes"
+          :key="org.id"
+        >
           <template #title>
             <div @click="selectChange(org)">
-              <checkbox v-model="org.selected" :disabled="disableDept(org)">
-                <avatar :name="org.name" :src="org.avatar" v-if="org.type === 'user'"></avatar>
+              <checkbox
+                v-model="org.selected"
+                :disabled="disableDept(org)"
+              >
+                <avatar
+                  :name="org.name"
+                  :src="org.avatar"
+                  v-if="org.type === 'user'"
+                ></avatar>
                 <span v-else>{{ org.name }}</span>
               </checkbox>
             </div>
           </template>
-          <template #right-icon v-if="org.type === 'dept'">
-            <div @click.stop="nextNode(org)" :class="{
-              'm-org-item-next': true,
-              'm-org-item-next-disabled': org.selected,
-            }">
+          <template
+            #right-icon
+            v-if="org.type === 'dept'"
+          >
+            <div
+              @click.stop="nextNode(org)"
+              :class="{
+                'm-org-item-next': true,
+                'm-org-item-next-disabled': org.selected,
+              }"
+            >
               <icon name="iconfont icon-map-site"></icon>
               <span> 下级</span>
             </div>
@@ -120,8 +273,11 @@ import {
   Checkbox,
   Dialog,
   showFailToast,
+  showToast,
 } from 'vant';
 import { getOrgTree, getUserByName } from '@/api/org';
+import { operationTypeEnum } from '@/views/operation/composition/useCertificateDict';
+import { judgeBinding, judgeHasPermission } from '@/utils/utils';
 
 export default {
   name: 'OrgPicker',
@@ -149,6 +305,10 @@ export default {
         return [];
       },
       type: Array,
+    },
+    config: {
+      type: Object || null,
+      default: null,
     },
   },
   data() {
@@ -342,7 +502,7 @@ export default {
       this.select = [];
       this.nodes.forEach((nd) => (nd.selected = false));
     },
-    selectOk() {
+    async selectOk() {
       if (this.select && this.select.length === 0) {
         if (this.pcMode) {
           this.$message.warning('选择的项为空');
@@ -350,6 +510,117 @@ export default {
           showFailToast('所选为空');
         }
         return;
+      }
+      let result = true;
+      if (this.type === 'user') {
+        result = await judgeBinding({
+          record: {
+            id: this.select[0].id,
+            platform: this.pcMode ? 'pc' : 'wx',
+          },
+        });
+      }
+      const cerTypeEnumSimple = {
+        [operationTypeEnum.BLINDPLATE]: 'BlindPlateCertificate',
+        [operationTypeEnum.CONFINEDSPACE]: 'ConfinedSpaceCertificate',
+        [operationTypeEnum.GROUND]: 'GroundCertificate',
+        [operationTypeEnum.HIGHALTITUDE]: 'HighAltitudeCertificate',
+        [operationTypeEnum.FIRE]: 'FireCertificate',
+        [operationTypeEnum.HOIST]: 'HoistCertificate',
+        [operationTypeEnum.BROKENROAD]: 'BrokenRoadCertificate',
+        [operationTypeEnum.TEMPELECTRICITY]: 'TempElectricityCertificate',
+      };
+      const cerTypeEnum = {
+        [operationTypeEnum.BLINDPLATE]: 'BlindPlateCertificateHandling',
+        [operationTypeEnum.CONFINEDSPACE]: 'ConfinedSpaceCertificateHandling',
+        [operationTypeEnum.GROUND]: 'GroundCertificateHandling',
+        [operationTypeEnum.HIGHALTITUDE]: 'HighAltitudeCertificateHandling',
+        [operationTypeEnum.FIRE]: 'FireCertificateHandling',
+        [operationTypeEnum.HOIST]: 'HoistCertificateHandling',
+        [operationTypeEnum.BROKENROAD]: 'BrokenRoadCertificateHandling',
+        [operationTypeEnum.TEMPELECTRICITY]:
+          'TempElectricityCertificateHandling',
+      };
+      if (result && this.config) {
+        // 这里是配置流程的时候选人
+        if (this.config.processKey && this.$store.state.design.operationType) {
+          const obj = {
+            apply: 'Add',
+            analyse: 'Analyse',
+            review: 'Review',
+            siteCheck: 'SiteCheck',
+            acceptance: 'Acceptance',
+            safeDisclosure: 'SafeDisclosure',
+            operationStart: 'Start',
+          };
+          await judgeHasPermission({
+            id: this.select[0].id,
+            platform: this.pcMode ? 'pc' : 'wx',
+            moduleNamesPC:
+              this.config.processKey === 'apply'
+                ? cerTypeEnumSimple[this.$store.state.design.operationType] +
+                  obj[this.config.processKey]
+                : cerTypeEnum[this.$store.state.design.operationType] +
+                  obj[this.config.processKey],
+            moduleNamesWX:
+              cerTypeEnumSimple[this.$store.state.design.operationType] +
+              obj[this.config.processKey],
+          });
+        }
+        // 这里是小程序的选人
+        if (
+          this.config.props.valueKey ||
+          this.config.title.includes('完工验收') ||
+          this.config.title.includes('安全交底')
+        ) {
+          function fuzzyMatch(obj, key) {
+            for (let k in obj) {
+              if (key.includes(k)) {
+                return obj[k];
+              }
+            }
+            return null;
+          }
+          const certType = localStorage.getItem('certType');
+          const currentOperationTypeNameSimple = cerTypeEnumSimple[certType];
+          const currentOperationTypeName = cerTypeEnum[certType];
+          const keyObjPC = {
+            operationMasterId: `${currentOperationTypeNameSimple}Index,${currentOperationTypeName}`,
+            guardianUserId: `${currentOperationTypeName}Close,${currentOperationTypeName}Pause${
+              certType === operationTypeEnum.BLINDPLATE
+                ? `,${currentOperationTypeName}Start`
+                : ''
+            }`,
+          };
+          const titleObjPC = {
+            安全交底: `${currentOperationTypeName}SafeDisclosure`,
+            完工验收: `${currentOperationTypeName}Acceptance`,
+          };
+          const keyObjWX = {
+            operationMasterId: `${currentOperationTypeNameSimple}`,
+            guardianUserId: `${currentOperationTypeNameSimple}Close,${currentOperationTypeNameSimple}Pause${
+              certType === operationTypeEnum.BLINDPLATE
+                ? `,${currentOperationTypeNameSimple}Start`
+                : ''
+            }`,
+          };
+          const titleObjWX = {
+            安全交底: `${currentOperationTypeNameSimple}SafeDisclosure`,
+            完工验收: `${currentOperationTypeNameSimple}Acceptance`,
+          };
+          const moduleNamesPC =
+            keyObjPC[this.config.props.valueKey] ??
+            fuzzyMatch(titleObjPC, this.config.title);
+          const moduleNamesWX =
+            keyObjWX[this.config.props.valueKey] ??
+            fuzzyMatch(titleObjWX, this.config.title);
+          await judgeHasPermission({
+            id: this.select[0].id,
+            moduleNamesPC,
+            moduleNamesWX,
+            platform: this.pcMode ? 'pc' : 'wx',
+          });
+        }
       }
       this.$emit('ok', Object.assign([], this.select));
       this.visible = false;
@@ -438,7 +709,7 @@ export default {
       cursor: not-allowed;
     }
 
-    &>div:first-child {
+    & > div:first-child {
       padding: 5px 10px;
     }
   }
@@ -462,10 +733,10 @@ export default {
     .org-dept-item {
       padding: 5px 5px;
 
-      &>div {
+      & > div {
         display: inline-block;
 
-        &>span:last-child {
+        & > span:last-child {
           position: absolute;
           right: 5px;
         }
@@ -516,7 +787,7 @@ export default {
     border-bottom: 1px solid #e8e8e8;
     margin-bottom: 5px;
 
-    &>span:nth-child(2) {
+    & > span:nth-child(2) {
       float: right;
       color: #c75450;
       cursor: pointer;

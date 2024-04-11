@@ -55,6 +55,7 @@
         :disabled="disabled"
       ></field>
       <org-picker
+        :config="config"
         :pc-mode="false"
         type="user"
         :multiple="multiple"
@@ -116,6 +117,12 @@ export default {
       type: Array,
       default: () => {
         return [];
+      },
+    },
+    config: {
+      type: Object,
+      default: () => {
+        return {};
       },
     },
   },

@@ -1,4 +1,5 @@
 import request from '@/api/request.js';
+import Axios from '@/api/requestForOperation.js';
 
 // 查询组织架构树
 export function getOrgTree(param) {
@@ -65,6 +66,23 @@ export function cancelUserAgent() {
     method: 'delete',
   });
 }
+
+// 判断选择的员工是否绑定了用户
+export const judgeBindingUser = (id) => {
+  return Axios({
+    url: `/business/employee/validate-employee-bind-user?id=${id}`,
+    method: 'POST',
+  }).then((res) => res.data);
+};
+
+// 判断选择的员工是否有对应模块或功能的权限
+export const judgeUserHasPermission = (data) => {
+  return Axios({
+    url: `/business/tenant/user/menu/validate-menu`,
+    method: 'POST',
+    data,
+  }).then((res) => res.data);
+};
 
 export default {
   getUserSign,
