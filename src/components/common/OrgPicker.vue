@@ -569,9 +569,10 @@ export default {
         }
         // 这里是小程序的选人
         if (
-          this.config.props.valueKey ||
-          this.config.title.includes('完工验收') ||
-          this.config.title.includes('安全交底')
+          (this.config.props && this.config.props.valueKey) ||
+          (this.config.title &&
+            (this.config.title.includes('完工验收') ||
+              this.config.title.includes('安全交底')))
         ) {
           function fuzzyMatch(obj, key) {
             for (let k in obj) {

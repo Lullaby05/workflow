@@ -90,10 +90,9 @@ const getDetailData = async () => {
   const {
     data: { data: detail },
   } = await getCertificateBaseDetail(id as string);
-  // const {
-  //   data: { data: btn },
-  // } = await getBtnPermission();
-  const btn = [];
+  const {
+    data: { data: btn },
+  } = await getBtnPermission();
   getCertificateDetail(id as string).then((res: any) => {
     if (res.code !== 0) return;
     res.data.processProgress.progress = res.data.processProgress.progress.map(
