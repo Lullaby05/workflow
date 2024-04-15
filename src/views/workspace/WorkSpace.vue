@@ -206,15 +206,15 @@
           ></avatar>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="switchUser">
+              <!-- <el-dropdown-item @click="switchUser">
                 <icon name="el-icon-sort"></icon>
                 切换账号
-              </el-dropdown-item>
+              </el-dropdown-item> -->
               <el-dropdown-item @click="showUserCenter">
                 <icon name="el-icon-user"></icon>
                 个人中心
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="logout">
                 <icon name="el-icon-close"></icon>
                 注销登录
               </el-dropdown-item>
@@ -318,16 +318,16 @@ export default {
       this.isCollapse = true;
     }
     if (!this.loginUser || !this.loginUser.id) {
-      this.$alert(
-        '无法识别您的身份，请点击右上角头像选择当前体验人员',
-        '嘿嘿嘿',
-        {
-          confirmButtonText: '朕知道了',
-          callback: (action) => {
-            this.switchUser();
-          },
-        }
-      );
+      // this.$alert(
+      //   '无法识别您的身份，请点击右上角头像选择当前体验人员',
+      //   '提示',
+      //   {
+      //     confirmButtonText: '确定',
+      //     callback: (action) => {
+      //       this.switchUser();
+      //     },
+      //   }
+      // );
     } else {
       this.getUserNotify();
       this.timerGetNotify(5);
@@ -364,6 +364,10 @@ export default {
     },
   },
   methods: {
+    logout() {
+      localStorage.clear();
+      this.$router.push('/login');
+    },
     getUserNotify() {
       getUserNotify(this.params)
         .then((res) => {

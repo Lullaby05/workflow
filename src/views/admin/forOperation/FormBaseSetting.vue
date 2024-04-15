@@ -84,6 +84,7 @@
         prop="companyName"
       >
         <el-select
+          disabled
           v-model="setup.companyName"
           placeholder="请选择企业名称"
           clearable
@@ -280,7 +281,9 @@ export default {
   computed: {
     setup() {
       const setup = this.$store.state.design;
+      const { companyName } = this.$store.state.loginUser;
       setup.groupId = 116;
+      setup.companyName = companyName;
       if (setup.operationType) {
         // 初始化
         this.handleChangeOperationType(setup.operationType);

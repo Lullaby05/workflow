@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import store from '../store';
 
 const viewport = {
   content: 'width=device-width, initial-scale=1.0, user-scalable=no',
@@ -73,6 +74,12 @@ const router = createRouter({
           meta: { title: 'wflow-pro | 表单列表', viewport: viewport },
         },
       ],
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/workspace/Login.vue'),
+      meta: { title: 'wflow-pro | 登录', viewport: viewport },
     },
     {
       path: '/mbinitiate',
@@ -167,7 +174,16 @@ router.beforeEach((to, from, next) => {
     meta.content = 'width=device-width, initial-scale=1.0, user-scalable=no';
     head[0].appendChild(meta);
   }
-  next();
+  const loginUser = store.state.loginUser;
+  if (!loginUser || !loginUser.id) {
+    if (to.path !== '/login') {
+      next('/login');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
   sessionStorage.setItem('router-path', to.path);
 });
 
