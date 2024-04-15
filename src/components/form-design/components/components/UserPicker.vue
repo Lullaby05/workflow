@@ -55,6 +55,7 @@
         :disabled="disabled"
       ></field>
       <org-picker
+        :needJudge="true"
         :config="config"
         :pc-mode="false"
         type="user"

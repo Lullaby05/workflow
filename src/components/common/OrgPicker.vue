@@ -310,6 +310,10 @@ export default {
       type: Object || null,
       default: null,
     },
+    needJudge: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -511,116 +515,121 @@ export default {
         }
         return;
       }
-      let result = true;
-      if (this.type === 'user') {
-        result = await judgeBinding({
-          record: {
-            id: this.select[0].id,
-            platform: this.pcMode ? 'pc' : 'wx',
-          },
-        });
-      }
-      const cerTypeEnumSimple = {
-        [operationTypeEnum.BLINDPLATE]: 'BlindPlateCertificate',
-        [operationTypeEnum.CONFINEDSPACE]: 'ConfinedSpaceCertificate',
-        [operationTypeEnum.GROUND]: 'GroundCertificate',
-        [operationTypeEnum.HIGHALTITUDE]: 'HighAltitudeCertificate',
-        [operationTypeEnum.FIRE]: 'FireCertificate',
-        [operationTypeEnum.HOIST]: 'HoistCertificate',
-        [operationTypeEnum.BROKENROAD]: 'BrokenRoadCertificate',
-        [operationTypeEnum.TEMPELECTRICITY]: 'TempElectricityCertificate',
-      };
-      const cerTypeEnum = {
-        [operationTypeEnum.BLINDPLATE]: 'BlindPlateCertificateHandling',
-        [operationTypeEnum.CONFINEDSPACE]: 'ConfinedSpaceCertificateHandling',
-        [operationTypeEnum.GROUND]: 'GroundCertificateHandling',
-        [operationTypeEnum.HIGHALTITUDE]: 'HighAltitudeCertificateHandling',
-        [operationTypeEnum.FIRE]: 'FireCertificateHandling',
-        [operationTypeEnum.HOIST]: 'HoistCertificateHandling',
-        [operationTypeEnum.BROKENROAD]: 'BrokenRoadCertificateHandling',
-        [operationTypeEnum.TEMPELECTRICITY]:
-          'TempElectricityCertificateHandling',
-      };
-      if (result && this.config) {
-        // 这里是配置流程的时候选人
-        if (this.config.processKey && this.$store.state.design.operationType) {
-          const obj = {
-            apply: 'Add',
-            analyse: 'Analyse',
-            review: 'Review',
-            siteCheck: 'SiteCheck',
-            acceptance: 'Acceptance',
-            safeDisclosure: 'SafeDisclosure',
-            operationStart: 'Start',
-          };
-          await judgeHasPermission({
-            id: this.select[0].id,
-            platform: this.pcMode ? 'pc' : 'wx',
-            moduleNamesPC:
-              this.config.processKey === 'apply'
-                ? cerTypeEnumSimple[this.$store.state.design.operationType] +
-                  obj[this.config.processKey]
-                : cerTypeEnum[this.$store.state.design.operationType] +
-                  obj[this.config.processKey],
-            moduleNamesWX:
-              cerTypeEnumSimple[this.$store.state.design.operationType] +
-              obj[this.config.processKey],
+      if (this.needJudge) {
+        let result = true;
+        if (this.type === 'user') {
+          result = await judgeBinding({
+            record: {
+              id: this.select[0].id,
+              platform: this.pcMode ? 'pc' : 'wx',
+            },
           });
         }
-        // 这里是小程序的选人
-        if (
-          (this.config.props && this.config.props.valueKey) ||
-          (this.config.title &&
-            (this.config.title.includes('完工验收') ||
-              this.config.title.includes('安全交底')))
-        ) {
-          function fuzzyMatch(obj, key) {
-            for (let k in obj) {
-              if (key.includes(k)) {
-                return obj[k];
-              }
-            }
-            return null;
+        const cerTypeEnumSimple = {
+          [operationTypeEnum.BLINDPLATE]: 'BlindPlateCertificate',
+          [operationTypeEnum.CONFINEDSPACE]: 'ConfinedSpaceCertificate',
+          [operationTypeEnum.GROUND]: 'GroundCertificate',
+          [operationTypeEnum.HIGHALTITUDE]: 'HighAltitudeCertificate',
+          [operationTypeEnum.FIRE]: 'FireCertificate',
+          [operationTypeEnum.HOIST]: 'HoistCertificate',
+          [operationTypeEnum.BROKENROAD]: 'BrokenRoadCertificate',
+          [operationTypeEnum.TEMPELECTRICITY]: 'TempElectricityCertificate',
+        };
+        const cerTypeEnum = {
+          [operationTypeEnum.BLINDPLATE]: 'BlindPlateCertificateHandling',
+          [operationTypeEnum.CONFINEDSPACE]: 'ConfinedSpaceCertificateHandling',
+          [operationTypeEnum.GROUND]: 'GroundCertificateHandling',
+          [operationTypeEnum.HIGHALTITUDE]: 'HighAltitudeCertificateHandling',
+          [operationTypeEnum.FIRE]: 'FireCertificateHandling',
+          [operationTypeEnum.HOIST]: 'HoistCertificateHandling',
+          [operationTypeEnum.BROKENROAD]: 'BrokenRoadCertificateHandling',
+          [operationTypeEnum.TEMPELECTRICITY]:
+            'TempElectricityCertificateHandling',
+        };
+        if (result && this.config) {
+          // 这里是配置流程的时候选人
+          if (
+            this.config.processKey &&
+            this.$store.state.design.operationType
+          ) {
+            const obj = {
+              apply: 'Add',
+              analyse: 'Analyse',
+              review: 'Review',
+              siteCheck: 'SiteCheck',
+              acceptance: 'Acceptance',
+              safeDisclosure: 'SafeDisclosure',
+              operationStart: 'Start',
+            };
+            await judgeHasPermission({
+              id: this.select[0].id,
+              platform: this.pcMode ? 'pc' : 'wx',
+              moduleNamesPC:
+                this.config.processKey === 'apply'
+                  ? cerTypeEnumSimple[this.$store.state.design.operationType] +
+                    obj[this.config.processKey]
+                  : cerTypeEnum[this.$store.state.design.operationType] +
+                    obj[this.config.processKey],
+              moduleNamesWX:
+                cerTypeEnumSimple[this.$store.state.design.operationType] +
+                obj[this.config.processKey],
+            });
           }
-          const certType = localStorage.getItem('certType');
-          const currentOperationTypeNameSimple = cerTypeEnumSimple[certType];
-          const currentOperationTypeName = cerTypeEnum[certType];
-          const keyObjPC = {
-            operationMasterId: `${currentOperationTypeNameSimple}Index,${currentOperationTypeName}`,
-            guardianUserId: `${currentOperationTypeName}Close,${currentOperationTypeName}Pause${
-              certType === operationTypeEnum.BLINDPLATE
-                ? `,${currentOperationTypeName}Start`
-                : ''
-            }`,
-          };
-          const titleObjPC = {
-            安全交底: `${currentOperationTypeName}SafeDisclosure`,
-            完工验收: `${currentOperationTypeName}Acceptance`,
-          };
-          const keyObjWX = {
-            operationMasterId: `${currentOperationTypeNameSimple}`,
-            guardianUserId: `${currentOperationTypeNameSimple}Close,${currentOperationTypeNameSimple}Pause${
-              certType === operationTypeEnum.BLINDPLATE
-                ? `,${currentOperationTypeNameSimple}Start`
-                : ''
-            }`,
-          };
-          const titleObjWX = {
-            安全交底: `${currentOperationTypeNameSimple}SafeDisclosure`,
-            完工验收: `${currentOperationTypeNameSimple}Acceptance`,
-          };
-          const moduleNamesPC =
-            keyObjPC[this.config.props.valueKey] ??
-            fuzzyMatch(titleObjPC, this.config.title);
-          const moduleNamesWX =
-            keyObjWX[this.config.props.valueKey] ??
-            fuzzyMatch(titleObjWX, this.config.title);
-          await judgeHasPermission({
-            id: this.select[0].id,
-            moduleNamesPC,
-            moduleNamesWX,
-            platform: this.pcMode ? 'pc' : 'wx',
-          });
+          // 这里是小程序的选人
+          if (
+            (this.config.props && this.config.props.valueKey) ||
+            (this.config.title &&
+              (this.config.title.includes('完工验收') ||
+                this.config.title.includes('安全交底')))
+          ) {
+            function fuzzyMatch(obj, key) {
+              for (let k in obj) {
+                if (key.includes(k)) {
+                  return obj[k];
+                }
+              }
+              return null;
+            }
+            const certType = localStorage.getItem('certType');
+            const currentOperationTypeNameSimple = cerTypeEnumSimple[certType];
+            const currentOperationTypeName = cerTypeEnum[certType];
+            const keyObjPC = {
+              operationMasterId: `${currentOperationTypeNameSimple}Index,${currentOperationTypeName}`,
+              guardianUserId: `${currentOperationTypeName}Close,${currentOperationTypeName}Pause${
+                certType === operationTypeEnum.BLINDPLATE
+                  ? `,${currentOperationTypeName}Start`
+                  : ''
+              }`,
+            };
+            const titleObjPC = {
+              安全交底: `${currentOperationTypeName}SafeDisclosure`,
+              完工验收: `${currentOperationTypeName}Acceptance`,
+            };
+            const keyObjWX = {
+              operationMasterId: `${currentOperationTypeNameSimple}`,
+              guardianUserId: `${currentOperationTypeNameSimple}Close,${currentOperationTypeNameSimple}Pause${
+                certType === operationTypeEnum.BLINDPLATE
+                  ? `,${currentOperationTypeNameSimple}Start`
+                  : ''
+              }`,
+            };
+            const titleObjWX = {
+              安全交底: `${currentOperationTypeNameSimple}SafeDisclosure`,
+              完工验收: `${currentOperationTypeNameSimple}Acceptance`,
+            };
+            const moduleNamesPC =
+              keyObjPC[this.config.props.valueKey] ??
+              fuzzyMatch(titleObjPC, this.config.title);
+            const moduleNamesWX =
+              keyObjWX[this.config.props.valueKey] ??
+              fuzzyMatch(titleObjWX, this.config.title);
+            await judgeHasPermission({
+              id: this.select[0].id,
+              moduleNamesPC,
+              moduleNamesWX,
+              platform: this.pcMode ? 'pc' : 'wx',
+            });
+          }
         }
       }
       this.$emit('ok', Object.assign([], this.select));

@@ -108,7 +108,7 @@ const buttonList = computed<any>(() => {
   if (needAnalysis) {
     switch (props.certificateStatus as fireStatusEnum) {
       case fireStatusEnum.待分析: {
-        return !props.btnPermission.includes('WithDrew')
+        return props.btnPermission.includes('WithDrew')
           ? [
               {
                 key: 'revocation',
@@ -127,7 +127,7 @@ const buttonList = computed<any>(() => {
         return [];
       }
       default: {
-        return !props.btnPermission.includes('Cancel')
+        return props.btnPermission.includes('Cancel')
           ? [
               {
                 key: 'cancel',
@@ -141,7 +141,7 @@ const buttonList = computed<any>(() => {
   } else {
     switch (props.certificateStatus as blindPlateStatusEnum) {
       case blindPlateStatusEnum.书面审核中: {
-        return !props.btnPermission.includes('WithDrew')
+        return props.btnPermission.includes('WithDrew')
           ? [
               {
                 key: 'revocation',
@@ -159,7 +159,7 @@ const buttonList = computed<any>(() => {
         return [];
       }
       default: {
-        return !props.btnPermission.includes('Cancel')
+        return props.btnPermission.includes('Cancel')
           ? [
               {
                 key: 'cancel',

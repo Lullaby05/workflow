@@ -6,7 +6,7 @@
     >
       <div style="text-align: right; display: flex">
         <Button
-          v-if="needEditApply && !props.btnPermission.includes('Add')"
+          v-if="needEditApply && props.btnPermission.includes('Add')"
           type="primary"
           size="mini"
           @click="jumpToEditApply"
@@ -23,7 +23,7 @@
           v-if="
             type === 'detail' &&
             currentProcess &&
-            !props.btnPermission.includes('SiteCheck')
+            props.btnPermission.includes('SiteCheck')
           "
           type="primary"
           size="mini"

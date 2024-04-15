@@ -339,6 +339,7 @@
       </div>
     </el-form>
     <org-picker
+      :needJudge="true"
       :config="config"
       :title="pickerTitle"
       multiple
