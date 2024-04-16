@@ -134,11 +134,11 @@ const handleLogin = async (token: any) => {
   const user = {
     id: info.employeeInfo.userId,
     name: info.userInfo.nickname,
-    avatar: info.userInfo.avatar,
     position: info.employeeInfo.jobName,
     companyName: info.employeeInfo.enterpriseName,
     tenantId: info.tenantId,
     type: 'user',
+    avatar: info.userInfo.avatar || 'https://business.api.xkrsecure.com/icon/icon-default-avatar.png', 
   };
   store.state.loginUser = user;
   localStorage.setItem('loginUser', JSON.stringify(user));
