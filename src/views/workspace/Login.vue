@@ -2,44 +2,48 @@
   <div class="login-container">
     <div class="login-background">
       <div class="login-content">
-        <h1 class="login-title">安全智能预警平台工作流</h1>
-        <el-form
-          label-position="right"
-          label-width="90"
-          ref="loginFormRef"
-          :model="loginForm"
-          :rules="loginRules"
-          class="login-form"
-        >
-          <el-form-item
-            prop="username"
-            label="用户名"
+        <div class="header">
+          <img
+            src="https://business.api.xkrsecure.com/icon/logo-xkr.png"
+            alt=""
+          />
+          <h1 class="login-title">安全智能预警平台工作流</h1>
+        </div>
+        <div class="form">
+          <el-form
+            label-position="right"
+            ref="loginFormRef"
+            :model="loginForm"
+            :rules="loginRules"
+            class="login-form"
           >
-            <el-input
-              clearable
-              v-model="loginForm.username"
-              placeholder="请输入手机号码/邮箱"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            prop="password"
-            label="密码"
-          >
-            <el-input
-              clearable
-              v-model="loginForm.password"
-              type="password"
-              placeholder="请输入密码"
-            ></el-input>
-          </el-form-item>
-          <div style="width: 100%; text-align: center">
-            <el-button
-              type="primary"
-              @click="login"
-              >登录</el-button
-            >
-          </div>
-        </el-form>
+            <el-form-item prop="username">
+              <el-input
+                style="--el-input-height: 42px"
+                clearable
+                v-model="loginForm.username"
+                placeholder="请输入手机号码/邮箱"
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                style="--el-input-height: 42px"
+                clearable
+                v-model="loginForm.password"
+                type="password"
+                placeholder="请输入密码"
+              ></el-input>
+            </el-form-item>
+            <div>
+              <el-button
+                style="width: 100%"
+                type="primary"
+                @click="login"
+                >登录</el-button
+              >
+            </div>
+          </el-form>
+        </div>
       </div>
     </div>
     <el-dialog
@@ -142,7 +146,7 @@ const handleLogin = async (token: any) => {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .login-container {
   display: flex;
   justify-content: center;
@@ -165,18 +169,35 @@ const handleLogin = async (token: any) => {
 .login-content {
   backdrop-filter: blur(10px);
   width: 400px;
-  padding: 20px;
   background-color: rgba(255, 255, 255, 1); /* 使用半透明的背景色 */
-  border-radius: 4px;
+  border-radius: 20px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
-.login-title {
-  margin-top: 0px;
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 24px;
-  color: #666;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+.header {
+  background-image: linear-gradient(to left, #428ffb 0%, #385de2 100%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px 10px 0 0;
+  gap: 20px;
+  img {
+    width: 132px;
+    height: 80px;
+    margin: 0 auto;
+  }
+  .login-title {
+    margin-top: 0px;
+    text-align: center;
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+.form {
+  padding: 20px;
 }
 </style>
