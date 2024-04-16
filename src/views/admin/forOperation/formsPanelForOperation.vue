@@ -16,6 +16,14 @@
           type="primary"
           icon="el-icon-plus"
           size="small"
+          @click="openDialog"
+          round
+          >导入流程</el-button
+        >
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="small"
           @click="newProcess(null)"
           round
           >新建表单</el-button
@@ -98,13 +106,76 @@
         </div>
       </template>
     </draggable>
+    <el-dialog
+      title="导入作业流程"
+      v-model="importDialog"
+    >
+      <el-form
+        ref="formRef"
+        :model="importFormData"
+        label-width="90px"
+        :rules="rules"
+      >
+        <el-form-item
+          prop="operationType"
+          label="作业类型"
+        >
+          <el-select
+            v-model="importFormData.operationType"
+            placeholder="请选择作业类型"
+            filterable
+            clearable
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in operationProcessList"
+              :key="item.value"
+              :label="item.key"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          prop="groupId"
+          label="分组"
+        >
+          <el-select
+            v-model="importFormData.groupId"
+            placeholder="请选择分组"
+            filterable
+            clearable
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in groups"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <div
+          class="btn-group"
+          style="text-align: center"
+        >
+          <el-button
+            type="primary"
+            @click="importProcess"
+            >导入</el-button
+          >
+          <el-button @click="importDialog = false">取消</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import draggable from 'vuedraggable';
 import modelGroupApi from '@/api/modelGroup';
 import GroupForms from '../GroupForms.vue';
+import { operationTypeEnum } from './enum/enum';
+import { saveProcess, deployProcess, getNewVerProcess } from '@/api/process';
 
 export default {
   name: 'FormsPanel',
@@ -129,6 +200,28 @@ export default {
         chosenClass: 'choose',
         scroll: true,
         sort: true,
+      },
+      formRef: null,
+      importFormData: {
+        operationType: '',
+        groupId: '',
+      },
+      importDialog: false,
+      operationProcessList: [
+        { key: '盲板抽堵', value: operationTypeEnum.BLINDPLATE },
+        { key: '受限空间', value: operationTypeEnum.CONFINEDSPACE },
+        { key: '动土', value: operationTypeEnum.GROUND },
+        { key: '高处', value: operationTypeEnum.HIGHALTITUDE },
+        { key: '动火', value: operationTypeEnum.FIRE },
+        { key: '吊装', value: operationTypeEnum.HOIST },
+        { key: '断路', value: operationTypeEnum.BROKENROAD },
+        { key: '临时用电', value: operationTypeEnum.TEMPELECTRICITY },
+      ],
+      rules: {
+        operationType: [
+          { required: true, message: '请选择作业类型', trigger: 'change' },
+        ],
+        groupId: [{ required: true, message: '请选择分组', trigger: 'change' }],
       },
     };
   },
@@ -244,6 +337,73 @@ export default {
             this.loading = false;
             this.$err(err, '修改失败');
           });
+      });
+    },
+    openDialog() {
+      this.importFormData = {
+        operationType: '',
+        groupId: '',
+      };
+      this.importDialog = true;
+    },
+    async loadJson(filePath) {
+      try {
+        const response = await fetch(
+          `https://business.api.xkrsecure.com/template/${filePath}`
+        );
+        return await response.json();
+      } catch (err) {
+        console.error('Failed to load JSON file:', err);
+      }
+    },
+    importProcess() {
+      this.$refs.formRef.validate(async (valid) => {
+        if (!valid) return;
+        const obj = {
+          [operationTypeEnum.BLINDPLATE]: 'blindPlate.json',
+          [operationTypeEnum.CONFINEDSPACE]: 'confinedSpace.json',
+          [operationTypeEnum.GROUND]: 'ground.json',
+          [operationTypeEnum.HIGHALTITUDE]: 'highAltitude.json',
+          [operationTypeEnum.FIRE]: 'fire.json',
+          [operationTypeEnum.HOIST]: 'hoist.json',
+          [operationTypeEnum.BROKENROAD]: 'brokenRoad.json',
+          [operationTypeEnum.TEMPELECTRICITY]: 'tempelectricity.json',
+        };
+        const data = await this.loadJson(
+          obj[this.importFormData.operationType]
+        );
+        const params = {
+          ...data,
+          formId: undefined,
+          groupId: this.importFormData.groupId,
+          tenantId: this.$store.state.loginUser.tenantId,
+          companyName: this.$store.state.loginUser.companyName,
+        };
+        const { data: processId } = await saveProcess(params);
+        if (!processId) {
+          this.importDialog = false;
+          this.$message.warning('导入失败,已存在该作业类型的流程');
+          return;
+        }
+        await deployProcess(processId);
+        this.getGroupModels();
+        this.importDialog = false;
+        this.$confirm(
+          '请尽快修改表单中的流程人员，否则可能导致表单不可用',
+          '导入成功',
+          {
+            confirmButtonText: '立即编辑',
+            cancelButtonText: '取消',
+            callback: (action) => {
+              if (action === 'confirm') {
+                window.open(
+                  `/wflow/#/admin/designForOperation?code=${processId}&groupId=${this.importFormData.groupId}`,
+                  '_blank'
+                );
+              }
+            },
+          }
+        );
       });
     },
   },

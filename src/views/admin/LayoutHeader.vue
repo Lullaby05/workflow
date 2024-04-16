@@ -1,32 +1,77 @@
 <template>
   <div>
     <div class="header">
-      <el-menu :default-active="modelValue" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="baseSetting" @click="to('baseSetting')">① 基础信息</el-menu-item>
-        <el-menu-item index="formSetting" @click="to('formSetting')">② 审批表单</el-menu-item>
-        <el-menu-item index="processDesign" @click="to('processDesign')">③ 审批流程</el-menu-item>
-        <el-menu-item index="proSetting" @click="to('proSetting')">④ 扩展设置</el-menu-item>
+      <el-menu
+        :default-active="modelValue"
+        class="el-menu-demo"
+        mode="horizontal"
+        @select="handleSelect"
+      >
+        <el-menu-item
+          index="baseSetting"
+          @click="to('baseSetting')"
+          >① 基础信息</el-menu-item
+        >
+        <el-menu-item
+          index="formSetting"
+          @click="to('formSetting')"
+          >② 审批表单</el-menu-item
+        >
+        <el-menu-item
+          index="processDesign"
+          @click="to('processDesign')"
+          >③ 审批流程</el-menu-item
+        >
+        <el-menu-item
+          index="proSetting"
+          @click="to('proSetting')"
+          >④ 扩展设置</el-menu-item
+        >
       </el-menu>
       <div class="publish">
-        <el-button size="default" @click="getFormData">获取表单数据</el-button>
-        <el-button size="default" @click="save">
+        <el-button
+          size="default"
+          @click="save"
+        >
           <icon name="el-icon-folderchecked"></icon>
           &nbsp;&nbsp;保存
         </el-button>
-        <el-button size="default" type="primary" @click="publish">
+        <el-button
+          size="default"
+          type="primary"
+          @click="publish"
+        >
           <icon name="el-icon-promotion"></icon>
           &nbsp;&nbsp;发布
         </el-button>
       </div>
       <div class="back">
-        <el-button @click="exit" icon="el-icon-arrowleft" circle></el-button>
-        <icon :key="setup.logo.icon" :name="setup.logo.icon" :style="'background:' + setup.logo.background"></icon>
+        <el-button
+          @click="exit"
+          icon="el-icon-arrowleft"
+          circle
+        ></el-button>
+        <icon
+          :key="setup.logo.icon"
+          :name="setup.logo.icon"
+          :style="'background:' + setup.logo.background"
+        ></icon>
         <span>{{ setup.formName }}</span>
       </div>
     </div>
 
-    <el-dialog title="请使用手机扫码预览" v-model="viewCode" width="300px" :close-on-click-modal="false" center>
-      <img src="../../assets/image/code.png" width="250" height="250" />
+    <el-dialog
+      title="请使用手机扫码预览"
+      v-model="viewCode"
+      width="300px"
+      :close-on-click-modal="false"
+      center
+    >
+      <img
+        src="../../assets/image/code.png"
+        width="250"
+        height="250"
+      />
     </el-dialog>
   </div>
 </template>
@@ -64,8 +109,8 @@ export default {
   },
   methods: {
     getFormData() {
-      console.log('@', this.setup);
-      console.log('!', JSON.stringify(this.setup));
+      // console.log('@', this.setup);
+      // console.log('!', JSON.stringify(this.setup));
     },
     publish() {
       this.$emit('publish');
@@ -82,6 +127,8 @@ export default {
         //window.location.reload()
         //this.$store.commit('clearTemplate')
         if (this.$route.name.includes('ForOperation')) {
+          this.$router.push('/workspace/formsPanelForOperation');
+        } else {
           this.$router.push('/workspace/formsPanel');
         }
       });

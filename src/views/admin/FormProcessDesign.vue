@@ -345,6 +345,7 @@ export default {
             this.loading = false;
             this.isSave = true;
             this.$message.success('保存成功');
+            console.log('@', rsp.data);
             if (call) {
               this.loading = true;
               call(modelData.groupId, rsp.data);

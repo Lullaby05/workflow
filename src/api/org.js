@@ -68,15 +68,25 @@ export function cancelUserAgent() {
 }
 
 // 判断选择的员工是否绑定了用户
-export const judgeBindingUser = (id) => {
+export const judgeBindingUser = (data) => {
   return Axios({
-    url: `/business/employee/validate-employee-bind-user?id=${id}`,
+    url: `/business/employee/validate-employee-bind-users`,
     method: 'POST',
+    data,
   }).then((res) => res.data);
 };
 
-// 判断选择的员工是否有对应模块或功能的权限
+// 判断选择的员工是否有对应模块或功能的权限(多个id单个权限)
 export const judgeUserHasPermission = (data) => {
+  return Axios({
+    url: `/business/tenant/user/menu/validate-menus`,
+    method: 'POST',
+    data,
+  }).then((res) => res.data);
+};
+
+// 判断选择的员工是否有对应模块或功能的权限(单个id多个权限)
+export const judgeUserHasPermissions = (data) => {
   return Axios({
     url: `/business/tenant/user/menu/validate-menu`,
     method: 'POST',

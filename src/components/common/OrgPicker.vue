@@ -520,7 +520,7 @@ export default {
         if (this.type === 'user') {
           result = await judgeBinding({
             record: {
-              id: this.select[0].id,
+              id: this.select.map((v) => v.id),
               platform: this.pcMode ? 'pc' : 'wx',
             },
           });
@@ -562,7 +562,7 @@ export default {
               operationStart: 'Start',
             };
             await judgeHasPermission({
-              id: this.select[0].id,
+              id: this.select.map((v) => v.id),
               platform: this.pcMode ? 'pc' : 'wx',
               moduleNamesPC:
                 this.config.processKey === 'apply'
@@ -623,7 +623,7 @@ export default {
             const moduleNamesWX =
               keyObjWX[this.config.props.valueKey] ??
               fuzzyMatch(titleObjWX, this.config.title);
-            await judgeHasPermission({
+            await judgeHasPermissions({
               id: this.select[0].id,
               moduleNamesPC,
               moduleNamesWX,

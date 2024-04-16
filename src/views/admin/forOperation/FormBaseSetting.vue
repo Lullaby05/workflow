@@ -282,7 +282,6 @@ export default {
     setup() {
       const setup = this.$store.state.design;
       const { companyName } = this.$store.state.loginUser;
-      setup.groupId = 116;
       setup.companyName = companyName;
       if (setup.operationType) {
         // 初始化

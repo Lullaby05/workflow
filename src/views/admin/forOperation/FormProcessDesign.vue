@@ -446,7 +446,7 @@ export default {
                   this.createReload(groupId, formId);
                 })
                 .catch(() => {
-                  this.$router.push('/workspace/formsPanel');
+                  this.$router.push('/workspace/formsPanelForOperation');
                 });
             })
             .catch((err) => {

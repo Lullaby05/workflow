@@ -1,44 +1,46 @@
 <template>
   <div class="login-container">
     <div class="login-background">
-      <h1 class="login-title">安全智能预警平台工作流</h1>
-      <el-form
-        label-position="right"
-        label-width="90"
-        ref="loginFormRef"
-        :model="loginForm"
-        :rules="loginRules"
-        class="login-form"
-      >
-        <el-form-item
-          prop="username"
-          label="用户名"
+      <div class="login-content">
+        <h1 class="login-title">安全智能预警平台工作流</h1>
+        <el-form
+          label-position="right"
+          label-width="90"
+          ref="loginFormRef"
+          :model="loginForm"
+          :rules="loginRules"
+          class="login-form"
         >
-          <el-input
-            clearable
-            v-model="loginForm.username"
-            placeholder="请输入手机号码/邮箱"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          prop="password"
-          label="密码"
-        >
-          <el-input
-            clearable
-            v-model="loginForm.password"
-            type="password"
-            placeholder="请输入密码"
-          ></el-input>
-        </el-form-item>
-        <div style="width: 100%; text-align: center">
-          <el-button
-            type="primary"
-            @click="login"
-            >登录</el-button
+          <el-form-item
+            prop="username"
+            label="用户名"
           >
-        </div>
-      </el-form>
+            <el-input
+              clearable
+              v-model="loginForm.username"
+              placeholder="请输入手机号码/邮箱"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            prop="password"
+            label="密码"
+          >
+            <el-input
+              clearable
+              v-model="loginForm.password"
+              type="password"
+              placeholder="请输入密码"
+            ></el-input>
+          </el-form-item>
+          <div style="width: 100%; text-align: center">
+            <el-button
+              type="primary"
+              @click="login"
+              >登录</el-button
+            >
+          </div>
+        </el-form>
+      </div>
     </div>
     <el-dialog
       v-model="enterpriseChooseVisible"
@@ -60,6 +62,7 @@ import { loginV2, getTokenByTenant, getUserInfo } from '@/api/login';
 import store from '@/store';
 import { useRouter } from 'vue-router';
 import ChooseEnterprise from './components/chooseEnterprise.vue';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 
@@ -93,6 +96,10 @@ const login = () => {
         condition: username,
         password,
       });
+      if (!data) {
+        ElMessage.warning('账号或密码不正确');
+        return;
+      }
       if (data.length === 1) {
         const { data: token } = await getTokenByTenant(data[0]);
         handleLogin(token);
@@ -126,6 +133,7 @@ const handleLogin = async (token: any) => {
     avatar: info.userInfo.avatar,
     position: info.employeeInfo.jobName,
     companyName: info.employeeInfo.enterpriseName,
+    tenantId: info.tenantId,
     type: 'user',
   };
   store.state.loginUser = user;
@@ -143,7 +151,7 @@ const handleLogin = async (token: any) => {
 }
 
 .login-background {
-  background-image: url('/path/to/background-image.jpg');
+  background-image: url('@/assets/image/background.jpg');
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -154,19 +162,21 @@ const handleLogin = async (token: any) => {
   justify-content: center;
 }
 
-.login-form {
+.login-content {
+  backdrop-filter: blur(10px);
   width: 400px;
   padding: 20px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 1); /* 使用半透明的背景色 */
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
 .login-title {
+  margin-top: 0px;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-size: 24px;
-  color: #fff;
+  color: #666;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 </style>
