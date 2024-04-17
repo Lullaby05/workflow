@@ -163,6 +163,13 @@ const router = createRouter({
   ],
 });
 
+const wxWhiteList = [
+  '/pitfall/check',
+  '/operation/add',
+  '/operation/operationDetailRender',
+  '/web-view/formRender',
+];
+
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title;
@@ -175,7 +182,9 @@ router.beforeEach((to, from, next) => {
     head[0].appendChild(meta);
   }
   const loginUser = store.state.loginUser;
-  if (!loginUser || !loginUser.id) {
+  if (wxWhiteList.includes(to.path)) {
+    next();
+  } else if (!loginUser || !loginUser.id) {
     if (to.path !== '/login') {
       next('/login');
     } else {
