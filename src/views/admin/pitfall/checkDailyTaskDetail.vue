@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router';
 import FormRender from '@/components/form-design/components/FormRender.vue';
 import { useFormRender } from '@/views/operation/wxHooks/useFormRender';
@@ -95,7 +95,7 @@ const getDetailData = async () => {
       },
     ],
     title: data.taskName,
-    status: status,
+    status: data.taskStateCode,
   };
 
   data.formList.forEach((item) => {
