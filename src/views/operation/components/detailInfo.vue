@@ -121,7 +121,7 @@ const jumpToEditApply = () => {
     align-items: center;
     .audit-person {
       span:nth-child(1) {
-        font-family: '思源黑体 Medium';
+        font-family: 'Noto Sans SC';
         font-size: 14px;
         color: #333333;
       }

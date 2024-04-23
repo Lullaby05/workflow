@@ -1,13 +1,15 @@
-@font-face {
+/* @font-face {
   font-family: '思源黑体';
-  src: url('./SourceHanSansSC-Regular-2.otf');
+  src: url('https://business.api.xkrsecure.com/SourceHanSansCN-Regular.ttf');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: '思源黑体 Medium';
-  src: url('./SourceHanSansOLD-Medium-2.otf');
+  src: url('https://business.api.xkrsecure.com/SourceHanSansCN-Medium.ttf');
   font-weight: normal;
   font-style: normal;
-}
+  font-display: swap;
+} */

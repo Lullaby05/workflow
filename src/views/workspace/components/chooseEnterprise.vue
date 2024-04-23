@@ -102,11 +102,11 @@ const confirm = () => {
       flex-direction: column;
       .enterprise-name {
         color: #333333;
-        font-family: '思源黑体 Medium';
+        font-family: 'Noto Sans SC';
       }
       .user-info {
         color: #999999;
-        font-family: '思源黑体';
+        font-family: 'Noto Sans SC';
         display: flex;
         align-items: center;
         gap: 10px;

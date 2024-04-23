@@ -218,7 +218,7 @@ export default {
   }
   .tableTitle {
     font-weight: 500;
-    font-family: '思源黑体 Medium';
+    font-family: 'Noto Sans SC';
   }
 
   & > div:last-child {
