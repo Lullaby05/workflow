@@ -69,6 +69,7 @@
         <el-select
           v-model="setup.operationType"
           filterable
+          @change="handleChangeOperationType(true)"
         >
           <el-option
             v-for="item in operationTypes"
@@ -221,6 +222,7 @@ export default {
   components: { OrgPicker },
   data() {
     return {
+      firstTime: true,
       nowUserSelect: null,
       showIconSelect: false,
       select: [],
@@ -283,10 +285,10 @@ export default {
       const setup = this.$store.state.design;
       const { companyName } = this.$store.state.loginUser;
       setup.companyName = companyName;
-      console.log('$$$$', setup.operationType);
-      if (setup.operationType) {
+      if (setup.operationType && this.firstTime) {
         // 初始化
-        this.handleChangeOperationType(setup.operationType);
+        this.handleChangeOperationType(false, setup.operationType);
+        this.firstTime = false;
       }
       return setup;
     },
@@ -298,7 +300,10 @@ export default {
     this.getGroups();
   },
   methods: {
-    handleChangeOperationType(operationType) {
+    handleChangeOperationType(
+      flag = false,
+      operationType = this.setup.operationType
+    ) {
       // if (operationType) {
       //   this.$confirm(
       //     '您确定要修改作业类型吗',
@@ -313,6 +318,7 @@ export default {
 
       //     })
       // }
+      if (!operationType && !this.setup.operationType) return;
       const clearProcessKey = (treeData) => {
         treeData.props.processKey = '';
         if (Object.keys(treeData.children).length) {
@@ -320,7 +326,9 @@ export default {
         }
         return treeData;
       };
-      clearProcessKey(this.setup.process);
+      if (flag) {
+        clearProcessKey(this.setup.process);
+      }
       const type = operationType || this.setup.operationType;
       getValueKeyEnum(type).then((res) => {
         const dataMap = [];
