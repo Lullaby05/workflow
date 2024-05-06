@@ -59,11 +59,13 @@ export default defineConfig({
       '/businessApi': {
         // target: 'http://172.16.16.9:32200',
         target: 'https://business.api.xkrsecure.com/', // 测试服务器
+        // target: 'https://prodapi.xkrsecure.com', // 正式服务器
         changeOrigin: true,
       },
       '/wflowApi': {
         // target: 'http://172.16.16.9:10000',
         target: 'https://business.api.xkrsecure.com/', // 测试服务器
+        // target: 'https://prodapi.xkrsecure.com', // 正式服务器
         changeOrigin: true,
       },
     },

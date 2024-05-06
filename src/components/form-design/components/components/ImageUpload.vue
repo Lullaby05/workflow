@@ -93,7 +93,7 @@ export default {
     },
     videoMaxSize: {
       type: Number,
-      default: 20,
+      default: 100,
     },
     maxNumber: {
       type: Number,

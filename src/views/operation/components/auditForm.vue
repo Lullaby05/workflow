@@ -24,7 +24,7 @@
         placeholder="请输入备注"
       />
       <Field
-        v-if="auditFormData.result === '1' && needSign"
+        v-if="needSign"
         v-model="auditFormData.signature"
         readonly
         :rules="[{ required: true }]"
@@ -118,9 +118,10 @@ const formData: any = computed({
 
 const needSign = ref<boolean>(false);
 if (props.status === 'edit') {
-  getNeedSignByTaskId(props.taskId).then((res: any) => {
-    needSign.value = res.data.enableSign;
-  });
+  //  getNeedSignByTaskId(props.taskId).then((res: any) => {
+  //  needSign.value = res.data.enableSign;
+  //});
+  needSign.value = true;
 }
 
 // 父组件调用

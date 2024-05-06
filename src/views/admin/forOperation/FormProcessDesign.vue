@@ -218,7 +218,6 @@ export default {
       getNewVerProcess(formId)
         .then((rsp) => {
           this.loading = false;
-          console.log('@', rsp);
           let form = rsp.data;
           form.logo = JSON.parse(form.logo);
           form.settings = JSON.parse(form.settings);
@@ -397,7 +396,7 @@ export default {
         formConfig: JSON.stringify(this.setup.formConfig || {}),
         process: JSON.stringify(this.setup.process),
         remark: this.setup.remark,
-        tenantId: '1',
+        tenantId: this.$store.state.loginUser.tenantId,
       };
     },
     getCheckModelData() {
@@ -406,7 +405,7 @@ export default {
         companyName: this.setup.companyName,
         formItems: this.setup.formItems,
         progress: this.setup.process,
-        tenantId: '1',
+        tenantId: this.$store.state.loginUser.tenantId,
       };
     },
     createReload(groupId, formId) {
