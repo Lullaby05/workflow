@@ -283,6 +283,7 @@ export default {
       const setup = this.$store.state.design;
       const { companyName } = this.$store.state.loginUser;
       setup.companyName = companyName;
+      console.log('$$$$', setup.operationType);
       if (setup.operationType) {
         // 初始化
         this.handleChangeOperationType(setup.operationType);
