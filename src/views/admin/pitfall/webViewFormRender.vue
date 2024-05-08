@@ -334,10 +334,11 @@ const goBack = () => {
 
   .form-render-title {
     background-color: #ffffff;
-    padding: 16px 0 10px 16px;
+    padding: 16px 16px 10px 16px;
     font-size: 14px;
     font-weight: 700;
     color: #1d2129;
+    word-break: break-all;
   }
   :deep(.process-form) {
     & > div + div {

@@ -192,6 +192,7 @@ onBeforeMount(() => {
     line-height: 20px;
     padding: 16px;
     font-weight: 700;
+    word-break: break-all;
   }
   :deep(.process-form) {
     & > div + div {
