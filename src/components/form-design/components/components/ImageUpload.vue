@@ -45,9 +45,12 @@
         :before-read="beforeUpload"
         upload-text="选择图片"
         :after-read="afterRead"
+        :previewFullImage="false"
         :max-size="maxSize * 1024 * 1024"
         @oversize="onOversize"
-      />
+        @click-preview="handlePreview"
+      >
+      </uploader>
       <div style="color: #9b9595">{{ placeholder }} {{ sizeTip }}</div>
     </div>
     <div
@@ -63,11 +66,36 @@
         />
       </div>
     </div>
+    <div class="mobile-img-preview">
+      <ImagePreview
+        v-model:show="show"
+        :loop="false"
+        :images="previewList"
+        :startPosition="startIndex"
+        :closeOnClickImage="false"
+      >
+        <template #image="{ src }">
+          <video
+            v-if="!src.isImage"
+            style="width: 100%"
+            muted
+            autoplay
+            controls
+            :src="src.url"
+          />
+          <img
+            v-else
+            style="width: 100%"
+            :src="src.url"
+          />
+        </template>
+      </ImagePreview>
+    </div>
   </div>
 </template>
 
 <script>
-import { Uploader, showSuccessToast, showFailToast } from 'vant';
+import { Uploader, showSuccessToast, showFailToast, ImagePreview } from 'vant';
 import componentMinxins from '../ComponentMinxins';
 // import Axios from '@/api/interceptor';
 import requestOpeartion from '@/api/requestForOperation.js';
@@ -75,7 +103,7 @@ import requestOpeartion from '@/api/requestForOperation.js';
 export default {
   mixins: [componentMinxins],
   name: 'ImageUpload',
-  components: { Uploader },
+  components: { Uploader, ImagePreview },
   props: {
     modelValue: {
       type: Array,
@@ -116,8 +144,17 @@ export default {
         return {
           name: f.name,
           url: f.url,
+          sourceUrl: f.sourceUrl,
           isImage: true,
           status: 'success',
+        };
+      });
+    },
+    previewList() {
+      return this._value.map((v) => {
+        return {
+          url: v.sourceUrl,
+          isImage: v.fileType === 'image',
         };
       });
     },
@@ -129,6 +166,8 @@ export default {
       uploadParams: { isImg: true },
       catchList: [],
       alows: ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'video/mp4'],
+      show: false,
+      startIndex: 0,
     };
   },
   methods: {
@@ -197,6 +236,10 @@ export default {
       } else {
         this.uploadFile(file);
       }
+    },
+    handlePreview(file, arg) {
+      this.show = true;
+      this.startIndex = arg.index;
     },
     uploadFile(file) {
       //上传文件
